@@ -1,7 +1,52 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, type PlanItem, type Prayers, type Streak, type Today } from "./api";
 import { Axon } from "./Axon";
+import { ProgressView } from "./Progress";
+import { Settings } from "./Settings";
 import { PRAYER_LABEL, clockParts, formatDate, formatTime, hijriDate, isNight, until } from "./time";
+import { WeekView } from "./Week";
+
+const TABS = [
+  { id: "today", label: "Today" },
+  { id: "week", label: "Week" },
+  { id: "progress", label: "Progress" },
+  { id: "settings", label: "Settings" },
+] as const;
+type Tab = (typeof TABS)[number]["id"];
+
+// Other tabs drift back to Today after this long without a click or keypress, so the wallpaper stays simple.
+const IDLE_RETURN_MS = 3 * 60_000;
+
+function initialTab(): Tab {
+  if (window.location.pathname.replace(/\/+$/, "") === "/settings") return "settings";
+  const hash = window.location.hash.slice(1);
+  return TABS.some((t) => t.id === hash) ? (hash as Tab) : "today";
+}
+
+function useTab(): [Tab, (t: Tab) => void] {
+  const [tab, setTab] = useState<Tab>(initialTab);
+  const go = useCallback((t: Tab) => {
+    setTab(t);
+    window.history.replaceState(null, "", t === "today" ? "/" : `/#${t}`);
+  }, []);
+
+  useEffect(() => {
+    if (tab === "today") return;
+    let timer = window.setTimeout(() => go("today"), IDLE_RETURN_MS);
+    const reset = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => go("today"), IDLE_RETURN_MS);
+    };
+    const events = ["pointerdown", "keydown", "wheel"] as const;
+    events.forEach((e) => window.addEventListener(e, reset));
+    return () => {
+      window.clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, reset));
+    };
+  }, [tab, go]);
+
+  return [tab, go];
+}
 
 function useNow(intervalMs = 1000): Date {
   const [now, setNow] = useState(() => new Date());
@@ -14,6 +59,7 @@ function useNow(intervalMs = 1000): Date {
 
 export function Wallpaper() {
   const now = useNow();
+  const [tab, go] = useTab();
   const [today, setToday] = useState<Today | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,6 +99,11 @@ export function Wallpaper() {
     if (today && today.date !== localDate && today.timezone === Intl.DateTimeFormat().resolvedOptions().timeZone) load();
   }, [localDate, today, load]);
 
+  // Coming back to Today (say, after saving a location in Settings) shows fresh data right away.
+  useEffect(() => {
+    if (tab === "today") load();
+  }, [tab, load]);
+
   const night = isNight(now, today?.prayers ?? null);
   useEffect(() => {
     const root = document.documentElement;
@@ -82,7 +133,30 @@ export function Wallpaper() {
           <p className="date">{formatDate(now)}</p>
           <p className="hijri">{hijriDate(now, today?.prayers ?? null)}</p>
         </div>
-        <NextPrayer now={now} prayers={today?.prayers ?? null} loaded={today !== null} />
+        <div className="top-right">
+          <nav className="tabs" role="tablist" aria-label="Views">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                id={`tab-${t.id}`}
+                aria-selected={tab === t.id}
+                aria-controls="view"
+                className="tab"
+                onClick={() => go(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          <NextPrayer
+            now={now}
+            prayers={today?.prayers ?? null}
+            loaded={today !== null}
+            onSetup={() => go("settings")}
+          />
+        </div>
       </header>
 
       {error && (
@@ -91,19 +165,24 @@ export function Wallpaper() {
         </p>
       )}
 
-      {today && (
-        <>
-          <section className="pathway" aria-label="Streak">
-            <Axon streak={today.streak} />
-            <p className="streak-line">{streakLine(today.streak)}</p>
-          </section>
+      <div id="view" className={`view view-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`}>
+        {tab === "today" && today && (
+          <>
+            <section className="pathway" aria-label="Streak">
+              <Axon streak={today.streak} />
+              <p className="streak-line">{streakLine(today.streak)}</p>
+            </section>
 
-          <div className="lower">
-            <TodayPlan plan={today.plan} onToggle={toggle} />
-            <PrayerTimes now={now} prayers={today.prayers} />
-          </div>
-        </>
-      )}
+            <div className="lower">
+              <TodayPlan plan={today.plan} onToggle={toggle} />
+              <PrayerTimes now={now} prayers={today.prayers} onChange={() => go("settings")} />
+            </div>
+          </>
+        )}
+        {tab === "week" && <WeekView />}
+        {tab === "progress" && <ProgressView />}
+        {tab === "settings" && <Settings embedded />}
+      </div>
     </main>
   );
 }
@@ -118,14 +197,24 @@ function streakLine(s: Streak): string {
   return `${s.current}-day streak. Finish today's hour to keep it growing.`;
 }
 
-function NextPrayer({ now, prayers, loaded }: { now: Date; prayers: Prayers | null; loaded: boolean }) {
+function NextPrayer({
+  now,
+  prayers,
+  loaded,
+  onSetup,
+}: {
+  now: Date;
+  prayers: Prayers | null;
+  loaded: boolean;
+  onSetup: () => void;
+}) {
   if (!prayers) {
     if (!loaded) return null;
     return (
       <div className="next-prayer">
-        <a className="setup-link" href="/settings">
+        <button type="button" className="link-button setup-link" onClick={onSetup}>
           Set your location to see prayer times
-        </a>
+        </button>
       </div>
     );
   }
@@ -179,7 +268,7 @@ function TodayPlan({ plan, onToggle }: { plan: PlanItem[]; onToggle: (i: PlanIte
   );
 }
 
-function PrayerTimes({ now, prayers }: { now: Date; prayers: Prayers | null }) {
+function PrayerTimes({ now, prayers, onChange }: { now: Date; prayers: Prayers | null; onChange: () => void }) {
   if (!prayers) return <section className="prayers" aria-hidden="true" />;
   return (
     <section className="prayers" aria-labelledby="prayers-heading">
@@ -207,7 +296,9 @@ function PrayerTimes({ now, prayers }: { now: Date; prayers: Prayers | null }) {
       <p className="prayer-method">
         {prayers.method === "NORTH_AMERICA" ? "ISNA" : prayers.method.replaceAll("_", " ").toLowerCase()},{" "}
         {prayers.asr_method === "HANAFI" ? "Hanafi Asr" : "standard Asr"}.{" "}
-        <a href="/settings">Change</a>
+        <button type="button" className="link-button" onClick={onChange}>
+          Change
+        </button>
       </p>
     </section>
   );

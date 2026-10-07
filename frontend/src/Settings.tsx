@@ -15,7 +15,7 @@ const METHODS: [string, string][] = [
   ["UOIF", "UOIF (France)"],
 ];
 
-export function Settings() {
+export function Settings({ embedded = false }: { embedded?: boolean }) {
   const [s, setS] = useState<SettingsT | null>(null);
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
@@ -79,10 +79,15 @@ export function Settings() {
     save({ latitude: la, longitude: lo });
   };
 
+  const Wrapper = embedded ? "section" : "main";
   return (
-    <main className="settings">
-      <a className="back" href="/">Back to today</a>
-      <h1>Settings</h1>
+    <Wrapper className={embedded ? "settings is-embedded" : "settings"} aria-label={embedded ? "Settings" : undefined}>
+      {!embedded && (
+        <>
+          <a className="back" href="/">Back to today</a>
+          <h1>Settings</h1>
+        </>
+      )}
 
       <section>
         <h2>Location for prayer times</h2>
@@ -127,6 +132,6 @@ export function Settings() {
       )}
 
       {status && <p className="status" role="status">{status}</p>}
-    </main>
+    </Wrapper>
   );
 }

@@ -21,6 +21,7 @@ from .models import PlanItem, UserSettings
 from .planner import ensure_plan
 from .prayer import prayers_for
 from .streak import streak_summary
+from .views import progress_view, week_view
 
 CALC_METHODS = {"NORTH_AMERICA", "MUSLIM_WORLD_LEAGUE", "EGYPTIAN", "KARACHI", "UMM_AL_QURA",
                 "DUBAI", "MOON_SIGHTING_COMMITTEE", "KUWAIT", "QATAR", "SINGAPORE", "UOIF"}
@@ -125,19 +126,21 @@ def create_app(
         session.refresh(settings)
         return _settings_json(settings)
 
-    @app.get("/api/today")
-    def today(session: Session = Depends(get_session)) -> dict:
+    def context(session: Session) -> tuple[UserSettings, datetime]:
+        """Settings and 'now' in the user's time zone. The first visit marks day 1 of the cycle."""
         settings = get_settings(session)
-        tz = _zone(settings)
-        now = now_in(tz)
-        day = now.date()
-
+        now = now_in(_zone(settings))
         if settings.started_on is None:
-            settings.started_on = day
+            settings.started_on = now.date()
             session.add(settings)
             session.commit()
             session.refresh(settings)
+        return settings, now
 
+    @app.get("/api/today")
+    def today(session: Session = Depends(get_session)) -> dict:
+        settings, now = context(session)
+        day = now.date()
         items = ensure_plan(session, day)
 
         prayers = None
@@ -154,6 +157,18 @@ def create_app(
             "prayers": prayers,
             "needs_setup": prayers is None,
         }
+
+    @app.get("/api/week")
+    def week(session: Session = Depends(get_session)) -> dict:
+        settings, now = context(session)
+        ensure_plan(session, now.date())
+        return week_view(session, settings.started_on, now.date())
+
+    @app.get("/api/progress")
+    def progress(session: Session = Depends(get_session)) -> dict:
+        settings, now = context(session)
+        ensure_plan(session, now.date())
+        return progress_view(session, settings.started_on, now.date())
 
     @app.post("/api/plan/{item_id}/toggle")
     def toggle(item_id: int, session: Session = Depends(get_session)) -> dict:

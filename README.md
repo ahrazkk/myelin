@@ -10,6 +10,11 @@ After Maghrib the wallpaper switches to a night view, styled like a fluorescence
 
 ![Myelin at night, with today's segment wrapped](docs/wallpaper-night.png)
 
+The Week and Progress tabs:
+
+![Week tab: seven days, each a segment of axon, with the routine for each day](docs/tab-week.png)
+![Progress tab: streak summary, calendar heatmap and reps per habit](docs/tab-progress.png)
+
 _Screenshots use sample data._
 
 ## What it does today (v0.1)
@@ -17,6 +22,7 @@ _Screenshots use sample data._
 - **Today's plan** from a weekly rotation that interleaves two interview tracks a day (LeetCode Python, LeetCode SQL, system design, resume, a new skill), plus Quran after Fajr and gym on gym days.
 - **One master streak**, drawn as an axon across a 66-day cycle. Missed days stay bare instead of turning red.
 - **Prayer times** calculated offline with the [Adhan](https://github.com/batoulapps/Adhan) algorithm (ISNA by default, any major method, standard or Hanafi Asr), a countdown to the next prayer, and the Hijri date, which turns over at Maghrib.
+- **Four tabs:** Today, Week (the whole rotation, with finished days wrapped), Progress (best streak, a calendar heatmap, and a small axon per habit counting reps toward 66) and Settings. Any other tab drifts back to Today after three idle minutes, so the wallpaper stays simple.
 - **Day and night views** that switch at Maghrib and sunrise.
 - **Local-first:** a small Python server on your PC and one SQLite file. No account, no cloud, and your location never leaves your computer.
 
@@ -78,8 +84,8 @@ npm run dev                                         # http://localhost:5173, for
 
 ## Roadmap
 
-- [x] **Phase 0, setup:** server, database, wallpaper, prayer times, check-offs, streak
-- [ ] **Phase 1, core loop:** streak freezes, never-miss-twice, a rescue minimum for busy days, 66-day meters per habit, year heatmap, daily hadith
+- [x] **Phase 0, setup:** server, database, wallpaper, prayer times, check-offs, streak, Week and Progress tabs
+- [ ] **Phase 1, core loop:** streak freezes, never-miss-twice, a rescue minimum for busy days, daily hadith
 - [ ] **Phase 2, smart scheduling:** "busy till 3" input that reshuffles the day, Google Calendar and Outlook sync, spaced re-solve queue, automatic logging from NeetCode submissions, phone access on home Wi-Fi
 - [ ] **Phase 3, AI and polish:** bring-your-own AI (Claude, OpenAI, Gemini or local Ollama), labeled hadith explanations, quizzes, mock interviews, focus timer
 - [ ] **Phase 4, v1.0:** setup wizard, templates and content packs, layout editor, Windows installer

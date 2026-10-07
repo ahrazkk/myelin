@@ -126,9 +126,79 @@ a:hover {
   font-size: clamp(15px, 1.05vw, 24px);
 }
 
+.top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3.2vh;
+}
+
 .next-prayer {
   text-align: right;
-  padding-top: 0.6vh;
+}
+
+/* Tabs: the active one sits on a myelin sheath. */
+.tabs {
+  display: flex;
+  gap: 1.7em;
+  font-size: clamp(15px, 0.95vw, 21px);
+}
+
+.tab {
+  position: relative;
+  padding: 0.25em 0 0.6em;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0.32em;
+  border-radius: 999px;
+  background: var(--myelin);
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--muted);
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration-color: currentColor;
+}
+
+.view-today {
+  display: grid;
+  row-gap: 4.5vh;
+  align-content: start;
+}
+
+.view-lead {
+  font-size: clamp(17px, 1.25vw, 28px);
+  max-width: 60ch;
 }
 
 .next-line {
@@ -372,6 +442,213 @@ a:hover {
   font-weight: 700;
 }
 
+/* ---------- Week ---------- */
+
+.week-grid {
+  list-style: none;
+  padding: 0;
+  margin-top: 3.5vh;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  font-size: clamp(14px, 0.95vw, 21px);
+}
+
+.week-day-name {
+  display: flex;
+  flex-direction: column;
+  font-weight: 650;
+}
+
+.week-day-date {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.9em;
+}
+
+.week-day.is-current .week-day-name {
+  color: var(--cresyl);
+}
+
+/* One internode per day; the seven line up into a stretch of axon. */
+.week-segment {
+  position: relative;
+  height: 1.3em;
+  margin: 0.9em 0 1.2em;
+}
+
+.week-segment::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: var(--axon-ahead);
+}
+
+.week-day.is-done .week-segment::before,
+.week-day.is-missed .week-segment::before,
+.week-day.is-today .week-segment::before {
+  background: var(--muted);
+}
+
+.week-segment span {
+  position: absolute;
+  inset: 0 3px;
+  border-radius: 0.5em;
+}
+
+.week-day.is-done .week-segment span {
+  background: var(--myelin);
+}
+
+.week-day.is-today .week-segment span {
+  background: var(--cresyl-wash);
+  border: 1.6px solid var(--cresyl);
+}
+
+.week-blocks {
+  list-style: none;
+  padding: 0 1.2em 0 0;
+  display: grid;
+  gap: 0.9em;
+}
+
+.week-blocks span {
+  display: block;
+}
+
+.week-block-title {
+  font-weight: 500;
+}
+
+.week-block-detail {
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.week-blocks li.is-done .week-block-title {
+  color: var(--muted);
+}
+
+.week-blocks li.is-done .week-block-title::before {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  margin-right: 0.45em;
+  border-radius: 50%;
+  background: var(--myelin);
+  vertical-align: 0.08em;
+}
+
+.week-day.is-before {
+  opacity: 0.55;
+}
+
+/* ---------- Progress ---------- */
+
+.progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  column-gap: 7vw;
+  align-items: start;
+  font-size: clamp(16px, 1.05vw, 23px);
+}
+
+.progress-sub {
+  color: var(--muted);
+  margin-top: 0.4em;
+  max-width: 52ch;
+}
+
+.heatmap {
+  margin: 3.5vh 0 0;
+}
+
+.heatmap svg {
+  display: block;
+  height: auto;
+}
+
+.heat-label {
+  fill: var(--muted);
+  font-size: 8px;
+  font-family: inherit;
+}
+
+.heat {
+  fill: none;
+  stroke: none;
+}
+
+.heat.is-done {
+  fill: var(--myelin);
+}
+
+.heat.is-missed {
+  fill: var(--hair);
+}
+
+.heat.is-today {
+  fill: var(--cresyl-wash);
+  stroke: var(--cresyl);
+  stroke-width: 1.5;
+}
+
+.heat.is-future {
+  stroke: var(--hair);
+  stroke-width: 1;
+}
+
+.habits h2 {
+  font-size: 1em;
+  font-weight: 650;
+}
+
+.habit-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 2.6vh;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.4vh 3vw;
+}
+
+.habit-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.habit-count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mini-axon {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 0.4em;
+}
+
+.habit-week {
+  margin-top: 0.25em;
+  color: var(--muted);
+  font-size: 0.8em;
+}
+
+/* ---------- Settings inside the wallpaper ---------- */
+
+.settings.is-embedded {
+  max-width: 40rem;
+  margin: 0;
+  padding: 0;
+}
+
 @media (max-width: 900px) {
   .wall {
     padding: 5vh 6vw;
@@ -379,12 +656,20 @@ a:hover {
   .top {
     flex-direction: column;
   }
+  .top-right {
+    align-items: flex-start;
+  }
   .next-prayer {
     text-align: left;
   }
-  .lower {
+  .lower,
+  .progress {
     grid-template-columns: 1fr;
     row-gap: 5vh;
+  }
+  .week-grid {
+    grid-template-columns: 1fr;
+    row-gap: 1.5em;
   }
 }
 

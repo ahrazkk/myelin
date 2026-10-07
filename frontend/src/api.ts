@@ -43,6 +43,42 @@ export interface Today {
   needs_setup: boolean;
 }
 
+export type HeatStatus = "before" | "done" | "missed" | "today" | "future";
+
+export interface WeekDay {
+  date: string;
+  weekday: "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
+  status: HeatStatus;
+  blocks: { title: string; detail: string; kind: Kind; minutes: number; done: boolean }[];
+}
+
+export interface Week {
+  week_of: string;
+  today: string;
+  days: WeekDay[];
+}
+
+export interface Habit {
+  track: string;
+  name: string;
+  kind: Kind;
+  reps: number;
+  this_week: number;
+  per_week: number;
+  target: number;
+}
+
+export interface Progress {
+  started_on: string;
+  today: string;
+  current: number;
+  best: number;
+  days_done: number;
+  days_since_start: number;
+  weeks: { date: string; status: HeatStatus }[][];
+  habits: Habit[];
+}
+
 export interface Settings {
   latitude: number | null;
   longitude: number | null;
@@ -67,6 +103,8 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   today: () => call<Today>("/api/today"),
+  week: () => call<Week>("/api/week"),
+  progress: () => call<Progress>("/api/progress"),
   toggle: (id: number) => call<PlanItem>(`/api/plan/${id}/toggle`, { method: "POST" }),
   settings: () => call<Settings>("/api/settings"),
   saveSettings: (patch: Partial<Settings>) =>
