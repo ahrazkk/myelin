@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Local data never belongs in the repo
+*.db
+*.log
+.env
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# TypeScript build cache
+*.tsbuildinfo

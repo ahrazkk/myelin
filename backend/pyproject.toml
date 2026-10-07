@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "myelin"
+version = "0.1.0"
+description = "Neuroplasticity habit OS: a live wallpaper that plans your day and protects your streak."
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Ahraz Kibria" }]
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.29",
+  "sqlmodel>=0.0.16",
+  "adhanpy>=1.0.3",
+  "platformdirs>=4.0",
+  "tzdata>=2024.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "httpx>=0.27"]
+
+[project.scripts]
+myelin = "myelin.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["myelin*"]
+
+[tool.setuptools.package-data]
+myelin = ["defaults/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

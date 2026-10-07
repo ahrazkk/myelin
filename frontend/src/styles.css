@@ -1,0 +1,503 @@
+/*
+  Myelin's palette comes from histology. Myelin is stained with Luxol fast blue, neurons with cresyl violet.
+  Day: a lit slide under a brightfield microscope. Night (Maghrib to sunrise): a fluorescence view.
+*/
+:root {
+  --slide: #edeff5;
+  --ink: #1b2142;
+  --muted: #5d6485;
+  --hair: #ccd1e0;
+  --axon-ahead: #c2c8da;
+  --myelin: #2d6bad;
+  --cresyl: #7b3f9e;
+  --cresyl-wash: rgb(123 63 158 / 0.1);
+
+  color-scheme: light;
+  font-family: "Atkinson Hyperlegible Next Variable", "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="day"]) {
+    --slide: #0e1530;
+    --ink: #e4e8f6;
+    --muted: #949bbb;
+    --hair: #27305a;
+    --axon-ahead: #2b3462;
+    --myelin: #57c4e5;
+    --cresyl: #d07be8;
+    --cresyl-wash: rgb(208 123 232 / 0.14);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="night"] {
+  --slide: #0e1530;
+  --ink: #e4e8f6;
+  --muted: #949bbb;
+  --hair: #27305a;
+  --axon-ahead: #2b3462;
+  --myelin: #57c4e5;
+  --cresyl: #d07be8;
+  --cresyl-wash: rgb(208 123 232 / 0.14);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--slide);
+  color: var(--ink);
+}
+
+p,
+h1,
+h2,
+ol {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--muted);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 3px solid var(--cresyl);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Wallpaper ---------- */
+
+.wall {
+  min-height: 100vh;
+  /* The left gutter leaves room for desktop icons; the bottom clears the Windows taskbar. */
+  padding: 6vh 6vw 9vh 10vw;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  row-gap: 4.5vh;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4vw;
+}
+
+.clock-face {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+}
+
+.clock-time {
+  font-family: "Manrope Variable", "Segoe UI", sans-serif;
+  font-size: clamp(64px, 7.4vw, 184px);
+  font-weight: 220;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock-period {
+  font-size: clamp(18px, 1.5vw, 36px);
+  color: var(--muted);
+}
+
+.date {
+  margin-top: 1.6vh;
+  font-size: clamp(18px, 1.35vw, 32px);
+}
+
+.hijri {
+  color: var(--muted);
+  font-size: clamp(15px, 1.05vw, 24px);
+}
+
+.next-prayer {
+  text-align: right;
+  padding-top: 0.6vh;
+}
+
+.next-line {
+  color: var(--cresyl);
+  font-size: clamp(22px, 2vw, 46px);
+  font-weight: 560;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.next-at {
+  color: var(--muted);
+  font-size: clamp(15px, 1.05vw, 24px);
+  margin-top: 0.4em;
+}
+
+.setup-link {
+  font-size: clamp(16px, 1.1vw, 24px);
+  color: var(--cresyl);
+}
+
+.notice {
+  border-left: 3px solid var(--cresyl);
+  padding-left: 1em;
+  max-width: 60ch;
+  font-size: clamp(15px, 1vw, 22px);
+}
+
+/* The axon */
+
+.pathway {
+  max-width: 100%;
+}
+
+.axon {
+  position: relative;
+  margin: 0;
+  padding-top: 1.7em;
+  font-size: clamp(14px, 0.95vw, 21px);
+}
+
+.axon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.axon-line {
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.axon-line.walked {
+  stroke: var(--muted);
+}
+
+.axon-line.ahead {
+  stroke: var(--axon-ahead);
+}
+
+.sheath {
+  fill: var(--myelin);
+}
+
+.sheath-today {
+  fill: var(--cresyl-wash);
+  stroke: var(--cresyl);
+  stroke-width: 1.6;
+}
+
+.milestone-tick {
+  stroke: var(--muted);
+  stroke-width: 1.5;
+}
+
+.signal {
+  fill: var(--cresyl);
+}
+
+.axon-today {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  color: var(--cresyl);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.axon-milestones {
+  position: relative;
+  height: 1.7em;
+  margin-top: 0.25em;
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.axon-milestones span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.axon-milestones span.end {
+  transform: translateX(-100%);
+}
+
+.streak-line {
+  margin-top: 1.4vh;
+  font-size: clamp(17px, 1.25vw, 28px);
+  max-width: 60ch;
+}
+
+/* Today and prayer times */
+
+.lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  column-gap: 7vw;
+  align-items: start;
+  font-size: clamp(16px, 1.05vw, 23px);
+}
+
+.lower h2 {
+  font-size: 1em;
+  font-weight: 650;
+  margin-bottom: 0.8em;
+}
+
+.plan,
+.prayer-list {
+  list-style: none;
+  padding: 0;
+}
+
+.plan-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 1em;
+  padding: 0.6em 0;
+  border-top: 1px solid var(--hair);
+}
+
+.plan-item:last-child {
+  border-bottom: 1px solid var(--hair);
+}
+
+.check {
+  width: 1.7em;
+  height: 1.7em;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--muted);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.check svg {
+  width: 72%;
+  fill: none;
+  stroke: var(--slide);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+
+.is-next .check {
+  border-color: var(--cresyl);
+  box-shadow: 0 0 0 0.3em var(--cresyl-wash);
+}
+
+.is-done .check {
+  background: var(--myelin);
+  border-color: var(--myelin);
+}
+
+.is-done .check svg {
+  opacity: 1;
+}
+
+.plan-title {
+  display: block;
+  font-weight: 500;
+}
+
+.is-next .plan-title {
+  font-weight: 700;
+}
+
+.is-done .plan-title {
+  color: var(--muted);
+}
+
+.plan-detail {
+  display: block;
+  color: var(--muted);
+  font-size: 0.86em;
+}
+
+.plan-minutes {
+  color: var(--muted);
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-progress,
+.prayer-method {
+  margin-top: 0.9em;
+  color: var(--muted);
+  font-size: 0.86em;
+}
+
+.prayer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.55em 0;
+  border-top: 1px solid var(--hair);
+  font-variant-numeric: tabular-nums;
+}
+
+.prayer:last-child {
+  border-bottom: 1px solid var(--hair);
+}
+
+.prayer.is-past,
+.prayer.is-sunrise {
+  color: var(--muted);
+}
+
+.prayer.is-sunrise {
+  font-size: 0.9em;
+}
+
+.prayer.is-next {
+  color: var(--cresyl);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .wall {
+    padding: 5vh 6vw;
+  }
+  .top {
+    flex-direction: column;
+  }
+  .next-prayer {
+    text-align: left;
+  }
+  .lower {
+    grid-template-columns: 1fr;
+    row-gap: 5vh;
+  }
+}
+
+/* ---------- Settings ---------- */
+
+.settings {
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+.settings h1 {
+  font-size: 2.2rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin: 1.5rem 0 2rem;
+}
+
+.settings section {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--hair);
+}
+
+.settings h2 {
+  font-size: 1.1rem;
+  font-weight: 650;
+  margin-bottom: 0.4rem;
+}
+
+.hint {
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.back {
+  color: var(--muted);
+}
+
+.settings button,
+.settings input,
+.settings select {
+  font: inherit;
+  color: var(--ink);
+}
+
+.settings button {
+  border: 2px solid var(--ink);
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+}
+
+.settings button.primary {
+  background: var(--myelin);
+  border-color: var(--myelin);
+  color: var(--slide);
+  font-weight: 650;
+}
+
+.settings button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.coords {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.coords label,
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.field {
+  margin-top: 1rem;
+}
+
+.settings input,
+.settings select {
+  background: transparent;
+  border: 1px solid var(--muted);
+  border-radius: 6px;
+  padding: 0.5rem 0.65rem;
+}
+
+.settings input {
+  width: 9rem;
+}
+
+.settings select option {
+  background: var(--slide);
+}
+
+.status {
+  margin-top: 1.5rem;
+  border-left: 3px solid var(--cresyl);
+  padding-left: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

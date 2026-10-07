@@ -1,0 +1,54 @@
+{
+  "_about": "The default routine. Everything here is data: change tracks, the rotation or gym days without touching code.",
+  "tracks": {
+    "quran": { "name": "Quran", "kind": "faith" },
+    "gym": { "name": "Gym", "kind": "body" },
+    "leetcode_python": { "name": "LeetCode Python", "kind": "interview" },
+    "leetcode_sql": { "name": "LeetCode SQL", "kind": "interview" },
+    "system_design": { "name": "System design", "kind": "interview" },
+    "resume": { "name": "Resume and projects", "kind": "interview" },
+    "new_skill": { "name": "New skill", "kind": "interview" },
+    "resolve": { "name": "Spaced re-solves", "kind": "interview" },
+    "mock": { "name": "Mock interview", "kind": "interview" },
+    "review": { "name": "Weekly review", "kind": "interview" }
+  },
+  "daily": [
+    { "track": "quran", "title": "Quran after Fajr", "detail": "15 minutes, 30 if you can", "minutes": 15 }
+  ],
+  "gym": {
+    "days": ["mon", "wed", "fri", "sat"],
+    "title": "Gym",
+    "detail": "Study right after, while the brain is primed",
+    "minutes": 60
+  },
+  "rotation": {
+    "mon": [
+      { "track": "leetcode_python", "title": "LeetCode Python", "detail": "1 problem", "minutes": 30 },
+      { "track": "leetcode_sql", "title": "LeetCode SQL", "detail": "1 problem", "minutes": 30 }
+    ],
+    "tue": [
+      { "track": "leetcode_python", "title": "LeetCode Python", "detail": "1 problem", "minutes": 30 },
+      { "track": "system_design", "title": "System design", "detail": "30 minutes", "minutes": 30 }
+    ],
+    "wed": [
+      { "track": "leetcode_sql", "title": "LeetCode SQL", "detail": "1 to 2 problems", "minutes": 30 },
+      { "track": "resume", "title": "Resume and projects", "detail": "Write 1 STAR story", "minutes": 30 }
+    ],
+    "thu": [
+      { "track": "leetcode_python", "title": "LeetCode Python", "detail": "1 problem", "minutes": 30 },
+      { "track": "new_skill", "title": "New skill or reading", "detail": "30 minutes", "minutes": 30 }
+    ],
+    "fri": [
+      { "track": "system_design", "title": "System design", "detail": "45 minutes", "minutes": 45 },
+      { "track": "resolve", "title": "Spaced re-solves", "detail": "Re-solve problems that are due", "minutes": 15 }
+    ],
+    "sat": [
+      { "track": "mock", "title": "Mock interview", "detail": "1 medium problem, design 1 system", "minutes": 60 },
+      { "track": "new_skill", "title": "New skill or reading", "detail": "As long as you like", "minutes": 30 }
+    ],
+    "sun": [
+      { "track": "review", "title": "Weekly review", "detail": "Re-solve 2 old problems", "minutes": 30 },
+      { "track": "resume", "title": "Resume and projects", "detail": "Polish one story, plan next week", "minutes": 30 }
+    ]
+  }
+}
