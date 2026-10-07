@@ -14,7 +14,9 @@ const MILESTONES = [
 ];
 
 const prefersReducedMotion = () =>
-  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof window !== "undefined" &&
+  (document.documentElement.dataset.motion === "reduce" ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
 /**
  * The streak drawn as an axon. Each day of the 66-day cycle is one internode;

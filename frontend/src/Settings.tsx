@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { api, type Settings as SettingsT } from "./api";
+import { useState, type FormEvent, type ReactNode } from "react";
+import type { Settings as SettingsT, TextSize, ThemeMode } from "./api";
 
 const METHODS: [string, string][] = [
   ["NORTH_AMERICA", "ISNA (North America)"],
@@ -15,29 +15,63 @@ const METHODS: [string, string][] = [
   ["UOIF", "UOIF (France)"],
 ];
 
-export function Settings({ embedded = false }: { embedded?: boolean }) {
-  const [s, setS] = useState<SettingsT | null>(null);
-  const [lat, setLat] = useState("");
-  const [lng, setLng] = useState("");
+const THEMES: [ThemeMode, string][] = [
+  ["auto", "Auto"],
+  ["light", "Light"],
+  ["dark", "Dark"],
+  ["system", "Follow Windows"],
+];
+
+const SIZES: [TextSize, string][] = [
+  ["normal", "Normal"],
+  ["large", "Large"],
+  ["larger", "Larger"],
+];
+
+export type SaveSettings = (patch: Partial<SettingsT>) => Promise<void>;
+
+export function Segmented<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: [T, string][];
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div className="segmented" role="radiogroup" aria-label={label}>
+      {options.map(([v, text]) => (
+        <button key={v} type="button" role="radio" aria-checked={value === v} onClick={() => onChange(v)}>
+          {text}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
+  return (
+    <section className="settings-section">
+      <h2>{title}</h2>
+      {hint && <p className="hint">{hint}</p>}
+      {children}
+    </section>
+  );
+}
+
+export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave: SaveSettings }) {
+  const [lat, setLat] = useState(s.latitude?.toString() ?? "");
+  const [lng, setLng] = useState(s.longitude?.toString() ?? "");
   const [status, setStatus] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
 
-  useEffect(() => {
-    api.settings().then((loaded) => {
-      setS(loaded);
-      setLat(loaded.latitude?.toString() ?? "");
-      setLng(loaded.longitude?.toString() ?? "");
-    }, (e) => setStatus(e.message));
-  }, []);
-
-  const save = async (patch: Partial<SettingsT>) => {
+  const save = async (patch: Partial<SettingsT>, message = "Saved.") => {
     try {
-      const saved = await api.saveSettings({
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        ...patch,
-      });
-      setS(saved);
-      setStatus("Saved. Prayer times update on the wallpaper within a minute.");
+      await onSave(patch);
+      setStatus(message);
     } catch (e) {
       setStatus(e instanceof Error ? e.message : String(e));
     }
@@ -45,7 +79,7 @@ export function Settings({ embedded = false }: { embedded?: boolean }) {
 
   const useMyLocation = () => {
     if (!navigator.geolocation) {
-      setStatus("This browser can't share its location. Type your latitude and longitude instead.");
+      setStatus("This window can't share its location. Type your latitude and longitude instead.");
       return;
     }
     setLocating(true);
@@ -58,7 +92,7 @@ export function Settings({ embedded = false }: { embedded?: boolean }) {
         setLat(la.toString());
         setLng(lo.toString());
         setLocating(false);
-        save({ latitude: la, longitude: lo });
+        save({ latitude: la, longitude: lo }, "Location saved. Prayer times are on Today.");
       },
       () => {
         setLocating(false);
@@ -76,62 +110,76 @@ export function Settings({ embedded = false }: { embedded?: boolean }) {
       setStatus("Latitude must be between -90 and 90, longitude between -180 and 180.");
       return;
     }
-    save({ latitude: la, longitude: lo });
+    save({ latitude: la, longitude: lo }, "Location saved. Prayer times are on Today.");
   };
 
-  const Wrapper = embedded ? "section" : "main";
   return (
-    <Wrapper className={embedded ? "settings is-embedded" : "settings"} aria-label={embedded ? "Settings" : undefined}>
-      {!embedded && (
-        <>
-          <a className="back" href="/">Back to today</a>
-          <h1>Settings</h1>
-        </>
-      )}
+    <section className="settings" aria-label="Settings">
+      <div className="settings-columns">
+        <div>
+          <Section title="Appearance" hint="Auto switches to the night view at Maghrib and back at sunrise.">
+            <Segmented label="Theme" value={s.theme} options={THEMES} onChange={(v) => save({ theme: v })} />
+            <p className="field-label">Text size</p>
+            <Segmented label="Text size" value={s.text_size} options={SIZES} onChange={(v) => save({ text_size: v })} />
+            <label className="check-field">
+              <input
+                type="checkbox"
+                checked={s.reduced_motion}
+                onChange={(e) => save({ reduced_motion: e.target.checked })}
+              />
+              Reduce motion
+            </label>
+          </Section>
 
-      <section>
-        <h2>Location for prayer times</h2>
-        <p className="hint">
-          Myelin calculates prayer times on this computer. Your location never leaves it.
+          <Section
+            title="Location for prayer times"
+            hint="Myelin calculates prayer times on this computer. Your location never leaves it."
+          >
+            <button type="button" className="btn primary" onClick={useMyLocation} disabled={locating}>
+              {locating ? "Finding your location…" : "Use my location"}
+            </button>
+            <form className="coords" onSubmit={saveTyped}>
+              <label>
+                Latitude
+                <input className="input" inputMode="decimal" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="43.65" />
+              </label>
+              <label>
+                Longitude
+                <input className="input" inputMode="decimal" value={lng} onChange={(e) => setLng(e.target.value)} placeholder="-79.38" />
+              </label>
+              <button type="submit" className="btn">
+                Save location
+              </button>
+            </form>
+          </Section>
+
+          <Section title="Calculation">
+            <label className="field">
+              Method
+              <select className="input" value={s.calc_method} onChange={(e) => save({ calc_method: e.target.value })}>
+                {METHODS.map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="field">
+              Asr
+              <select className="input" value={s.asr_method} onChange={(e) => save({ asr_method: e.target.value })}>
+                <option value="SHAFI">Standard (Shafi'i, Maliki, Hanbali)</option>
+                <option value="HANAFI">Hanafi</option>
+              </select>
+            </label>
+          </Section>
+        </div>
+      </div>
+
+      {status && (
+        <p className="status" role="status">
+          {status}
         </p>
-        <button type="button" className="primary" onClick={useMyLocation} disabled={locating}>
-          {locating ? "Finding your location…" : "Use my location"}
-        </button>
-        <form className="coords" onSubmit={saveTyped}>
-          <label>
-            Latitude
-            <input inputMode="decimal" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="43.65" />
-          </label>
-          <label>
-            Longitude
-            <input inputMode="decimal" value={lng} onChange={(e) => setLng(e.target.value)} placeholder="-79.38" />
-          </label>
-          <button type="submit">Save location</button>
-        </form>
-      </section>
-
-      {s && (
-        <section>
-          <h2>Calculation</h2>
-          <label className="field">
-            Method
-            <select value={s.calc_method} onChange={(e) => save({ calc_method: e.target.value })}>
-              {METHODS.map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </select>
-          </label>
-          <label className="field">
-            Asr
-            <select value={s.asr_method} onChange={(e) => save({ asr_method: e.target.value })}>
-              <option value="SHAFI">Standard (Shafi'i, Maliki, Hanbali)</option>
-              <option value="HANAFI">Hanafi</option>
-            </select>
-          </label>
-        </section>
       )}
-
-      {status && <p className="status" role="status">{status}</p>}
-    </Wrapper>
+    </section>
   );
 }

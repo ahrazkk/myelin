@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type PlanItem, type Prayers, type Streak, type Today } from "./api";
+import {
+  api,
+  type PlanItem,
+  type Prayers,
+  type Settings as SettingsT,
+  type Streak,
+  type ThemeMode,
+  type Today,
+} from "./api";
 import { Axon } from "./Axon";
 import { ProgressView } from "./Progress";
-import { Settings } from "./Settings";
+import { Settings, type SaveSettings } from "./Settings";
 import { PRAYER_LABEL, clockParts, formatDate, formatTime, hijriDate, isNight, until } from "./time";
 import { WeekView } from "./Week";
 
@@ -61,6 +69,7 @@ export function Wallpaper() {
   const now = useNow();
   const [tab, go] = useTab();
   const [today, setToday] = useState<Today | null>(null);
+  const [settings, setSettings] = useState<SettingsT | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -72,14 +81,19 @@ export function Wallpaper() {
     }
   }, []);
 
+  const saveSettings: SaveSettings = useCallback(async (patch) => {
+    setSettings(await api.saveSettings(patch));
+  }, []);
+
   // First run: record this computer's time zone so "today" matches the clock on the wall.
   useEffect(() => {
     (async () => {
       try {
-        const s = await api.settings();
+        let s = await api.settings();
         if (!s.timezone) {
-          await api.saveSettings({ timezone: Intl.DateTimeFormat().resolvedOptions().timeZone });
+          s = await api.saveSettings({ timezone: Intl.DateTimeFormat().resolvedOptions().timeZone });
         }
+        setSettings(s);
       } catch {
         /* load() below reports the problem */
       }
@@ -104,12 +118,18 @@ export function Wallpaper() {
     if (tab === "today") load();
   }, [tab, load]);
 
-  const night = isNight(now, today?.prayers ?? null);
+  const theme = resolveTheme(settings?.theme ?? "auto", isNight(now, today?.prayers ?? null));
   useEffect(() => {
     const root = document.documentElement;
-    if (night === null) delete root.dataset.theme;
-    else root.dataset.theme = night ? "night" : "day";
-  }, [night]);
+    if (theme === null) delete root.dataset.theme;
+    else root.dataset.theme = theme;
+  }, [theme]);
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.text = settings?.text_size ?? "normal";
+    if (settings?.reduced_motion) root.dataset.motion = "reduce";
+    else delete root.dataset.motion;
+  }, [settings?.text_size, settings?.reduced_motion]);
 
   const toggle = async (item: PlanItem) => {
     setToday((t) => t && { ...t, plan: t.plan.map((p) => (p.id === item.id ? { ...p, done: !p.done } : p)) });
@@ -149,6 +169,9 @@ export function Wallpaper() {
                 {t.label}
               </button>
             ))}
+            {settings && (
+              <ThemeToggle mode={settings.theme} onChange={(theme) => saveSettings({ theme })} />
+            )}
           </nav>
           <NextPrayer
             now={now}
@@ -181,9 +204,56 @@ export function Wallpaper() {
         )}
         {tab === "week" && <WeekView />}
         {tab === "progress" && <ProgressView />}
-        {tab === "settings" && <Settings embedded />}
+        {tab === "settings" && settings && <Settings settings={settings} onSave={saveSettings} />}
       </div>
     </main>
+  );
+}
+
+/** The theme to apply: "day", "night", or null to follow the system. */
+function resolveTheme(mode: ThemeMode, night: boolean | null): "day" | "night" | null {
+  if (mode === "light") return "day";
+  if (mode === "dark") return "night";
+  if (mode === "system" || night === null) return null;
+  return night ? "night" : "day";
+}
+
+const NEXT_THEME: Record<ThemeMode, ThemeMode> = { auto: "light", light: "dark", dark: "auto", system: "auto" };
+const THEME_NAME: Record<ThemeMode, string> = {
+  auto: "Auto, switches at Maghrib",
+  light: "Light",
+  dark: "Dark",
+  system: "Follows Windows",
+};
+
+function ThemeToggle({ mode, onChange }: { mode: ThemeMode; onChange: (m: ThemeMode) => void }) {
+  const next = NEXT_THEME[mode];
+  return (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={() => onChange(next)}
+      aria-label={`Theme: ${THEME_NAME[mode]}. Switch to ${THEME_NAME[next]}`}
+      title={`Theme: ${THEME_NAME[mode]}`}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        {mode === "light" && (
+          <>
+            <circle cx="12" cy="12" r="4.2" />
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+              <line key={a} x1="12" y1="2.8" x2="12" y2="5.2" transform={`rotate(${a} 12 12)`} />
+            ))}
+          </>
+        )}
+        {mode === "dark" && <path d="M15.5 3.5a8.5 8.5 0 1 0 5 13.7A7 7 0 0 1 15.5 3.5z" />}
+        {(mode === "auto" || mode === "system") && (
+          <>
+            <circle cx="12" cy="12" r="8" />
+            <path d="M12 4a8 8 0 0 1 0 16z" className="fill" />
+          </>
+        )}
+      </svg>
+    </button>
   );
 }
 

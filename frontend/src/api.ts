@@ -79,6 +79,9 @@ export interface Progress {
   habits: Habit[];
 }
 
+export type ThemeMode = "auto" | "light" | "dark" | "system";
+export type TextSize = "normal" | "large" | "larger";
+
 export interface Settings {
   latitude: number | null;
   longitude: number | null;
@@ -87,6 +90,21 @@ export interface Settings {
   asr_method: string;
   started_on: string | null;
   has_location: boolean;
+  theme: ThemeMode;
+  text_size: TextSize;
+  reduced_motion: boolean;
+  work_start: string;
+  work_end: string;
+  work_days: string;
+  office_days: string;
+  commute_minutes: number;
+  prayer_buffer_minutes: number;
+  study_cutoff_after_isha: number;
+  calendar_urls: string;
+  phone_access: boolean;
+  phone_key: string | null;
+  windows_lockscreen: boolean;
+  notifications: boolean;
 }
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {

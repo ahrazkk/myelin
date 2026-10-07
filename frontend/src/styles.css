@@ -641,14 +641,6 @@ a:hover {
   font-size: 0.8em;
 }
 
-/* ---------- Settings inside the wallpaper ---------- */
-
-.settings.is-embedded {
-  max-width: 40rem;
-  margin: 0;
-  padding: 0;
-}
-
 @media (max-width: 900px) {
   .wall {
     padding: 5vh 6vw;
@@ -673,109 +665,219 @@ a:hover {
   }
 }
 
-/* ---------- Settings ---------- */
+/* ---------- Shared controls ---------- */
 
-.settings {
-  max-width: 38rem;
-  margin: 0 auto;
-  padding: 3rem 1.25rem 4rem;
-}
-
-.settings h1 {
-  font-size: 2.2rem;
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  margin: 1.5rem 0 2rem;
-}
-
-.settings section {
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--hair);
-}
-
-.settings h2 {
-  font-size: 1.1rem;
-  font-weight: 650;
-  margin-bottom: 0.4rem;
-}
-
-.hint {
-  color: var(--muted);
-  margin-bottom: 1rem;
-}
-
-.back {
-  color: var(--muted);
-}
-
-.settings button,
-.settings input,
-.settings select {
+.btn {
   font: inherit;
   color: var(--ink);
-}
-
-.settings button {
   border: 2px solid var(--ink);
   background: transparent;
   border-radius: 999px;
-  padding: 0.5rem 1.2rem;
+  padding: 0.45em 1.15em;
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.settings button.primary {
+.btn.primary {
   background: var(--myelin);
   border-color: var(--myelin);
   color: var(--slide);
   font-weight: 650;
 }
 
-.settings button:disabled {
-  opacity: 0.6;
-  cursor: progress;
-}
-
-.coords {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 1rem;
-  margin-top: 1.25rem;
-}
-
-.coords label,
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+.btn.quiet {
+  border-color: transparent;
   color: var(--muted);
-  font-size: 0.95rem;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
 }
 
-.field {
-  margin-top: 1rem;
+.btn.quiet:hover {
+  color: var(--ink);
 }
 
-.settings input,
-.settings select {
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.input {
+  font: inherit;
+  color: var(--ink);
   background: transparent;
   border: 1px solid var(--muted);
   border-radius: 6px;
-  padding: 0.5rem 0.65rem;
+  padding: 0.45em 0.65em;
 }
 
-.settings input {
-  width: 9rem;
+.input::placeholder {
+  color: var(--muted);
+  opacity: 0.8;
 }
 
-.settings select option {
+select.input option {
   background: var(--slide);
+}
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.segmented button {
+  font: inherit;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.35em 0.95em;
+  cursor: pointer;
+}
+
+.segmented button[aria-checked="true"] {
+  background: var(--myelin);
+  color: var(--slide);
+  font-weight: 650;
+}
+
+.check-field {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.check-field input {
+  width: 1.1em;
+  height: 1.1em;
+  accent-color: var(--myelin);
+}
+
+.field-label {
+  margin: 1rem 0 0.4rem;
+  color: var(--muted);
+  font-size: 0.95em;
+}
+
+.hint {
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+  max-width: 60ch;
 }
 
 .status {
   margin-top: 1.5rem;
   border-left: 3px solid var(--cresyl);
   padding-left: 1rem;
+}
+
+/* ---------- Settings ---------- */
+
+.settings {
+  font-size: clamp(15px, 0.9vw, 19px);
+}
+
+.settings-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26em), 1fr));
+  column-gap: 5vw;
+  align-items: start;
+}
+
+.settings-section {
+  padding: 1.25em 0 1.5em;
+  border-top: 1px solid var(--hair);
+}
+
+.settings-section h2 {
+  font-size: 1.05em;
+  font-weight: 650;
+  margin-bottom: 0.35em;
+}
+
+.coords {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1em;
+  margin-top: 1.1em;
+}
+
+.coords label,
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  color: var(--muted);
+  font-size: 0.95em;
+}
+
+.coords .input {
+  width: 9em;
+}
+
+.field {
+  margin-top: 1em;
+}
+
+.field .input {
+  color: var(--ink);
+  max-width: 28em;
+}
+
+/* Theme toggle beside the tabs */
+
+.theme-toggle {
+  align-self: center;
+  width: 2em;
+  height: 2em;
+  margin-left: -0.4em;
+  padding: 0.25em;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+}
+
+.theme-toggle svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle svg .fill {
+  fill: currentColor;
+}
+
+/* Text size scales the whole wallpaper */
+
+:root[data-text="large"] .wall {
+  zoom: 1.1;
+}
+
+:root[data-text="larger"] .wall {
+  zoom: 1.22;
+}
+
+:root[data-motion="reduce"] *,
+:root[data-motion="reduce"] *::before,
+:root[data-motion="reduce"] *::after {
+  transition: none !important;
+  animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
