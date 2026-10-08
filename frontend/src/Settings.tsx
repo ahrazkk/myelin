@@ -1,5 +1,12 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { api, type InterviewInfo, type Settings as SettingsT, type TextSize, type ThemeMode } from "./api";
+import {
+  api,
+  type InterviewInfo,
+  type LockScreenStatus,
+  type Settings as SettingsT,
+  type TextSize,
+  type ThemeMode,
+} from "./api";
 
 const METHODS: [string, string][] = [
   ["NORTH_AMERICA", "ISNA (North America)"],
@@ -178,6 +185,7 @@ export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave:
           <YourDay s={s} save={save} />
           <Calendars s={s} save={save} />
           <Interviews />
+          <LockScreens s={s} save={save} />
         </div>
       </div>
 
@@ -376,6 +384,111 @@ function Interviews() {
         </button>
       </form>
       {error && <p className="form-error">{error}</p>}
+    </Section>
+  );
+}
+
+function LockScreens({ s, save }: { s: SettingsT; save: (p: Partial<SettingsT>, m?: string) => Promise<void> }) {
+  const [st, setSt] = useState<LockScreenStatus | null>(null);
+  const [stamp, setStamp] = useState(Date.now());
+  const [copied, setCopied] = useState(false);
+  const load = () => api.lockscreen().then(setSt, () => undefined);
+  useEffect(() => {
+    load();
+  }, [s.phone_access, s.windows_lockscreen, s.phone_key]);
+
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* select-and-copy still works */
+    }
+  };
+
+  const fmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+  return (
+    <Section
+      title="Lock screens"
+      hint="Windows and iPhone don't allow live widgets on the lock screen, but both show a picture. Myelin draws one of your day and keeps it current."
+    >
+      <div className="lock-previews" aria-hidden="true">
+        <img src={`/lockscreen/desktop.png?w=960&h=540&t=${stamp}`} alt="" className="lock-desktop" />
+        <img src={`/lockscreen/phone.png?w=393&h=852&t=${stamp}`} alt="" className="lock-phone" />
+      </div>
+      <button type="button" className="btn quiet small" onClick={() => setStamp(Date.now())}>
+        Refresh previews
+      </button>
+
+      <h3 className="sub-heading">Windows</h3>
+      {st && !st.windows.available ? (
+        <p className="hint">This works when Myelin runs on Windows.</p>
+      ) : (
+        <>
+          <label className="check-field">
+            <input
+              type="checkbox"
+              checked={s.windows_lockscreen}
+              onChange={(e) => save({ windows_lockscreen: e.target.checked }, e.target.checked ? "Your lock screen will update within a minute, then every 15 minutes." : "Saved.")}
+            />
+            Keep my Windows lock screen up to date
+          </label>
+          {st?.windows.last_set && (
+            <p className="muted small">Last updated at {fmt.format(new Date(st.windows.last_set))}.</p>
+          )}
+          {st?.windows.error && (
+            <p className="form-error">
+              Windows said: {st.windows.error}. In Windows Settings, set Personalization, Lock screen to Picture, then try
+              again.
+            </p>
+          )}
+          {s.windows_lockscreen && (
+            <button type="button" className="btn small" onClick={async () => (await api.refreshWindowsLock(), window.setTimeout(load, 4000))}>
+              Update now
+            </button>
+          )}
+        </>
+      )}
+
+      <h3 className="sub-heading">iPhone</h3>
+      <label className="check-field">
+        <input
+          type="checkbox"
+          checked={s.phone_access}
+          onChange={(e) => save({ phone_access: e.target.checked })}
+        />
+        Let my phone fetch the lock-screen picture on home Wi-Fi
+      </label>
+      {s.phone_access && st && (
+        <>
+          {!st.phone.listening_on_network && (
+            <p className="form-error">Restart Myelin so your phone can reach it (quit from the tray icon, then open it again).</p>
+          )}
+          {st.phone.url && (
+            <div className="phone-link">
+              <code>{st.phone.url}</code>
+              <div className="form-actions">
+                <button type="button" className="btn small" onClick={() => copy(st.phone.url!)}>
+                  {copied ? "Copied" : "Copy link"}
+                </button>
+                <button type="button" className="btn quiet small" onClick={async () => (await api.newPhoneKey(), load())}>
+                  Make a new link
+                </button>
+              </div>
+              <p className="muted small">Only this picture is reachable from your network, and only with this link.</p>
+            </div>
+          )}
+          <ol className="steps">
+            <li>On your iPhone, open Shortcuts, then Automation, then New Automation.</li>
+            <li>Choose Time of Day, pick a time such as 6:30 a.m., set it to Daily and Run Immediately.</li>
+            <li>Add the action Get Contents of URL and paste the link above.</li>
+            <li>Add the action Set Wallpaper, choose Lock Screen, and turn off Show Preview.</li>
+            <li>Make two more automations, say 12:30 p.m. and 5:30 p.m., so the picture stays fresh.</li>
+          </ol>
+          <p className="muted small">Your phone needs to be on the same Wi-Fi as this computer when the automation runs.</p>
+        </>
+      )}
     </Section>
   );
 }

@@ -264,6 +264,11 @@ export interface SqlResult {
   ms: number;
 }
 
+export interface LockScreenStatus {
+  windows: { available: boolean; enabled: boolean; last_set: string | null; error: string | null };
+  phone: { enabled: boolean; url: string | null; listening_on_network: boolean };
+}
+
 export const api = {
   today: () => call<Today>("/api/today"),
   week: () => call<Week>("/api/week"),
@@ -308,6 +313,9 @@ export const api = {
   addInterview: (body: { company: string; role?: string; on: string }) =>
     call<InterviewInfo>("/api/interviews", { method: "POST", body: JSON.stringify(body) }),
   deleteInterview: (id: number) => call<{ ok: boolean }>(`/api/interviews/${id}`, { method: "DELETE" }),
+  lockscreen: () => call<LockScreenStatus>("/api/lockscreen"),
+  refreshWindowsLock: () => call<{ ok: boolean }>("/api/lockscreen/windows/refresh", { method: "POST" }),
+  newPhoneKey: () => call<Settings>("/api/settings/phone-key", { method: "POST" }),
   settings: () => call<Settings>("/api/settings"),
   saveSettings: (patch: Partial<Settings>) =>
     call<Settings>("/api/settings", { method: "PUT", body: JSON.stringify(patch) }),

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from types import SimpleNamespace
 from typing import Optional
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -43,10 +44,20 @@ class Ctx:
     """Everything most endpoints need, in one dependency."""
 
     def __init__(self, request: Request, session: Session = Depends(get_session)):
+        self._setup(request, session)
+
+    @classmethod
+    def for_app(cls, app, session: Session) -> "Ctx":
+        """A context outside any web request, for background work like the lock screen."""
+        ctx = cls.__new__(cls)
+        ctx._setup(SimpleNamespace(app=app, client=None), session)
+        return ctx
+
+    def _setup(self, request, session: Session) -> None:
         self.request = request
         self.session = session
         self.settings = load_settings(session)
-        self.now = now_for(request, self.settings)
+        self.now = request.app.state.clock(zone(self.settings))
         if self.settings.started_on is None:
             # The first visit marks day 1 of the 66-day cycle.
             self.settings.started_on = self.now.date()

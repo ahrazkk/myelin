@@ -863,3 +863,57 @@
   flex: 1 1 9em;
   min-width: 0;
 }
+
+/* ---------- Settings: lock screens ---------- */
+
+.lock-previews {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.2em;
+  margin: 0.4em 0 0.6em;
+}
+
+.lock-previews img {
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--hair);
+}
+
+.lock-desktop {
+  width: 62%;
+  height: auto;
+}
+
+.lock-phone {
+  width: 15%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.sub-heading {
+  font-size: 0.95em;
+  font-weight: 650;
+  margin: 1.4em 0 0.2em;
+}
+
+.phone-link {
+  margin-top: 0.8em;
+}
+
+.phone-link code {
+  display: block;
+  word-break: break-all;
+  font-family: "Cascadia Code", Consolas, ui-monospace, monospace;
+  font-size: 0.85em;
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 0.6em 0.8em;
+}
+
+.steps {
+  margin: 1em 0 0.6em;
+  padding-left: 1.3em;
+  display: grid;
+  gap: 0.35em;
+  max-width: 60ch;
+}

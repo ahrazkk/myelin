@@ -32,7 +32,7 @@ def clock() -> FakeClock:
 def client(tmp_path: Path, clock: FakeClock) -> TestClient:
     config = Config(data_dir=tmp_path, host="127.0.0.1", port=0, frontend_dist=tmp_path / "no-dist")
     engine = make_engine(config.db_url)
-    app = create_app(config=config, engine=engine, clock=clock)
+    app = create_app(config=config, engine=engine, clock=clock, background=False)
     with TestClient(app) as c:
         c.put("/api/settings", json={"timezone": "Asia/Riyadh"})
         yield c
