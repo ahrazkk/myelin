@@ -1,7 +1,8 @@
 """The master streak and the 66-day myelination cycle.
 
-A day is complete when every block that counts toward the streak is done.
-Phase 0 keeps the rules simple; freezes and the never-miss-twice rule arrive in Phase 1.
+A normal day is complete when every block that counts toward the streak is done. On a light day
+(you said so, your energy is low, or work and meetings left no room) one finished block is enough:
+the 20-minute rescue keeps the streak alive.
 """
 
 from __future__ import annotations
@@ -11,9 +12,14 @@ from datetime import date, timedelta
 
 from sqlmodel import Session, select
 
-from .models import PlanItem
+from .models import DayState, PlanItem
 
 CYCLE_DAYS = 66  # median days to automaticity (Lally et al., 2010)
+
+
+def light_days(session: Session, start: date, end: date) -> set[date]:
+    rows = session.exec(select(DayState).where(DayState.day >= start, DayState.day <= end))
+    return {s.day for s in rows if s.light or s.auto_light or s.energy == "low"}
 
 
 def completed_days(session: Session, start: date, end: date) -> set[date]:
@@ -23,7 +29,11 @@ def completed_days(session: Session, start: date, end: date) -> set[date]:
     by_day: dict[date, list[PlanItem]] = defaultdict(list)
     for item in rows:
         by_day[item.day].append(item)
-    return {d for d, items in by_day.items() if items and all(i.done_at for i in items)}
+    light = light_days(session, start, end)
+    return {
+        d for d, items in by_day.items()
+        if items and (any(i.done_at for i in items) if d in light else all(i.done_at for i in items))
+    }
 
 
 def streak_summary(session: Session, started_on: date, today: date) -> dict:

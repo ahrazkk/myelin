@@ -10,6 +10,40 @@ export interface PlanItem {
   counts_for_streak: boolean;
   done: boolean;
   done_at: string | null;
+  skipped: boolean;
+  bonus: boolean;
+  status?: "done" | "scheduled" | "no_room" | "skipped";
+  start?: string | null;
+  end?: string | null;
+  scheduled_minutes?: number | null;
+  optional?: boolean;
+}
+
+export interface BusyTime {
+  id: number | null;
+  start: string;
+  end: string;
+  label: string;
+  source: "work" | "you" | "calendar";
+  free?: boolean;
+}
+
+export interface DayInfo {
+  light: boolean;
+  auto_light: boolean;
+  energy: "low" | "ok" | "high" | null;
+  busy: BusyTime[];
+  calendar_errors: string[];
+  ends_at: string | null;
+}
+
+export interface InterviewInfo {
+  id: number;
+  company: string;
+  role: string;
+  on: string;
+  days_left: number;
+  notes: string;
 }
 
 export type DayStatus = "done" | "missed" | "today" | "future";
@@ -41,6 +75,9 @@ export interface Today {
   streak: Streak;
   prayers: Prayers | null;
   needs_setup: boolean;
+  day: DayInfo;
+  interviews: InterviewInfo[];
+  resolves_due: { id: number; title: string }[];
 }
 
 export type HeatStatus = "before" | "done" | "missed" | "today" | "future";
@@ -258,6 +295,19 @@ export const api = {
       body: JSON.stringify({ question_id, query }),
     }),
   sqlSolution: (id: string) => call<{ solution: string }>(`/api/sql/questions/${id}/solution`),
+  command: (text: string) =>
+    call<{ ok: boolean; kind: string; message: string }>("/api/command", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    }),
+  skip: (id: number) => call<PlanItem>(`/api/plan/${id}/skip`, { method: "POST" }),
+  setDay: (patch: { light?: boolean; energy?: "low" | "ok" | "high" }) =>
+    call<{ light: boolean; energy: string | null }>("/api/day", { method: "POST", body: JSON.stringify(patch) }),
+  removeBusy: (id: number) => call<{ ok: boolean }>(`/api/busy/${id}`, { method: "DELETE" }),
+  interviews: () => call<InterviewInfo[]>("/api/interviews"),
+  addInterview: (body: { company: string; role?: string; on: string }) =>
+    call<InterviewInfo>("/api/interviews", { method: "POST", body: JSON.stringify(body) }),
+  deleteInterview: (id: number) => call<{ ok: boolean }>(`/api/interviews/${id}`, { method: "DELETE" }),
   settings: () => call<Settings>("/api/settings"),
   saveSettings: (patch: Partial<Settings>) =>
     call<Settings>("/api/settings", { method: "PUT", body: JSON.stringify(patch) }),

@@ -89,7 +89,7 @@ a:hover {
 .wall {
   min-height: 100vh;
   /* The left gutter leaves room for desktop icons; the bottom clears the Windows taskbar. */
-  padding: 6vh 6vw 9vh 10vw;
+  padding: 6vh 6vw 7vh 10vw;
   display: grid;
   grid-template-rows: auto auto 1fr;
   row-gap: 4.5vh;

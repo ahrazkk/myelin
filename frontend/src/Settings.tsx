@@ -1,5 +1,5 @@
-import { useState, type FormEvent, type ReactNode } from "react";
-import type { Settings as SettingsT, TextSize, ThemeMode } from "./api";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { api, type InterviewInfo, type Settings as SettingsT, type TextSize, type ThemeMode } from "./api";
 
 const METHODS: [string, string][] = [
   ["NORTH_AMERICA", "ISNA (North America)"],
@@ -173,6 +173,12 @@ export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave:
             </label>
           </Section>
         </div>
+
+        <div>
+          <YourDay s={s} save={save} />
+          <Calendars s={s} save={save} />
+          <Interviews />
+        </div>
       </div>
 
       {status && (
@@ -181,5 +187,195 @@ export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave:
         </p>
       )}
     </section>
+  );
+}
+
+const DAYS: [string, string][] = [
+  ["mon", "Mon"],
+  ["tue", "Tue"],
+  ["wed", "Wed"],
+  ["thu", "Thu"],
+  ["fri", "Fri"],
+  ["sat", "Sat"],
+  ["sun", "Sun"],
+];
+
+function DayPicker({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  const on = new Set(value.split(",").filter(Boolean));
+  const toggle = (d: string) => {
+    const next = new Set(on);
+    if (next.has(d)) next.delete(d);
+    else next.add(d);
+    onChange(DAYS.map(([k]) => k).filter((k) => next.has(k)).join(","));
+  };
+  return (
+    <div className="day-picker" role="group" aria-label={label}>
+      {DAYS.map(([k, name]) => (
+        <button key={k} type="button" className={`chip${on.has(k) ? " is-on" : ""}`} aria-pressed={on.has(k)} onClick={() => toggle(k)}>
+          {name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function NumberField({
+  label,
+  value,
+  unit,
+  onSave,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  onSave: (n: number) => void;
+}) {
+  const [v, setV] = useState(String(value));
+  useEffect(() => setV(String(value)), [value]);
+  return (
+    <label className="field inline">
+      {label}
+      <span className="with-unit">
+        <input
+          className="input short"
+          inputMode="numeric"
+          value={v}
+          onChange={(e) => setV(e.target.value.replace(/\D/g, ""))}
+          onBlur={() => v !== String(value) && onSave(Number(v) || 0)}
+        />
+        <span className="muted">{unit}</span>
+      </span>
+    </label>
+  );
+}
+
+function YourDay({ s, save }: { s: SettingsT; save: (p: Partial<SettingsT>, m?: string) => Promise<void> }) {
+  return (
+    <Section
+      title="Your day"
+      hint="Myelin plans study blocks around these. Quran goes right after Fajr; everything else after work, or from your start time on days off."
+    >
+      <div className="time-row">
+        <label className="field inline">
+          Work starts
+          <input className="input" type="time" value={s.work_start} onChange={(e) => e.target.value && save({ work_start: e.target.value })} />
+        </label>
+        <label className="field inline">
+          Work ends
+          <input className="input" type="time" value={s.work_end} onChange={(e) => e.target.value && save({ work_end: e.target.value })} />
+        </label>
+      </div>
+      <p className="field-label">Work days</p>
+      <DayPicker label="Work days" value={s.work_days} onChange={(v) => save({ work_days: v })} />
+      <p className="field-label">Office days (adds your commute)</p>
+      <DayPicker label="Office days" value={s.office_days} onChange={(v) => save({ office_days: v })} />
+      <div className="time-row">
+        <NumberField label="Commute" value={s.commute_minutes} unit="min each way" onSave={(n) => save({ commute_minutes: n })} />
+        <NumberField label="Time for each prayer" value={s.prayer_buffer_minutes} unit="min" onSave={(n) => save({ prayer_buffer_minutes: n })} />
+        <NumberField label="Stop studying" value={s.study_cutoff_after_isha} unit="min after Isha" onSave={(n) => save({ study_cutoff_after_isha: n })} />
+      </div>
+    </Section>
+  );
+}
+
+function Calendars({ s, save }: { s: SettingsT; save: (p: Partial<SettingsT>, m?: string) => Promise<void> }) {
+  const [text, setText] = useState(s.calendar_urls);
+  return (
+    <Section
+      title="Calendars"
+      hint="Paste a private iCal link, one per line. Events become busy time; Myelin only reads them."
+    >
+      <textarea
+        className="input calendar-links"
+        rows={3}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="https://calendar.google.com/calendar/ical/…/basic.ics"
+        spellCheck={false}
+      />
+      <div className="form-actions">
+        <button type="button" className="btn" onClick={() => save({ calendar_urls: text }, "Calendars saved.")}>
+          Save calendars
+        </button>
+      </div>
+      <details className="how-to">
+        <summary>Where do I find the link?</summary>
+        <p>
+          <strong>Google Calendar:</strong> on a computer, open Settings, pick your calendar under "Settings for my
+          calendars", then copy "Secret address in iCal format".
+        </p>
+        <p>
+          <strong>Outlook:</strong> open Settings, Calendar, Shared calendars, then "Publish a calendar". Choose "Can
+          view all details" and copy the ICS link. Some work accounts don't allow this; type "busy 2-4" instead.
+        </p>
+      </details>
+    </Section>
+  );
+}
+
+function Interviews() {
+  const [list, setList] = useState<InterviewInfo[]>([]);
+  const [company, setCompany] = useState("");
+  const [role, setRole] = useState("");
+  const [on, setOn] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const load = () => api.interviews().then(setList);
+  useEffect(() => {
+    load();
+  }, []);
+
+  const add = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!company.trim() || !on) {
+      setError("Add the company and the date.");
+      return;
+    }
+    try {
+      await api.addInterview({ company, role, on });
+      setCompany("");
+      setRole("");
+      setOn("");
+      setError(null);
+      load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const fmt = new Intl.DateTimeFormat(undefined, { weekday: "short", month: "short", day: "numeric" });
+  return (
+    <Section
+      title="Interviews"
+      hint="Two weeks out, a daily prep block appears. Three days out, it becomes a mock interview."
+    >
+      {list.length > 0 && (
+        <ul className="interview-list">
+          {list.map((iv) => (
+            <li key={iv.id}>
+              <span>
+                <strong>{iv.company}</strong>
+                {iv.role && <span className="muted">, {iv.role}</span>}
+              </span>
+              <span className="muted">
+                {fmt.format(new Date(`${iv.on}T12:00:00`))}
+                {iv.days_left >= 0 ? `, in ${iv.days_left} days` : ", done"}
+              </span>
+              <button type="button" className="link-button small" onClick={async () => (await api.deleteInterview(iv.id), load())}>
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <form className="interview-form" onSubmit={add}>
+        <input className="input" placeholder="Company" value={company} onChange={(e) => setCompany(e.target.value)} />
+        <input className="input" placeholder="Role (optional)" value={role} onChange={(e) => setRole(e.target.value)} />
+        <input className="input" type="date" value={on} onChange={(e) => setOn(e.target.value)} aria-label="Interview date" />
+        <button type="submit" className="btn">
+          Add interview
+        </button>
+      </form>
+      {error && <p className="form-error">{error}</p>}
+    </Section>
   );
 }

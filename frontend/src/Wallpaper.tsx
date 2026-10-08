@@ -1,20 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  api,
-  type PlanItem,
-  type Prayers,
-  type Settings as SettingsT,
-  type Streak,
-  type ThemeMode,
-  type Today,
-} from "./api";
-import { Axon } from "./Axon";
+import { api, type Settings as SettingsT, type ThemeMode, type Today } from "./api";
+import { FocusBadge, useFocus } from "./Focus";
 import { ProgressView } from "./Progress";
 import { Settings, type SaveSettings } from "./Settings";
-import { PRAYER_LABEL, clockParts, formatDate, formatTime, hijriDate, isNight, until } from "./time";
+import { clockParts, formatDate, hijriDate, isNight } from "./time";
+import { InterviewCountdown, NextPrayer, TodayView } from "./Today";
 import { ToolsView } from "./Tools";
 import { WeekView } from "./Week";
-import { FocusBadge, useFocus } from "./Focus";
 
 const TABS = [
   { id: "today", label: "Today" },
@@ -34,11 +26,11 @@ function initialTab(): Tab {
   return TABS.some((t) => t.id === hash) ? (hash as Tab) : "today";
 }
 
-function useTab(): [Tab, (t: Tab) => void] {
+function useTab(): [Tab, (t: Tab, sub?: string) => void] {
   const [tab, setTab] = useState<Tab>(initialTab);
-  const go = useCallback((t: Tab) => {
+  const go = useCallback((t: Tab, sub?: string) => {
+    window.history.replaceState(null, "", t === "today" ? "/" : `/#${t}${sub ? `/${sub}` : ""}`);
     setTab(t);
-    window.history.replaceState(null, "", t === "today" ? "/" : `/#${t}`);
   }, []);
 
   useEffect(() => {
@@ -55,6 +47,16 @@ function useTab(): [Tab, (t: Tab) => void] {
       events.forEach((e) => window.removeEventListener(e, reset));
     };
   }, [tab, go]);
+
+  // The desktop app's hotkey asks for the command box.
+  useEffect(() => {
+    const onFocusCommand = () => {
+      go("today");
+      window.setTimeout(() => document.getElementById("command-input")?.focus(), 80);
+    };
+    window.addEventListener("myelin:command", onFocusCommand);
+    return () => window.removeEventListener("myelin:command", onFocusCommand);
+  }, [go]);
 
   return [tab, go];
 }
@@ -74,6 +76,7 @@ export function Wallpaper() {
   const [today, setToday] = useState<Today | null>(null);
   const [settings, setSettings] = useState<SettingsT | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [toolKey, setToolKey] = useState(0);
 
   const load = useCallback(async () => {
     try {
@@ -86,9 +89,13 @@ export function Wallpaper() {
 
   const focus = useFocus(now, load);
 
-  const saveSettings: SaveSettings = useCallback(async (patch) => {
-    setSettings(await api.saveSettings(patch));
-  }, []);
+  const saveSettings: SaveSettings = useCallback(
+    async (patch) => {
+      setSettings(await api.saveSettings(patch));
+      load();
+    },
+    [load],
+  );
 
   // First run: record this computer's time zone so "today" matches the clock on the wall.
   useEffect(() => {
@@ -118,7 +125,6 @@ export function Wallpaper() {
     if (today && today.date !== localDate && today.timezone === Intl.DateTimeFormat().resolvedOptions().timeZone) load();
   }, [localDate, today, load]);
 
-  // Coming back to Today (say, after saving a location in Settings) shows fresh data right away.
   useEffect(() => {
     if (tab === "today") load();
   }, [tab, load]);
@@ -136,19 +142,16 @@ export function Wallpaper() {
     else delete root.dataset.motion;
   }, [settings?.text_size, settings?.reduced_motion]);
 
-  const toggle = async (item: PlanItem) => {
-    setToday((t) => t && { ...t, plan: t.plan.map((p) => (p.id === item.id ? { ...p, done: !p.done } : p)) });
-    try {
-      await api.toggle(item.id);
-    } finally {
-      load();
-    }
+  const goTools = (tool?: string) => {
+    go("tools", tool);
+    setToolKey((k) => k + 1); // re-mount so a link to a specific tool lands on it
   };
 
   const { time, period } = clockParts(now);
+  const compact = tab === "tools" || tab === "settings";
 
   return (
-    <main className={`wall${tab === "tools" || tab === "settings" ? " is-compact" : ""}`}>
+    <main className={`wall${compact ? " is-compact" : ""}`}>
       <header className="top">
         <div className="clock">
           <p className="clock-face">
@@ -169,48 +172,45 @@ export function Wallpaper() {
                 aria-selected={tab === t.id}
                 aria-controls="view"
                 className="tab"
-                onClick={() => go(t.id)}
+                onClick={() => (t.id === "tools" ? goTools() : go(t.id))}
               >
                 {t.label}
               </button>
             ))}
-            {settings && (
-              <ThemeToggle mode={settings.theme} onChange={(theme) => saveSettings({ theme })} />
-            )}
+            {settings && <ThemeToggle mode={settings.theme} onChange={(theme) => saveSettings({ theme })} />}
           </nav>
-          <FocusBadge focus={focus} onOpen={() => go("tools")} />
+          <FocusBadge focus={focus} onOpen={() => goTools("focus")} />
           <NextPrayer
             now={now}
             prayers={today?.prayers ?? null}
             loaded={today !== null}
             onSetup={() => go("settings")}
           />
+          <InterviewCountdown today={today} />
         </div>
       </header>
 
       {error && (
         <p className="notice" role="alert">
-          Can't reach Myelin on this computer. Start it with scripts\start.ps1, and this page will reconnect on its own.
+          Can't reach Myelin on this computer. Start it from the Start menu (or scripts\start.ps1), and this page will
+          reconnect on its own.
         </p>
       )}
 
       <div id="view" className={`view view-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`}>
         {tab === "today" && today && (
-          <>
-            <section className="pathway" aria-label="Streak">
-              <Axon streak={today.streak} />
-              <p className="streak-line">{streakLine(today.streak)}</p>
-            </section>
-
-            <div className="lower">
-              <TodayPlan plan={today.plan} onToggle={toggle} />
-              <PrayerTimes now={now} prayers={today.prayers} onChange={() => go("settings")} />
-            </div>
-          </>
+          <TodayView
+            today={today}
+            now={now}
+            focus={focus}
+            onChanged={load}
+            goTools={goTools}
+            goSettings={() => go("settings")}
+          />
         )}
         {tab === "week" && <WeekView />}
         {tab === "progress" && <ProgressView />}
-        {tab === "tools" && <ToolsView focus={focus} plan={today?.plan ?? []} />}
+        {tab === "tools" && <ToolsView key={toolKey} focus={focus} plan={today?.plan ?? []} />}
         {tab === "settings" && settings && <Settings settings={settings} onSave={saveSettings} />}
       </div>
     </main>
@@ -261,122 +261,5 @@ function ThemeToggle({ mode, onChange }: { mode: ThemeMode; onChange: (m: ThemeM
         )}
       </svg>
     </button>
-  );
-}
-
-function streakLine(s: Streak): string {
-  if (s.today_complete) {
-    return `Today's segment is wrapped. ${s.current}-day streak.`;
-  }
-  if (s.current === 0) {
-    return "Finish today's interview hour to wrap your first segment.";
-  }
-  return `${s.current}-day streak. Finish today's hour to keep it growing.`;
-}
-
-function NextPrayer({
-  now,
-  prayers,
-  loaded,
-  onSetup,
-}: {
-  now: Date;
-  prayers: Prayers | null;
-  loaded: boolean;
-  onSetup: () => void;
-}) {
-  if (!prayers) {
-    if (!loaded) return null;
-    return (
-      <div className="next-prayer">
-        <button type="button" className="link-button setup-link" onClick={onSetup}>
-          Set your location to see prayer times
-        </button>
-      </div>
-    );
-  }
-  const at = new Date(prayers.next.at);
-  return (
-    <div className="next-prayer">
-      <p className="next-line">
-        {PRAYER_LABEL[prayers.next.name]} in {until(now, at)}
-      </p>
-      <p className="next-at">at {formatTime(at)}</p>
-    </div>
-  );
-}
-
-function TodayPlan({ plan, onToggle }: { plan: PlanItem[]; onToggle: (i: PlanItem) => void }) {
-  const next = plan.find((p) => !p.done);
-  const hour = plan.filter((p) => p.counts_for_streak);
-  const hourDone = hour.filter((p) => p.done).length;
-
-  return (
-    <section className="today" aria-labelledby="today-heading">
-      <h2 id="today-heading">Today</h2>
-      <ol className="plan">
-        {plan.map((item) => (
-          <li key={item.id} className={`plan-item${item.done ? " is-done" : ""}${item === next ? " is-next" : ""}`}>
-            <button
-              type="button"
-              className="check"
-              aria-pressed={item.done}
-              aria-label={`${item.done ? "Mark not done" : "Mark done"}: ${item.title}`}
-              onClick={() => onToggle(item)}
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M5 10.5l3.2 3.2L15 7" />
-              </svg>
-            </button>
-            <div className="plan-text">
-              <span className="plan-title">{item.title}</span>
-              <span className="plan-detail">{item.detail}</span>
-            </div>
-            <span className="plan-minutes">{item.minutes} min</span>
-          </li>
-        ))}
-      </ol>
-      <p className="plan-progress">
-        {hourDone === hour.length
-          ? "Interview hour done."
-          : `Interview hour: ${hourDone} of ${hour.length} blocks done.`}
-      </p>
-    </section>
-  );
-}
-
-function PrayerTimes({ now, prayers, onChange }: { now: Date; prayers: Prayers | null; onChange: () => void }) {
-  if (!prayers) return <section className="prayers" aria-hidden="true" />;
-  return (
-    <section className="prayers" aria-labelledby="prayers-heading">
-      <h2 id="prayers-heading">Prayer times</h2>
-      <ol className="prayer-list">
-        {prayers.times.map((t) => {
-          const at = new Date(t.at);
-          const isNext = t.name === prayers.next.name && t.at === prayers.next.at;
-          const cls = [
-            "prayer",
-            t.name === "sunrise" ? "is-sunrise" : "",
-            at <= now && !isNext ? "is-past" : "",
-            isNext ? "is-next" : "",
-          ]
-            .filter(Boolean)
-            .join(" ");
-          return (
-            <li key={t.name} className={cls}>
-              <span>{PRAYER_LABEL[t.name]}</span>
-              <span className="prayer-time">{formatTime(at)}</span>
-            </li>
-          );
-        })}
-      </ol>
-      <p className="prayer-method">
-        {prayers.method === "NORTH_AMERICA" ? "ISNA" : prayers.method.replaceAll("_", " ").toLowerCase()},{" "}
-        {prayers.asr_method === "HANAFI" ? "Hanafi Asr" : "standard Asr"}.{" "}
-        <button type="button" className="link-button" onClick={onChange}>
-          Change
-        </button>
-      </p>
-    </section>
   );
 }

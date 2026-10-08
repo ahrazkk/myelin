@@ -13,6 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.engine import Engine
 
 from . import __version__
+from .calendar_sync import CalendarCache
 from .config import Config, load_config
 from .db import make_engine
 from .routes import focus, problems, sql, system
@@ -34,6 +35,7 @@ def create_app(
     app.state.config = config
     app.state.engine = engine or make_engine(config.db_url)
     app.state.clock = clock or default_clock
+    app.state.calendars = CalendarCache()
 
     @app.get("/api/health")
     def health() -> dict:

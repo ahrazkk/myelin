@@ -91,6 +91,32 @@ class SqlSolve(SQLModel, table=True):
     tries: int = 1
 
 
+class BusyBlock(SQLModel, table=True):
+    """Time you told Myelin about: busy (e.g. a meeting) or free (e.g. a slow afternoon at work)."""
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    day: date = Field(index=True)
+    start: datetime
+    end: datetime
+    label: str = "Busy"
+    kind: str = "busy"  # "busy" | "free"
+
+
+class DayState(SQLModel, table=True):
+    day: date = Field(primary_key=True)
+    light: bool = False  # you said it's a light day: the 20-minute rescue keeps the streak
+    auto_light: bool = False  # Myelin found no room for the full hour, so the rescue counts
+    energy: Optional[str] = None  # "low" | "ok" | "high"
+
+
+class Interview(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    company: str
+    role: str = ""
+    on: date
+    notes: str = ""
+
+
 class PlanItem(SQLModel, table=True):
     """One block on one day's plan."""
 
@@ -104,3 +130,5 @@ class PlanItem(SQLModel, table=True):
     minutes: int = 0
     counts_for_streak: bool = False
     done_at: Optional[datetime] = None
+    skipped: bool = False
+    bonus: bool = False  # extra credit: never needed for the streak
