@@ -21,7 +21,7 @@ from .config import Config, load_config
 from .db import make_engine
 from . import lockscreen
 from .deps import Ctx, load_settings
-from .routes import focus, lockscreen as lockscreen_routes, problems, sql, system
+from .routes import appctl, focus, lockscreen as lockscreen_routes, problems, sql, system
 from .routes import settings as settings_routes
 from .routes import today as today_routes
 
@@ -83,7 +83,7 @@ def create_app(
         return {"ok": True, "version": __version__}
 
     for router in (settings_routes.router, today_routes.router, focus.router, problems.router,
-                   sql.router, system.router, lockscreen_routes.router):
+                   sql.router, system.router, lockscreen_routes.router, appctl.router):
         app.include_router(router)
 
     _mount_frontend(app, config)

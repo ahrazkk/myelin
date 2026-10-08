@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import {
   api,
+  type AppInfo,
   type InterviewInfo,
   type LockScreenStatus,
   type Settings as SettingsT,
@@ -159,6 +160,8 @@ export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave:
               </button>
             </form>
           </Section>
+
+          <AppSection s={s} save={save} />
 
           <Section title="Calculation">
             <label className="field">
@@ -384,6 +387,46 @@ function Interviews() {
         </button>
       </form>
       {error && <p className="form-error">{error}</p>}
+    </Section>
+  );
+}
+
+function AppSection({ s, save }: { s: SettingsT; save: (p: Partial<SettingsT>, m?: string) => Promise<void> }) {
+  const [info, setInfo] = useState<AppInfo | null>(null);
+  useEffect(() => {
+    api.appInfo().then(setInfo, () => undefined);
+  }, []);
+  if (!info) return null;
+
+  return (
+    <Section
+      title="App"
+      hint={
+        info.desktop
+          ? "Closing the window keeps Myelin in the tray, so the wallpaper and reminders keep working."
+          : "You're using Myelin in a browser or on the wallpaper. Install the Myelin app for a window, tray icon, reminders and a hotkey."
+      }
+    >
+      {info.windows && info.autostart !== null && (
+        <label className="check-field">
+          <input
+            type="checkbox"
+            checked={info.autostart}
+            onChange={async (e) => setInfo({ ...info, autostart: (await api.setAutostart(e.target.checked)).autostart })}
+          />
+          Start Myelin when I sign in
+        </label>
+      )}
+      <label className="check-field">
+        <input type="checkbox" checked={s.notifications} onChange={(e) => save({ notifications: e.target.checked })} />
+        Remind me before prayers, when a block starts, and when a focus timer ends
+      </label>
+      {info.hotkey && (
+        <p className="muted small hotkey-note">
+          Press <kbd>{info.hotkey}</kbd> anywhere to type "busy till 3" or "note …" without leaving what you're doing.
+        </p>
+      )}
+      <p className="muted small">Myelin {info.version}</p>
     </Section>
   );
 }

@@ -1,0 +1,78 @@
+name: Windows app
+
+# Builds Myelin.exe and the installer. Runs when you push a version tag (v0.2.0 and so on) or by hand
+# from the Actions tab. Tagged builds are attached to a GitHub Release.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build the web interface
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Myelin with desktop and build extras
+        run: python -m pip install -e "backend[dev,desktop,build]"
+      - name: Tests
+        working-directory: backend
+        run: python -m pytest -q
+      - name: Check the desktop module imports
+        run: python -c "import myelin.desktop, webview, pystray, windows_toasts; print('desktop imports ok')"
+
+      - name: Build Myelin.exe
+        run: pyinstaller packaging/myelin.spec --noconfirm
+
+      - name: Smoke test the packaged server
+        shell: pwsh
+        run: |
+          $env:MYELIN_DATA_DIR = "$env:RUNNER_TEMP\myelin-data"
+          $p = Start-Process -FilePath "dist\Myelin\Myelin.exe" -ArgumentList "--server-only" -PassThru
+          $ok = $false
+          foreach ($i in 1..60) {
+            try { $r = Invoke-RestMethod "http://127.0.0.1:8765/api/health" -TimeoutSec 2; if ($r.ok) { $ok = $true; break } } catch {}
+            Start-Sleep -Seconds 1
+          }
+          $page = Invoke-WebRequest "http://127.0.0.1:8765/" -UseBasicParsing
+          Stop-Process -Id $p.Id -Force
+          if (-not $ok) { throw "The packaged app's server never answered." }
+          if ($page.Content -notmatch "<div id=`"root`">") { throw "The packaged app didn't serve the web interface." }
+          Write-Host "Packaged app answered and served the interface."
+
+      - name: Build the installer
+        shell: pwsh
+        run: |
+          $version = (Select-String -Path backend/pyproject.toml -Pattern '^version = "(.+)"').Matches[0].Groups[1].Value
+          choco install innosetup -y --no-progress | Out-Null
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DMyAppVersion=$version" packaging\installer.iss
+          Get-ChildItem dist-installer
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Myelin-Setup
+          path: dist-installer/*.exe
+
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist-installer/*.exe
+          generate_release_notes: true

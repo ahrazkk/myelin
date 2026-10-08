@@ -1,4 +1,8 @@
-"""Run Myelin: `python -m myelin` (or `pythonw -m myelin` for no console window)."""
+"""Run Myelin's server on its own: `python -m myelin` (or `pythonw -m myelin` for no console window).
+
+Most people run the desktop app instead (`python -m myelin.desktop`, or Myelin.exe), which includes
+this server plus a window, tray icon, hotkey and notifications.
+"""
 
 from __future__ import annotations
 
@@ -6,12 +10,21 @@ import dataclasses
 import sys
 
 import uvicorn
+from sqlalchemy.engine import Engine
 from sqlmodel import Session
 
 from .app import create_app
-from .config import load_config
+from .config import Config, load_config
 from .db import make_engine
 from .deps import load_settings
+
+
+def network_config(config: Config, engine: Engine) -> Config:
+    """With phone access on, listen on the home network too (only the lock-screen picture is served there)."""
+    with Session(engine) as s:
+        if load_settings(s).phone_access and config.host in ("127.0.0.1", "localhost"):
+            return dataclasses.replace(config, host="0.0.0.0")
+    return config
 
 
 def main() -> None:
@@ -24,10 +37,7 @@ def main() -> None:
         sys.stderr = sys.stderr or log
 
     engine = make_engine(config.db_url)
-    with Session(engine) as s:
-        if load_settings(s).phone_access and config.host in ("127.0.0.1", "localhost"):
-            # Phone access: listen on the home network too (only the lock-screen picture is served there).
-            config = dataclasses.replace(config, host="0.0.0.0")
+    config = network_config(config, engine)
     uvicorn.run(create_app(config, engine), host=config.host, port=config.port, log_level="warning")
 
 

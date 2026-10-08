@@ -41,7 +41,7 @@ Push-Location "$root\backend"
 $exe, $pyArgs = $python
 & $exe @pyArgs -m venv .venv
 & .\.venv\Scripts\python.exe -m pip install --upgrade pip --quiet
-& .\.venv\Scripts\python.exe -m pip install -e . --quiet
+& .\.venv\Scripts\python.exe -m pip install -e ".[desktop]" --quiet
 Pop-Location
 
 Write-Host "Building the wallpaper..."
@@ -52,6 +52,6 @@ Pop-Location
 
 Write-Host ""
 Write-Host "Myelin is set up. Next:"
-Write-Host "  1. scripts\start.ps1            starts Myelin and opens settings"
-Write-Host "  2. scripts\install-startup.ps1  starts Myelin every time you sign in"
+Write-Host "  1. scripts\start.ps1            opens the Myelin app"
+Write-Host "  2. scripts\install-startup.ps1  starts it in the tray every time you sign in"
 Write-Host "  3. In Lively Wallpaper, add http://127.0.0.1:8765/ as a web wallpaper"

@@ -128,6 +128,16 @@ def _axon(draw: ImageDraw.ImageDraw, x0: int, y: int, width: int, cycle: list[st
             draw.rounded_rectangle(box, radius=r, outline=pal["cresyl"], width=max(3, sheath_h // 7))
 
 
+def plan_line(s: Snapshot) -> str:
+    """What to say when nothing is scheduled next."""
+    left = s.total_count - s.done_count
+    if s.total_count and left == 0:
+        return "Everything on today's plan is done."
+    if left > 0:
+        return f"{left} {'block' if left == 1 else 'blocks'} still open today."
+    return "Nothing scheduled right now."
+
+
 def _streak_text(s: Snapshot) -> str:
     if s.today_complete:
         return f"{s.current}-day streak. Today is wrapped."
@@ -174,8 +184,7 @@ def render(s: Snapshot, width: int, height: int, layout: str) -> Image.Image:
                 text((margin + inner, y), when, 38 * k, 500, "muted", face="Manrope", anchor="ra")
                 y += int(62 * k)
         else:
-            done = "Everything on today's plan is done." if s.done_count else "Nothing scheduled right now."
-            text((margin, y), done, 46 * k, 550)
+            text((margin, y), plan_line(s), 46 * k, 550)
 
         if s.next_prayer:
             name, at = s.next_prayer
@@ -196,6 +205,8 @@ def render(s: Snapshot, width: int, height: int, layout: str) -> Image.Image:
         if s.next_title:
             text((margin, y), _fit(d, f"Next: {s.next_title}", inner, 40 * k, 650), 40 * k, 650)
             text((margin, y + int(58 * k)), s.next_when or "", 30 * k, 600, "myelin", face="Manrope")
+        else:
+            text((margin, y), plan_line(s), 34 * k, 550)
         if s.next_prayer:
             name, at = s.next_prayer
             text((W - margin, int(H * 0.58)), name, 32 * k, 650, "cresyl", anchor="ra")

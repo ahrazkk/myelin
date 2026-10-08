@@ -78,3 +78,21 @@ def test_windows_updater_reports_errors(tmp_path: Path):
     updater = LockScreenUpdater(tmp_path, lambda: True, lambda w, h: b"jpeg", setter=fail)
     updater.run_once()
     assert updater.last_error == "Access denied"
+
+
+def test_open_blocks_are_never_reported_as_done(client):
+    """Late in the day, unscheduled blocks are still open, not finished."""
+    from myelin import lockscreen
+    from myelin.routes.today import today as today_data  # noqa: F401  (route module loads)
+
+    today = client.get("/api/today").json()
+    for item in today["plan"]:
+        item["status"] = "no_room"  # nothing left on the schedule
+    snap = lockscreen.snapshot(today)
+    assert snap.next_title is None
+    open_blocks = sum(1 for i in today["plan"] if not i.get("bonus") and not i["done"])
+    assert lockscreen.plan_line(snap) == f"{open_blocks} blocks still open today."
+
+    for item in today["plan"]:
+        item["done"] = True
+    assert lockscreen.plan_line(lockscreen.snapshot(today)) == "Everything on today's plan is done."

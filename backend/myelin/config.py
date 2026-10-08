@@ -7,6 +7,7 @@ Everything is local. The database lives in the user's app-data folder
 from __future__ import annotations
 
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -31,8 +32,11 @@ def load_config() -> Config:
     data_dir = Path(os.environ.get("MYELIN_DATA_DIR") or user_data_dir(APP_NAME, appauthor=False))
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    repo_root = Path(__file__).resolve().parents[2]
-    frontend_dist = Path(os.environ.get("MYELIN_FRONTEND_DIST") or repo_root / "frontend" / "dist")
+    if getattr(sys, "frozen", False):  # the packaged Myelin.exe carries the web interface inside it
+        default_dist = Path(getattr(sys, "_MEIPASS", Path(sys.executable).parent)) / "frontend"
+    else:
+        default_dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+    frontend_dist = Path(os.environ.get("MYELIN_FRONTEND_DIST") or default_dist)
 
     return Config(
         data_dir=data_dir,
