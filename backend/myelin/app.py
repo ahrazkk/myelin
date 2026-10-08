@@ -15,6 +15,7 @@ from sqlalchemy.engine import Engine
 from . import __version__
 from .config import Config, load_config
 from .db import make_engine
+from .routes import focus, problems, sql, system
 from .routes import settings as settings_routes
 from .routes import today as today_routes
 
@@ -38,8 +39,9 @@ def create_app(
     def health() -> dict:
         return {"ok": True, "version": __version__}
 
-    app.include_router(settings_routes.router)
-    app.include_router(today_routes.router)
+    for router in (settings_routes.router, today_routes.router, focus.router, problems.router,
+                   sql.router, system.router):
+        app.include_router(router)
 
     _mount_frontend(app, config)
     return app

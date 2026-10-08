@@ -1,0 +1,182 @@
+[
+  {
+    "id": "company-second-salary",
+    "db": "company",
+    "title": "Second-highest salary",
+    "difficulty": "easy",
+    "pattern": "Subqueries",
+    "prompt": "Return the second-highest distinct salary as a single value.",
+    "ordered": false,
+    "solution": "SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees)"
+  },
+  {
+    "id": "company-headcount",
+    "db": "company",
+    "title": "Headcount per department",
+    "difficulty": "easy",
+    "pattern": "Joins",
+    "prompt": "List every department with its number of employees, including departments with none. Sort by headcount, highest first, then by department name.",
+    "ordered": true,
+    "solution": "SELECT d.name, COUNT(e.id) AS headcount FROM departments d LEFT JOIN employees e ON e.department_id = d.id GROUP BY d.id ORDER BY headcount DESC, d.name"
+  },
+  {
+    "id": "company-no-projects",
+    "db": "company",
+    "title": "Employees on no project",
+    "difficulty": "easy",
+    "pattern": "Joins",
+    "prompt": "List the names of employees who aren't assigned to any project.",
+    "ordered": false,
+    "solution": "SELECT e.name FROM employees e LEFT JOIN assignments a ON a.employee_id = e.id WHERE a.employee_id IS NULL"
+  },
+  {
+    "id": "company-above-manager",
+    "db": "company",
+    "title": "Earning more than their manager",
+    "difficulty": "easy",
+    "pattern": "Self joins",
+    "prompt": "List the names of employees who earn more than their manager.",
+    "ordered": false,
+    "solution": "SELECT e.name FROM employees e JOIN employees m ON m.id = e.manager_id WHERE e.salary > m.salary"
+  },
+  {
+    "id": "company-top-earner",
+    "db": "company",
+    "title": "Top earner in each department",
+    "difficulty": "medium",
+    "pattern": "Subqueries",
+    "prompt": "For each department, return the department name, the employee name and salary of its highest-paid employee. Include everyone tied for first.",
+    "ordered": false,
+    "solution": "SELECT d.name, e.name, e.salary FROM employees e JOIN departments d ON d.id = e.department_id WHERE e.salary = (SELECT MAX(x.salary) FROM employees x WHERE x.department_id = e.department_id)"
+  },
+  {
+    "id": "company-avg-salary",
+    "db": "company",
+    "title": "Well-paid departments",
+    "difficulty": "medium",
+    "pattern": "Aggregation & GROUP BY",
+    "prompt": "Return department name and average salary, rounded to whole dollars, for departments whose average is above 120,000. Highest average first.",
+    "ordered": true,
+    "solution": "SELECT d.name, ROUND(AVG(e.salary)) AS avg_salary FROM employees e JOIN departments d ON d.id = e.department_id GROUP BY d.id HAVING AVG(e.salary) > 120000 ORDER BY avg_salary DESC"
+  },
+  {
+    "id": "company-top-two",
+    "db": "company",
+    "title": "Top two salaries per department",
+    "difficulty": "medium",
+    "pattern": "Window functions",
+    "prompt": "Return department name, employee name and salary for the two highest salary levels in each department. Employees with equal salaries share a place, so a department can return more than two people.",
+    "ordered": false,
+    "solution": "SELECT department, name, salary FROM (SELECT d.name AS department, e.name, e.salary, DENSE_RANK() OVER (PARTITION BY e.department_id ORDER BY e.salary DESC) AS r FROM employees e JOIN departments d ON d.id = e.department_id) WHERE r <= 2"
+  },
+  {
+    "id": "company-running-payroll",
+    "db": "company",
+    "title": "Running payroll by hire date",
+    "difficulty": "medium",
+    "pattern": "Window functions",
+    "prompt": "List each employee's name, hire date and the running total of salaries of everyone hired up to and including them. Order by hire date.",
+    "ordered": true,
+    "solution": "SELECT name, hired_on, SUM(salary) OVER (ORDER BY hired_on) AS running_total FROM employees ORDER BY hired_on"
+  },
+  {
+    "id": "shop-never-ordered",
+    "db": "shop",
+    "title": "Customers who never ordered",
+    "difficulty": "easy",
+    "pattern": "Joins",
+    "prompt": "List the names of customers who have never placed an order.",
+    "ordered": false,
+    "solution": "SELECT c.name FROM customers c LEFT JOIN orders o ON o.customer_id = c.id WHERE o.id IS NULL"
+  },
+  {
+    "id": "shop-unsold-products",
+    "db": "shop",
+    "title": "Products nobody ordered",
+    "difficulty": "easy",
+    "pattern": "Subqueries",
+    "prompt": "List the names of products that don't appear in any order.",
+    "ordered": false,
+    "solution": "SELECT name FROM products WHERE id NOT IN (SELECT product_id FROM order_items)"
+  },
+  {
+    "id": "shop-monthly-orders",
+    "db": "shop",
+    "title": "Orders per month",
+    "difficulty": "easy",
+    "pattern": "Dates",
+    "prompt": "Count orders of any status per month. Return the month as YYYY-MM and the count, in month order.",
+    "ordered": true,
+    "solution": "SELECT strftime('%Y-%m', ordered_on) AS month, COUNT(*) FROM orders GROUP BY month ORDER BY month"
+  },
+  {
+    "id": "shop-repeat-customers",
+    "db": "shop",
+    "title": "Repeat customers",
+    "difficulty": "easy",
+    "pattern": "Aggregation & GROUP BY",
+    "prompt": "Return the name and order count of customers with at least two orders of any status.",
+    "ordered": false,
+    "solution": "SELECT c.name, COUNT(*) FROM customers c JOIN orders o ON o.customer_id = c.id GROUP BY c.id HAVING COUNT(*) >= 2"
+  },
+  {
+    "id": "shop-category-revenue",
+    "db": "shop",
+    "title": "Revenue by category",
+    "difficulty": "medium",
+    "pattern": "Aggregation & GROUP BY",
+    "prompt": "Total revenue (price times quantity) per product category, counting delivered orders only. Round to 2 decimals and sort highest first.",
+    "ordered": true,
+    "solution": "SELECT p.category, ROUND(SUM(p.price * oi.quantity), 2) AS revenue FROM order_items oi JOIN orders o ON o.id = oi.order_id JOIN products p ON p.id = oi.product_id WHERE o.status = 'delivered' GROUP BY p.category ORDER BY revenue DESC"
+  },
+  {
+    "id": "shop-top-spenders",
+    "db": "shop",
+    "title": "Top three spenders",
+    "difficulty": "medium",
+    "pattern": "CTEs",
+    "prompt": "Return the names and total spend (delivered orders only, rounded to 2 decimals) of the three customers who spent the most, highest first.",
+    "ordered": true,
+    "solution": "WITH spend AS (SELECT o.customer_id, SUM(p.price * oi.quantity) AS total FROM orders o JOIN order_items oi ON oi.order_id = o.id JOIN products p ON p.id = oi.product_id WHERE o.status = 'delivered' GROUP BY o.customer_id) SELECT c.name, ROUND(s.total, 2) FROM spend s JOIN customers c ON c.id = s.customer_id ORDER BY s.total DESC LIMIT 3"
+  },
+  {
+    "id": "shop-days-to-first-order",
+    "db": "shop",
+    "title": "Days to first order",
+    "difficulty": "medium",
+    "pattern": "Dates",
+    "prompt": "For customers who have ordered, return their name and the whole number of days between signing up and their first order (any status). Fewest days first, then by name.",
+    "ordered": true,
+    "solution": "SELECT c.name, CAST(julianday(MIN(o.ordered_on)) - julianday(c.joined_on) AS INTEGER) AS days FROM customers c JOIN orders o ON o.customer_id = c.id GROUP BY c.id ORDER BY days, c.name"
+  },
+  {
+    "id": "activity-daily-active",
+    "db": "activity",
+    "title": "Daily active users",
+    "difficulty": "easy",
+    "pattern": "Aggregation & GROUP BY",
+    "prompt": "For each date with logins, return the date and the number of distinct users who logged in, in date order.",
+    "ordered": true,
+    "solution": "SELECT login_date, COUNT(DISTINCT user_id) FROM logins GROUP BY login_date ORDER BY login_date"
+  },
+  {
+    "id": "activity-next-day-retention",
+    "db": "activity",
+    "title": "Next-day retention",
+    "difficulty": "medium",
+    "pattern": "Dates",
+    "prompt": "What share of users logged in on the day after they signed up? Return one value between 0 and 1, rounded to 2 decimals.",
+    "ordered": false,
+    "solution": "SELECT ROUND(AVG(CASE WHEN EXISTS (SELECT 1 FROM logins l WHERE l.user_id = u.id AND l.login_date = date(u.signed_up_on, '+1 day')) THEN 1.0 ELSE 0 END), 2) FROM users u"
+  },
+  {
+    "id": "activity-streaks",
+    "db": "activity",
+    "title": "Three days in a row",
+    "difficulty": "hard",
+    "pattern": "Gaps & islands",
+    "prompt": "List the names of users who logged in on at least three consecutive days.",
+    "ordered": false,
+    "solution": "WITH g AS (SELECT user_id, julianday(login_date) - ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY login_date) AS island FROM logins), runs AS (SELECT user_id FROM g GROUP BY user_id, island HAVING COUNT(*) >= 3) SELECT DISTINCT u.name FROM runs r JOIN users u ON u.id = r.user_id"
+  }
+]

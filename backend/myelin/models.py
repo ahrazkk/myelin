@@ -41,6 +41,56 @@ class UserSettings(SQLModel, table=True):
     notifications: bool = True
 
 
+class FocusSession(SQLModel, table=True):
+    """A timed focus block, optionally tied to a plan item."""
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    plan_item_id: Optional[int] = None
+    label: str
+    started_at: datetime
+    planned_minutes: int
+    ended_at: Optional[datetime] = None
+    completed: bool = False  # ran all the way to the planned end
+
+
+class Note(SQLModel, table=True):
+    """Brain dump: a thought parked so it doesn't break focus."""
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    created_at: datetime
+    text: str
+    done_at: Optional[datetime] = None
+
+
+class Problem(SQLModel, table=True):
+    """A LeetCode/NeetCode problem in the re-solve queue."""
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    url: str = ""
+    track: str = "python"  # "python" | "sql"
+    difficulty: str = "medium"  # "easy" | "medium" | "hard"
+    pattern: str = ""
+    created_on: date
+    stage: int = 0  # successful spaced re-solves so far
+    due_on: Optional[date] = Field(default=None, index=True)  # None once mastered
+
+
+class Attempt(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    problem_id: int = Field(index=True)
+    day: date
+    outcome: str  # "solved" | "hint" | "stuck"
+    minutes: int = 0
+    note: str = ""
+
+
+class SqlSolve(SQLModel, table=True):
+    question_id: str = Field(primary_key=True)
+    solved_at: datetime
+    tries: int = 1
+
+
 class PlanItem(SQLModel, table=True):
     """One block on one day's plan."""
 

@@ -28,7 +28,7 @@ myelin = "myelin.__main__:main"
 include = ["myelin*"]
 
 [tool.setuptools.package-data]
-myelin = ["defaults/*.json"]
+myelin = ["defaults/*.json", "sql_samples/*.sql", "sql_samples/*.json", "assets/fonts/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,0 +1,573 @@
+/* ---------- Tools ---------- */
+
+.tools {
+  font-size: clamp(15px, 0.95vw, 20px);
+}
+
+.tool-body {
+  margin-top: 3vh;
+}
+
+.tool-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  column-gap: 5vw;
+  row-gap: 3vh;
+  align-items: start;
+}
+
+.tool-block {
+  margin-bottom: 3.2vh;
+}
+
+.tool-block h3,
+.sql-group h3 {
+  font-size: 1em;
+  font-weight: 650;
+  margin: 0 0 0.45em;
+}
+
+.tool-sub {
+  color: var(--muted);
+  font-size: 0.92em;
+  margin: 0.2em 0 0.8em;
+  max-width: 60ch;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.85em;
+}
+
+.cap {
+  text-transform: capitalize;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.btn.small {
+  font-size: 0.85em;
+  padding: 0.3em 0.9em;
+  border-width: 1.5px;
+}
+
+.push-right {
+  margin-left: auto;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8em;
+  margin-top: 1.1em;
+}
+
+.form-error {
+  color: var(--cresyl);
+  margin-top: 0.8em;
+}
+
+.field.wide .input {
+  width: 100%;
+  max-width: none;
+}
+
+/* Focus timer */
+
+.focus-label {
+  font-weight: 650;
+  font-size: 1.15em;
+}
+
+.focus-time {
+  font-family: "Manrope Variable", "Segoe UI", sans-serif;
+  font-weight: 200;
+  font-size: clamp(64px, 6.5vw, 160px);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0.15em 0 0.3em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Elapsed time wraps the bar in myelin. */
+.focus-sheath {
+  height: 0.9em;
+  border-radius: 999px;
+  background: var(--hair);
+  overflow: hidden;
+  max-width: 34em;
+}
+
+.focus-sheath span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--myelin);
+  transition: width 1s linear;
+}
+
+.focus-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8em;
+  margin: 1.5em 0 1em;
+}
+
+.focus-setup .field .input {
+  min-width: 18em;
+}
+
+.focus-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6em;
+  border: 0;
+  border-radius: 999px;
+  background: var(--myelin-wash);
+  color: var(--ink);
+  font: inherit;
+  font-size: clamp(14px, 0.9vw, 20px);
+  padding: 0.35em 1em;
+  cursor: pointer;
+  max-width: 26em;
+}
+
+.focus-badge-time {
+  font-weight: 700;
+  color: var(--myelin);
+  font-variant-numeric: tabular-nums;
+}
+
+.focus-badge-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-badge.is-up {
+  display: block;
+  cursor: default;
+  border-radius: 14px;
+  padding: 0.8em 1em;
+  text-align: right;
+  background: var(--cresyl-wash);
+}
+
+.focus-badge-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-top: 0.6em;
+}
+
+.park-row {
+  display: flex;
+  gap: 0.7em;
+}
+
+.park-row .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-list,
+.note-list,
+.due-list,
+.pattern-list,
+.sql-group ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.session-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.45em 0;
+  border-top: 1px solid var(--hair);
+}
+
+/* Brain dump */
+
+.note-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.55em 0;
+  border-top: 1px solid var(--hair);
+}
+
+.note-list.is-cleared .note-text {
+  color: var(--muted);
+}
+
+.note-time {
+  font-size: 0.82em;
+}
+
+.check.small {
+  width: 1.35em;
+  height: 1.35em;
+  border-width: 1.5px;
+}
+
+.check.is-on {
+  background: var(--myelin);
+  border-color: var(--myelin);
+}
+
+.check.is-on svg,
+.check.small:hover svg {
+  opacity: 1;
+}
+
+.check.small:hover:not(.is-on) svg {
+  stroke: var(--muted);
+}
+
+/* LeetCode log */
+
+.log-form {
+  display: grid;
+  gap: 0.2em;
+}
+
+.log-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1em 1.5em;
+  margin-top: 0.9em;
+}
+
+.log-row .field {
+  margin-top: 0;
+}
+
+.input.minutes {
+  width: 6em;
+}
+
+.due-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  padding: 0.6em 0;
+  border-top: 1px solid var(--hair);
+}
+
+.due-list li > div:first-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.due-actions {
+  display: flex;
+  gap: 0.4em;
+}
+
+.problem-title {
+  font-weight: 550;
+  text-align: left;
+}
+
+.block-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 0.6em;
+}
+
+.block-head h3 {
+  margin: 0;
+}
+
+.next-pattern {
+  margin-bottom: 0.7em;
+}
+
+.pattern-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7em 6.5em;
+  align-items: center;
+  gap: 0.9em;
+  padding: 0.3em 0;
+}
+
+.pattern-list li.is-untried {
+  color: var(--muted);
+}
+
+.pattern-bar {
+  height: 0.5em;
+  border-radius: 999px;
+  background: var(--hair);
+  overflow: hidden;
+}
+
+.pattern-bar span {
+  display: block;
+  height: 100%;
+  background: var(--myelin);
+  border-radius: inherit;
+}
+
+.pattern-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.problem-table,
+.result table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+.problem-table th,
+.result th {
+  text-align: left;
+  font-weight: 650;
+  color: var(--muted);
+  padding: 0.4em 0.8em 0.4em 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.problem-table td,
+.result td {
+  padding: 0.45em 0.8em 0.45em 0;
+  border-bottom: 1px solid var(--hair);
+  vertical-align: top;
+}
+
+.problem-table td.is-due {
+  color: var(--cresyl);
+  font-weight: 650;
+}
+
+.quick-log {
+  grid-column: 1 / -1;
+  margin: 0.4em 0 0.8em 2.7em;
+  padding: 0.9em 1.1em;
+  border-left: 3px solid var(--myelin);
+  background: var(--myelin-wash);
+  border-radius: 0 10px 10px 0;
+  font-size: 0.92em;
+}
+
+.quick-log-title {
+  font-weight: 650;
+  margin-bottom: 0.3em;
+}
+
+.quick-log[role="status"] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* SQL playground */
+
+.sql {
+  display: grid;
+  grid-template-columns: minmax(13em, 1fr) minmax(0, 3.2fr);
+  column-gap: 4vw;
+  align-items: start;
+}
+
+.sql-group {
+  margin-bottom: 1.4em;
+}
+
+.sql-q {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.92em;
+  text-align: left;
+  padding: 0.35em 0.6em;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sql-q:hover {
+  background: var(--myelin-wash);
+}
+
+.sql-q.is-selected {
+  background: var(--myelin-wash);
+  font-weight: 650;
+}
+
+.sql-q.is-free {
+  color: var(--muted);
+}
+
+.sql-q-mark {
+  flex: none;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  border: 1.5px solid var(--muted);
+}
+
+.sql-q.is-solved .sql-q-mark {
+  background: var(--myelin);
+  border-color: var(--myelin);
+}
+
+.sql-q.is-free .sql-q-mark {
+  border-style: dashed;
+}
+
+.sql-title {
+  font-size: 1.25em;
+  font-weight: 650;
+  margin: 0.1em 0 0.3em;
+}
+
+.sql-prompt {
+  max-width: 65ch;
+  margin-bottom: 1em;
+}
+
+.schema {
+  margin-bottom: 1em;
+  font-size: 0.9em;
+}
+
+.schema summary {
+  cursor: pointer;
+  color: var(--muted);
+  margin-bottom: 0.4em;
+}
+
+.schema ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.25em;
+}
+
+.sql-editor,
+.solution pre {
+  font-family: "Cascadia Code", Consolas, ui-monospace, monospace;
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+
+.sql-editor {
+  display: block;
+  width: 100%;
+  resize: vertical;
+  color: var(--ink);
+  background: var(--code-bg);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 0.8em 1em;
+  tab-size: 2;
+}
+
+.sql-editor:focus-visible {
+  border-color: var(--myelin);
+}
+
+.verdict {
+  margin-top: 1em;
+  padding-left: 0.9em;
+  border-left: 3px solid;
+  font-weight: 600;
+}
+
+.verdict.is-correct {
+  border-color: var(--myelin);
+  color: var(--myelin);
+}
+
+.verdict.is-wrong {
+  border-color: var(--cresyl);
+}
+
+.solution {
+  margin-top: 1em;
+}
+
+.solution pre {
+  white-space: pre-wrap;
+  background: var(--code-bg);
+  border-radius: 10px;
+  padding: 0.8em 1em;
+  margin: 0.3em 0 0;
+}
+
+.result {
+  margin-top: 1.2em;
+}
+
+.result-scroll {
+  max-height: 42vh;
+  overflow: auto;
+  margin-top: 0.4em;
+}
+
+.result td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .tool-columns,
+  .sql {
+    grid-template-columns: 1fr;
+  }
+}
+
+.log-form .segmented {
+  justify-self: start;
+}
+
+/* Work tabs get a smaller clock so the tool has room. */
+.wall.is-compact .clock-time {
+  font-size: clamp(44px, 3.8vw, 96px);
+}
+
+.wall.is-compact .clock-period {
+  font-size: clamp(15px, 1vw, 24px);
+}
+
+.wall.is-compact .date {
+  margin-top: 0.6vh;
+  font-size: clamp(15px, 1vw, 22px);
+}
+
+.wall.is-compact .hijri {
+  font-size: clamp(13px, 0.85vw, 19px);
+}
+
+.wall.is-compact .next-line {
+  font-size: clamp(18px, 1.35vw, 30px);
+}
+
+.wall.is-compact .top-right {
+  gap: 1.8vh;
+}

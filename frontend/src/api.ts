@@ -119,11 +119,145 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+export interface FocusSession {
+  id: number;
+  label: string;
+  plan_item_id: number | null;
+  started_at: string;
+  ends_at: string;
+  planned_minutes: number;
+  ended_at: string | null;
+  completed: boolean;
+  minutes?: number;
+}
+
+export interface FocusState {
+  active: FocusSession | null;
+  today_minutes: number;
+  sessions: (FocusSession & { minutes: number })[];
+}
+
+export interface Note {
+  id: number;
+  text: string;
+  created_at: string;
+  done: boolean;
+  done_at: string | null;
+}
+
+export type Outcome = "solved" | "hint" | "stuck";
+export type Track = "python" | "sql";
+export type Difficulty = "easy" | "medium" | "hard";
+
+export interface Problem {
+  id: number;
+  title: string;
+  url: string;
+  track: Track;
+  difficulty: Difficulty;
+  pattern: string;
+  created_on: string;
+  stage: number;
+  due_on: string | null;
+  is_due: boolean;
+  mastered: boolean;
+  attempts: number;
+  last_outcome: Outcome | null;
+  last_minutes: number | null;
+}
+
+export interface PatternStat {
+  track: Track;
+  pattern: string;
+  problems: number;
+  attempts: number;
+  solve_rate: number | null;
+  avg_minutes: number | null;
+}
+
+export interface Problems {
+  problems: Problem[];
+  due: Problem[];
+  stats: {
+    patterns: PatternStat[];
+    next: Record<Track, { pattern: string; why: string } | null>;
+  };
+  pattern_names: Record<Track, string[]>;
+  ladder_days: number[];
+}
+
+export interface ProblemIn {
+  title?: string;
+  url?: string;
+  track: Track;
+  difficulty: Difficulty;
+  pattern: string;
+  outcome: Outcome;
+  minutes: number;
+  note?: string;
+}
+
+export interface SqlTable {
+  name: string;
+  columns: { name: string; type: string }[];
+  rows: number;
+}
+
+export interface SqlDatabase {
+  id: string;
+  description: string;
+  tables: SqlTable[];
+}
+
+export interface SqlQuestion {
+  id: string;
+  db: string;
+  title: string;
+  difficulty: Difficulty;
+  pattern: string;
+  prompt: string;
+  ordered: boolean;
+  solved: boolean;
+}
+
+export interface SqlResult {
+  columns: string[];
+  rows: (string | number | null)[][];
+  truncated: boolean;
+  ms: number;
+}
+
 export const api = {
   today: () => call<Today>("/api/today"),
   week: () => call<Week>("/api/week"),
   progress: () => call<Progress>("/api/progress"),
   toggle: (id: number) => call<PlanItem>(`/api/plan/${id}/toggle`, { method: "POST" }),
+  focus: () => call<FocusState>("/api/focus"),
+  startFocus: (body: { plan_item_id?: number; label?: string; minutes: number }) =>
+    call<FocusSession>("/api/focus/start", { method: "POST", body: JSON.stringify(body) }),
+  stopFocus: (mark_done = false) =>
+    call<FocusSession>("/api/focus/stop", { method: "POST", body: JSON.stringify({ mark_done }) }),
+  notes: () => call<{ open: Note[]; cleared: Note[] }>("/api/notes"),
+  addNote: (text: string) => call<Note>("/api/notes", { method: "POST", body: JSON.stringify({ text }) }),
+  editNote: (id: number, patch: { done?: boolean; text?: string }) =>
+    call<Note>(`/api/notes/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
+  deleteNote: (id: number) => call<{ ok: boolean }>(`/api/notes/${id}`, { method: "DELETE" }),
+  problems: () => call<Problems>("/api/problems"),
+  logProblem: (body: ProblemIn) =>
+    call<Problem & { was_new: boolean }>("/api/problems", { method: "POST", body: JSON.stringify(body) }),
+  attempt: (id: number, outcome: Outcome, minutes = 0) =>
+    call<Problem>(`/api/problems/${id}/attempts`, { method: "POST", body: JSON.stringify({ outcome, minutes }) }),
+  deleteProblem: (id: number) => call<{ ok: boolean }>(`/api/problems/${id}`, { method: "DELETE" }),
+  sqlDatabases: () => call<SqlDatabase[]>("/api/sql/databases"),
+  sqlQuestions: () => call<SqlQuestion[]>("/api/sql/questions"),
+  sqlRun: (db: string, query: string) =>
+    call<SqlResult>("/api/sql/run", { method: "POST", body: JSON.stringify({ db, query }) }),
+  sqlCheck: (question_id: string, query: string) =>
+    call<{ correct: boolean; message: string; result: SqlResult }>("/api/sql/check", {
+      method: "POST",
+      body: JSON.stringify({ question_id, query }),
+    }),
+  sqlSolution: (id: string) => call<{ solution: string }>(`/api/sql/questions/${id}/solution`),
   settings: () => call<Settings>("/api/settings"),
   saveSettings: (patch: Partial<Settings>) =>
     call<Settings>("/api/settings", { method: "PUT", body: JSON.stringify(patch) }),

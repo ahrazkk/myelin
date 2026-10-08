@@ -11,6 +11,8 @@
   --myelin: #2d6bad;
   --cresyl: #7b3f9e;
   --cresyl-wash: rgb(123 63 158 / 0.1);
+  --myelin-wash: rgb(45 107 173 / 0.09);
+  --code-bg: rgb(27 33 66 / 0.04);
 
   color-scheme: light;
   font-family: "Atkinson Hyperlegible Next Variable", "Segoe UI", system-ui, sans-serif;
@@ -29,6 +31,8 @@
     --myelin: #57c4e5;
     --cresyl: #d07be8;
     --cresyl-wash: rgb(208 123 232 / 0.14);
+    --myelin-wash: rgb(87 196 229 / 0.1);
+    --code-bg: rgb(228 232 246 / 0.05);
     color-scheme: dark;
   }
 }
@@ -42,6 +46,8 @@
   --myelin: #57c4e5;
   --cresyl: #d07be8;
   --cresyl-wash: rgb(208 123 232 / 0.14);
+  --myelin-wash: rgb(87 196 229 / 0.1);
+  --code-bg: rgb(228 232 246 / 0.05);
   color-scheme: dark;
 }
 

@@ -12,12 +12,15 @@ import { Axon } from "./Axon";
 import { ProgressView } from "./Progress";
 import { Settings, type SaveSettings } from "./Settings";
 import { PRAYER_LABEL, clockParts, formatDate, formatTime, hijriDate, isNight, until } from "./time";
+import { ToolsView } from "./Tools";
 import { WeekView } from "./Week";
+import { FocusBadge, useFocus } from "./Focus";
 
 const TABS = [
   { id: "today", label: "Today" },
   { id: "week", label: "Week" },
   { id: "progress", label: "Progress" },
+  { id: "tools", label: "Tools" },
   { id: "settings", label: "Settings" },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
@@ -27,7 +30,7 @@ const IDLE_RETURN_MS = 3 * 60_000;
 
 function initialTab(): Tab {
   if (window.location.pathname.replace(/\/+$/, "") === "/settings") return "settings";
-  const hash = window.location.hash.slice(1);
+  const hash = window.location.hash.slice(1).split("/")[0];
   return TABS.some((t) => t.id === hash) ? (hash as Tab) : "today";
 }
 
@@ -80,6 +83,8 @@ export function Wallpaper() {
       setError(e instanceof Error ? e.message : String(e));
     }
   }, []);
+
+  const focus = useFocus(now, load);
 
   const saveSettings: SaveSettings = useCallback(async (patch) => {
     setSettings(await api.saveSettings(patch));
@@ -143,7 +148,7 @@ export function Wallpaper() {
   const { time, period } = clockParts(now);
 
   return (
-    <main className="wall">
+    <main className={`wall${tab === "tools" || tab === "settings" ? " is-compact" : ""}`}>
       <header className="top">
         <div className="clock">
           <p className="clock-face">
@@ -173,6 +178,7 @@ export function Wallpaper() {
               <ThemeToggle mode={settings.theme} onChange={(theme) => saveSettings({ theme })} />
             )}
           </nav>
+          <FocusBadge focus={focus} onOpen={() => go("tools")} />
           <NextPrayer
             now={now}
             prayers={today?.prayers ?? null}
@@ -204,6 +210,7 @@ export function Wallpaper() {
         )}
         {tab === "week" && <WeekView />}
         {tab === "progress" && <ProgressView />}
+        {tab === "tools" && <ToolsView focus={focus} plan={today?.plan ?? []} />}
         {tab === "settings" && settings && <Settings settings={settings} onSave={saveSettings} />}
       </div>
     </main>
