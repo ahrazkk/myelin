@@ -130,6 +130,14 @@ export interface Settings {
   theme: ThemeMode;
   text_size: TextSize;
   reduced_motion: boolean;
+  background: BackgroundMode;
+  cursor_effect: CursorEffect;
+  accent: Accent;
+  clock_24h: boolean;
+  show_seconds: boolean;
+  show_hijri: boolean;
+  show_weather: boolean;
+  temperature_unit: "c" | "f";
   work_start: string;
   work_end: string;
   work_days: string;
@@ -277,7 +285,33 @@ export interface LockScreenStatus {
   phone: { enabled: boolean; url: string | null; listening_on_network: boolean };
 }
 
+export type BackgroundMode = "plain" | "weather" | "neural";
+export type CursorEffect = "off" | "glow" | "synapses";
+export type Accent = "myelin" | "emerald" | "amber" | "rose";
+export type WeatherScene = "clear" | "partly" | "cloudy" | "fog" | "drizzle" | "rain" | "snow" | "storm";
+
+export type Weather =
+  | { available: false; reason: "off" | "no_location" | "offline" }
+  | {
+      available: true;
+      scene: WeatherScene;
+      label: string;
+      intensity: number;
+      code: number;
+      temp: number | null;
+      feels_like: number | null;
+      high: number | null;
+      low: number | null;
+      is_day: boolean;
+      cloud_cover: number | null;
+      wind_kmh: number | null;
+      unit: "c" | "f";
+      stale?: boolean;
+    };
+
 export const api = {
+  weather: () => call<Weather>("/api/weather"),
+  health: () => call<{ ok: boolean; version: string }>("/api/health"),
   today: () => call<Today>("/api/today"),
   week: () => call<Week>("/api/week"),
   progress: () => call<Progress>("/api/progress"),

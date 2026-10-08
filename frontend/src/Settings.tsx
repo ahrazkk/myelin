@@ -1,7 +1,10 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import {
   api,
+  type Accent,
   type AppInfo,
+  type BackgroundMode,
+  type CursorEffect,
   type InterviewInfo,
   type LockScreenStatus,
   type Settings as SettingsT,
@@ -35,6 +38,38 @@ const SIZES: [TextSize, string][] = [
   ["large", "Large"],
   ["larger", "Larger"],
 ];
+
+const BACKGROUNDS: [BackgroundMode, string][] = [
+  ["weather", "Live weather"],
+  ["neural", "Neurons"],
+  ["plain", "Plain"],
+];
+
+const CURSORS: [CursorEffect, string][] = [
+  ["glow", "Glow"],
+  ["synapses", "Synapses"],
+  ["off", "Off"],
+];
+
+const ACCENTS: { id: Accent; label: string; day: string; night: string }[] = [
+  { id: "myelin", label: "Myelin blue", day: "#2d6bad", night: "#57c4e5" },
+  { id: "emerald", label: "Emerald", day: "#1f7a5a", night: "#4fd1a1" },
+  { id: "amber", label: "Amber", day: "#9a5b12", night: "#f2b25c" },
+  { id: "rose", label: "Rose", day: "#b03a6a", night: "#f28bb0" },
+];
+
+const BACKGROUND_HINT: Record<BackgroundMode, string> = {
+  weather:
+    "The sky behind Myelin follows the weather outside: sun or moon and stars, clouds, rain, snow, storms and fog. It uses your location, rounded to about 1 km, to ask Open-Meteo for the weather every 15 minutes.",
+  neural: "Neurons drift behind your day, with signals hopping between them now and then.",
+  plain: "A calm, still background.",
+};
+
+const CURSOR_HINT: Record<CursorEffect, string> = {
+  glow: "A soft light follows your cursor.",
+  synapses: "Your cursor leaves a trail of firing synapses that fade in about a second.",
+  off: "No cursor effect.",
+};
 
 export type SaveSettings = (patch: Partial<SettingsT>) => Promise<void>;
 
@@ -127,6 +162,71 @@ export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave:
         <div>
           <Section title="Appearance" hint="Auto switches to the night view at Maghrib and back at sunrise.">
             <Segmented label="Theme" value={s.theme} options={THEMES} onChange={(v) => save({ theme: v })} />
+
+            <p className="field-label">Background</p>
+            <Segmented label="Background" value={s.background} options={BACKGROUNDS} onChange={(v) => save({ background: v })} />
+            <p className="muted small field-note">{BACKGROUND_HINT[s.background]}</p>
+            {s.background === "weather" && !s.has_location && (
+              <p className="form-error">Set your location below so the sky can match the weather.</p>
+            )}
+
+            <p className="field-label">Cursor effect</p>
+            <Segmented label="Cursor effect" value={s.cursor_effect} options={CURSORS} onChange={(v) => save({ cursor_effect: v })} />
+            <p className="muted small field-note">
+              {CURSOR_HINT[s.cursor_effect]} On the wallpaper, turn on mouse input in Lively's settings.
+            </p>
+
+            <p className="field-label">Accent colour</p>
+            <div className="swatches" role="radiogroup" aria-label="Accent colour">
+              {ACCENTS.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={s.accent === a.id}
+                  className="swatch"
+                  onClick={() => save({ accent: a.id })}
+                >
+                  <span
+                    className="swatch-dot"
+                    style={{ background: `linear-gradient(135deg, ${a.day} 50%, ${a.night} 50%)` }}
+                    aria-hidden="true"
+                  />
+                  {a.label}
+                </button>
+              ))}
+            </div>
+
+            <p className="field-label">Clock and date</p>
+            <div className="settings-row">
+              <label className="check-field">
+                <input type="checkbox" checked={s.clock_24h} onChange={(e) => save({ clock_24h: e.target.checked })} />
+                24-hour clock
+              </label>
+              <label className="check-field">
+                <input type="checkbox" checked={s.show_seconds} onChange={(e) => save({ show_seconds: e.target.checked })} />
+                Seconds
+              </label>
+              <label className="check-field">
+                <input type="checkbox" checked={s.show_hijri} onChange={(e) => save({ show_hijri: e.target.checked })} />
+                Hijri date
+              </label>
+            </div>
+            <div className="settings-row">
+              <label className="check-field">
+                <input type="checkbox" checked={s.show_weather} onChange={(e) => save({ show_weather: e.target.checked })} />
+                Weather under the date
+              </label>
+              {s.show_weather && (
+                <Segmented
+                  label="Temperature unit"
+                  value={s.temperature_unit}
+                  options={[["c", "°C"], ["f", "°F"]]}
+                  onChange={(v) => save({ temperature_unit: v })}
+                />
+              )}
+            </div>
+
             <p className="field-label">Text size</p>
             <Segmented label="Text size" value={s.text_size} options={SIZES} onChange={(v) => save({ text_size: v })} />
             <label className="check-field">
@@ -141,7 +241,11 @@ export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave:
 
           <Section
             title="Location for prayer times"
-            hint="Myelin calculates prayer times on this computer. Your location never leaves it."
+            hint={
+              s.background === "weather" || s.show_weather
+                ? "Prayer times are calculated on this computer. Live weather sends your location, rounded to about 1 km, to Open-Meteo."
+                : "Myelin calculates prayer times on this computer. Your location never leaves it."
+            }
           >
             <button type="button" className="btn primary" onClick={useMyLocation} disabled={locating}>
               {locating ? "Finding your location…" : "Use my location"}

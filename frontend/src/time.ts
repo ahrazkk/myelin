@@ -9,7 +9,19 @@ export const PRAYER_LABEL: Record<PrayerName, string> = {
   isha: "Isha",
 };
 
-const clockFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+let clockFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+let faceFmt = clockFmt;
+let prefsKey = "";
+
+/** Apply the clock settings (24-hour, seconds) to every time Myelin shows. Cheap to call on each render. */
+export function setClockPrefs(h24: boolean, seconds: boolean) {
+  const key = `${h24}|${seconds}`;
+  if (key === prefsKey) return;
+  prefsKey = key;
+  const hour = h24 ? { hourCycle: "h23" as const, hour: "2-digit" as const } : { hour: "numeric" as const };
+  clockFmt = new Intl.DateTimeFormat(undefined, { ...hour, minute: "2-digit" });
+  faceFmt = new Intl.DateTimeFormat(undefined, { ...hour, minute: "2-digit", ...(seconds ? { second: "2-digit" as const } : {}) });
+}
 const dateFmt = new Intl.DateTimeFormat(undefined, { weekday: "long", day: "numeric", month: "long" });
 const hijriFmt = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {
   day: "numeric",
@@ -19,7 +31,7 @@ const hijriFmt = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {
 
 /** "7:42 PM" split into the time and the day-period, so they can be set at different sizes. */
 export function clockParts(d: Date): { time: string; period: string } {
-  const parts = clockFmt.formatToParts(d);
+  const parts = faceFmt.formatToParts(d);
   const period = parts.find((p) => p.type === "dayPeriod")?.value ?? "";
   const time = parts
     .filter((p) => p.type !== "dayPeriod")

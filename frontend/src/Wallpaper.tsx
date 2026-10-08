@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type Settings as SettingsT, type ThemeMode, type Today } from "./api";
+import { Ambient } from "./Ambient";
+import { api, type Settings as SettingsT, type ThemeMode, type Today, type Weather } from "./api";
 import { FocusBadge, useFocus } from "./Focus";
 import { ProgressView } from "./Progress";
 import { Settings, type SaveSettings } from "./Settings";
-import { clockParts, formatDate, hijriDate, isNight } from "./time";
+import { clockParts, formatDate, hijriDate, isNight, setClockPrefs } from "./time";
 import { InterviewCountdown, NextPrayer, TodayView } from "./Today";
 import { ToolsView } from "./Tools";
 import { WeekView } from "./Week";
@@ -88,6 +89,7 @@ export function Wallpaper() {
   }, []);
 
   const focus = useFocus(now, load);
+  const weather = useWeather(settings);
 
   const saveSettings: SaveSettings = useCallback(
     async (patch) => {
@@ -119,6 +121,23 @@ export function Wallpaper() {
     };
   }, [load]);
 
+  // After an update the server reports a new version: reload so the wallpaper never stays on an old build.
+  useEffect(() => {
+    let loaded: string | null = null;
+    const check = async () => {
+      try {
+        const { version } = await api.health();
+        if (loaded === null) loaded = version;
+        else if (version !== loaded) window.location.reload();
+      } catch {
+        /* the server is restarting; try again next time */
+      }
+    };
+    check();
+    const t = window.setInterval(check, 30_000);
+    return () => window.clearInterval(t);
+  }, []);
+
   // Roll over to the new day's plan at midnight without waiting for the next poll.
   const localDate = now.toLocaleDateString("en-CA");
   useEffect(() => {
@@ -136,6 +155,9 @@ export function Wallpaper() {
     else root.dataset.theme = theme;
   }, [theme]);
   useEffect(() => {
+    document.documentElement.dataset.accent = settings?.accent ?? "myelin";
+  }, [settings?.accent]);
+  useEffect(() => {
     const root = document.documentElement;
     root.dataset.text = settings?.text_size ?? "normal";
     if (settings?.reduced_motion) root.dataset.motion = "reduce";
@@ -147,10 +169,23 @@ export function Wallpaper() {
     setToolKey((k) => k + 1); // re-mount so a link to a specific tool lands on it
   };
 
+  setClockPrefs(settings?.clock_24h ?? false, settings?.show_seconds ?? false);
   const { time, period } = clockParts(now);
   const compact = tab === "tools" || tab === "settings";
+  const night = theme === "night" || (theme === null && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   return (
+    <>
+    {settings && (
+      <Ambient
+        mode={settings.background}
+        weather={weather}
+        night={night}
+        cursor={settings.cursor_effect}
+        still={settings.reduced_motion || window.matchMedia("(prefers-reduced-motion: reduce)").matches}
+        paletteKey={`${night}|${settings.accent}`}
+      />
+    )}
     <main className={`wall${compact ? " is-compact" : ""}`}>
       <header className="top">
         <div className="clock">
@@ -159,7 +194,8 @@ export function Wallpaper() {
             {period && <span className="clock-period">{period}</span>}
           </p>
           <p className="date">{formatDate(now)}</p>
-          <p className="hijri">{hijriDate(now, today?.prayers ?? null)}</p>
+          {settings?.show_hijri !== false && <p className="hijri">{hijriDate(now, today?.prayers ?? null)}</p>}
+          {settings?.show_weather && <WeatherLine weather={weather} />}
         </div>
         <div className="top-right">
           <nav className="tabs" role="tablist" aria-label="Views">
@@ -214,6 +250,45 @@ export function Wallpaper() {
         {tab === "settings" && settings && <Settings settings={settings} onSave={saveSettings} />}
       </div>
     </main>
+    </>
+  );
+}
+
+/** Current weather, refreshed every 10 minutes while the background or the weather line needs it. */
+function useWeather(settings: SettingsT | null): Weather | null {
+  const [weather, setWeather] = useState<Weather | null>(null);
+  const wanted = !!settings && (settings.background === "weather" || settings.show_weather);
+  const key = settings
+    ? `${settings.latitude},${settings.longitude},${settings.temperature_unit},${settings.background},${settings.show_weather}`
+    : "";
+  useEffect(() => {
+    if (!wanted) {
+      setWeather(null);
+      return;
+    }
+    let alive = true;
+    const fetchIt = () =>
+      api.weather().then(
+        (w) => alive && setWeather(w),
+        () => undefined,
+      );
+    fetchIt();
+    const t = window.setInterval(fetchIt, 10 * 60_000);
+    return () => {
+      alive = false;
+      window.clearInterval(t);
+    };
+  }, [wanted, key]);
+  return weather;
+}
+
+function WeatherLine({ weather }: { weather: Weather | null }) {
+  if (!weather || !weather.available || weather.temp === null) return null;
+  const range = weather.high !== null && weather.low !== null ? ` High ${weather.high}°, low ${weather.low}°.` : "";
+  return (
+    <p className="weather-line">
+      {weather.temp}° and {weather.label.toLowerCase()}.{range}
+    </p>
   );
 }
 

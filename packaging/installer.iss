@@ -32,6 +32,10 @@ Name: "desktopicon"; Description: "Add a desktop shortcut"; Flags: unchecked
 [Files]
 Source: "..\dist\Myelin\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
 
+[InstallDelete]
+; Older from-source setups started Myelin at sign-in with this shortcut.
+Type: files; Name: "{userstartup}\Myelin.lnk"
+
 [Icons]
 Name: "{autoprograms}\Myelin"; Filename: "{app}\Myelin.exe"
 Name: "{autodesktop}\Myelin"; Filename: "{app}\Myelin.exe"; Tasks: desktopicon

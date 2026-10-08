@@ -19,6 +19,10 @@ CALC_METHODS = {"NORTH_AMERICA", "MUSLIM_WORLD_LEAGUE", "EGYPTIAN", "KARACHI", "
 ASR_METHODS = {"SHAFI", "HANAFI"}
 THEMES = {"auto", "light", "dark", "system"}
 TEXT_SIZES = {"normal", "large", "larger"}
+BACKGROUNDS = {"plain", "weather", "neural"}
+CURSOR_EFFECTS = {"off", "glow", "synapses"}
+ACCENTS = {"myelin", "emerald", "amber", "rose"}
+TEMPERATURE_UNITS = {"c", "f"}
 WEEKDAYS = {"mon", "tue", "wed", "thu", "fri", "sat", "sun"}
 HHMM = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 
@@ -32,6 +36,14 @@ class SettingsUpdate(BaseModel):
     theme: Optional[str] = None
     text_size: Optional[str] = None
     reduced_motion: Optional[bool] = None
+    background: Optional[str] = None
+    cursor_effect: Optional[str] = None
+    accent: Optional[str] = None
+    clock_24h: Optional[bool] = None
+    show_seconds: Optional[bool] = None
+    show_hijri: Optional[bool] = None
+    show_weather: Optional[bool] = None
+    temperature_unit: Optional[str] = None
     work_start: Optional[str] = None
     work_end: Optional[str] = None
     work_days: Optional[str] = None
@@ -57,6 +69,14 @@ def settings_json(s: UserSettings) -> dict:
         "theme": s.theme,
         "text_size": s.text_size,
         "reduced_motion": s.reduced_motion,
+        "background": s.background,
+        "cursor_effect": s.cursor_effect,
+        "accent": s.accent,
+        "clock_24h": s.clock_24h,
+        "show_seconds": s.show_seconds,
+        "show_hijri": s.show_hijri,
+        "show_weather": s.show_weather,
+        "temperature_unit": s.temperature_unit,
         "work_start": s.work_start,
         "work_end": s.work_end,
         "work_days": s.work_days,
@@ -89,6 +109,10 @@ def _check(data: dict) -> None:
         bad(f"Theme must be one of {', '.join(sorted(THEMES))}")
     if data.get("text_size") and data["text_size"] not in TEXT_SIZES:
         bad(f"Text size must be one of {', '.join(sorted(TEXT_SIZES))}")
+    for key, allowed, name in (("background", BACKGROUNDS, "Background"), ("cursor_effect", CURSOR_EFFECTS, "Cursor effect"),
+                               ("accent", ACCENTS, "Accent"), ("temperature_unit", TEMPERATURE_UNITS, "Temperature unit")):
+        if data.get(key) and data[key] not in allowed:
+            bad(f"{name} must be one of {', '.join(sorted(allowed))}")
     for key in ("work_start", "work_end"):
         if data.get(key) and not HHMM.match(data[key]):
             bad(f"{key.replace('_', ' ').capitalize()} must look like 09:00")

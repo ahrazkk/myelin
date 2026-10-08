@@ -4,11 +4,11 @@ Myelin is a Windows app that plans your day, protects your streak and keeps your
 
 Practice wraps nerve pathways in myelin, the insulation that makes signals fire faster. Myelin draws your streak the same way: each day you finish your plan wraps one segment of an axon, across the 66 days habits take on average to become automatic.
 
-![Myelin by day: the clock, the streak drawn as an axon, today's timed plan and prayer times](docs/wallpaper-day.png)
+![Myelin by day on a partly cloudy afternoon: live clouds and sun behind the clock, the streak axon and today's plan](docs/wallpaper-day.png)
 
-After Maghrib it switches to a night view, styled like a fluorescence microscope:
+The sky behind it follows the weather outside. After Maghrib it switches to the night view:
 
-![Myelin at night](docs/wallpaper-night.png)
+![Myelin on a clear night, with the moon and stars](docs/wallpaper-night.png)
 
 _Screenshots use sample data._
 
@@ -19,6 +19,8 @@ _Screenshots use sample data._
 3. For the wallpaper, install [Lively Wallpaper](https://github.com/rocksdanister/lively) from the Microsoft Store. Choose **Add wallpaper**, enter `http://127.0.0.1:8765/`, and turn on mouse input for wallpapers in Lively's settings so you can tick things off on the desktop.
 
 Closing the window keeps Myelin in the tray, so the wallpaper, lock screens and reminders keep working. Quit from the tray icon.
+
+**Updating from an older Myelin:** if you ran Myelin from source before, the app finds that old server, replaces it, and removes its old sign-in shortcut. If Lively still shows the old look, open Lively and set the Myelin wallpaper again (or sign out and back in) once. From now on the page reloads itself after every update.
 
 ## What it does
 
@@ -56,7 +58,20 @@ Tell Myelin about your day in the command box, or press **Ctrl+Alt+M** from anyw
 - **Windows:** turn on *Keep my Windows lock screen up to date* in Settings, under Lock screens. Myelin refreshes it every 15 minutes.
 - **iPhone:** turn on phone access in the same section and copy the private link it shows. In the Shortcuts app, create a daily automation: **Get Contents of URL** with that link, then **Set Wallpaper** on the Lock Screen. Add two or three times a day to keep it fresh. Your phone needs to be on the same Wi-Fi as your PC. Only that picture is reachable from your network, and only with the link.
 
-**Settings** covers the theme (Auto switches at Maghrib and sunrise, or choose Light, Dark or Follow Windows, also on the toggle beside the tabs), text size, reduced motion, work hours and office days, commute, prayer method and Asr, private calendar links from Google or Outlook, upcoming interviews, lock screens, reminders and starting with Windows.
+**Make it yours.** In Settings, under Appearance:
+
+- **Background:** *Live weather* draws the sky outside: sun or moon and stars, drifting clouds, rain, snow, a storm with soft lightning, or fog. *Neurons* shows drifting cells with signals hopping between them. *Plain* is still.
+- **Cursor effect:** a soft *glow* that follows your cursor, or *synapses* that fire along its path and fade. On the wallpaper, turn on mouse input in Lively's settings.
+- **Accent colour:** Myelin blue, emerald, amber or rose, each tuned for day and night.
+- **Clock and date:** 24-hour clock, seconds, Hijri date on or off, and the weather in °C or °F under the date.
+
+| Neurons with the synapse cursor | A storm at night |
+| --- | --- |
+| ![Neurons background with a trail of synapses following the cursor](docs/background-neurons.png) | ![Storm background: dark clouds and slanted rain](docs/background-storm.png) |
+
+Animations run at about 30 frames a second, stop when the window is hidden or a full-screen app runs, and go still with Reduce motion on.
+
+**Settings** also covers the theme (Auto switches at Maghrib and sunrise, or choose Light, Dark or Follow Windows, also on the toggle beside the tabs), text size, reduced motion, work hours and office days, commute, prayer method and Asr, private calendar links from Google or Outlook, upcoming interviews, lock screens, reminders and starting with Windows.
 
 **Reminders** come as Windows notifications: 10 minutes before each prayer, when a block starts, and when a focus timer ends.
 
@@ -71,7 +86,7 @@ Tell Myelin about your day in the command box, or press **Ctrl+Alt+M** from anyw
 
 ## Privacy
 
-Everything runs on your PC: a small local server and one SQLite file in `%LOCALAPPDATA%\Myelin`. There's no account and no cloud. Your location is used only to calculate prayer times, and calendars are read through private links you paste in.
+Everything runs on your PC: a small local server and one SQLite file in `%LOCALAPPDATA%\Myelin`. There's no account and no cloud. Prayer times are calculated on your PC. With the live weather background or the weather line on, Myelin asks [Open-Meteo](https://open-meteo.com) for the weather every 15 minutes, sending only your location rounded to about 1 km; turn both off and nothing leaves your computer. Calendars are read through private links you paste in.
 
 ## Change your routine
 
@@ -111,6 +126,7 @@ To build the installer locally on Windows: `npm run build` in `frontend`, then `
 - [x] **Smart planning:** timed schedule, quick commands, light days, energy check-in, interview mode, calendar sync
 - [x] **Tools:** focus timer, brain dump, LeetCode log with spaced re-solves, SQL playground
 - [x] **Everywhere:** Windows app with tray, hotkey and reminders, installer, themes, Windows and iPhone lock screens
+- [x] **Make it yours:** live weather and neuron backgrounds, cursor effects, accent colours, clock options
 - [ ] **Faith:** daily hadith with labeled AI explanations, Quran khatm progress, dhikr counter
 - [ ] **AI:** bring your own AI (Claude, OpenAI, Gemini or local Ollama) to plan, quiz and run mock interviews
 - [ ] **For everyone:** setup wizard, routine templates, content packs, wallpaper layout editor

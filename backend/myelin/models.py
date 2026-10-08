@@ -23,6 +23,14 @@ class UserSettings(SQLModel, table=True):
     theme: str = "auto"  # "auto" (night from Maghrib to sunrise) | "light" | "dark" | "system"
     text_size: str = "normal"  # "normal" | "large" | "larger"
     reduced_motion: bool = False
+    background: str = "weather"  # "plain" | "weather" (live sky) | "neural" (drifting neurons)
+    cursor_effect: str = "glow"  # "off" | "glow" | "synapses"
+    accent: str = "myelin"  # "myelin" | "emerald" | "amber" | "rose"
+    clock_24h: bool = False
+    show_seconds: bool = False
+    show_hijri: bool = True
+    show_weather: bool = True  # temperature and conditions under the date
+    temperature_unit: str = "c"  # "c" | "f"
 
     # Your day, for the scheduler
     work_start: str = "09:00"

@@ -51,6 +51,46 @@
   color-scheme: dark;
 }
 
+/* Accent colours. Myelin blue is the default; each has a day and a night shade with readable contrast. */
+:root[data-accent="emerald"] {
+  --myelin: #1f7a5a;
+  --myelin-wash: rgb(31 122 90 / 0.09);
+}
+:root[data-accent="amber"] {
+  --myelin: #9a5b12;
+  --myelin-wash: rgb(154 91 18 / 0.09);
+}
+:root[data-accent="rose"] {
+  --myelin: #b03a6a;
+  --myelin-wash: rgb(176 58 106 / 0.09);
+}
+:root[data-theme="night"][data-accent="emerald"] {
+  --myelin: #4fd1a1;
+  --myelin-wash: rgb(79 209 161 / 0.1);
+}
+:root[data-theme="night"][data-accent="amber"] {
+  --myelin: #f2b25c;
+  --myelin-wash: rgb(242 178 92 / 0.1);
+}
+:root[data-theme="night"][data-accent="rose"] {
+  --myelin: #f28bb0;
+  --myelin-wash: rgb(242 139 176 / 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="day"])[data-accent="emerald"] {
+    --myelin: #4fd1a1;
+    --myelin-wash: rgb(79 209 161 / 0.1);
+  }
+  :root:not([data-theme="day"])[data-accent="amber"] {
+    --myelin: #f2b25c;
+    --myelin-wash: rgb(242 178 92 / 0.1);
+  }
+  :root:not([data-theme="day"])[data-accent="rose"] {
+    --myelin: #f28bb0;
+    --myelin-wash: rgb(242 139 176 / 0.1);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -908,4 +948,73 @@ kbd {
     transition: none !important;
     animation: none !important;
   }
+}
+
+
+/* ---------- Living background ---------- */
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wall {
+  position: relative;
+  z-index: 1;
+}
+
+.weather-line {
+  color: var(--muted);
+  font-size: clamp(14px, 0.95vw, 21px);
+  margin-top: 0.15em;
+}
+
+/* Accent swatches in Settings */
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.35rem 0.8rem 0.35rem 0.45rem;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.swatch[aria-checked="true"] {
+  border-color: var(--ink);
+  font-weight: 650;
+}
+
+.swatch-dot {
+  width: 1.15em;
+  height: 1.15em;
+  border-radius: 50%;
+}
+
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+}
+
+.field-note {
+  margin-top: 0.45rem;
+  max-width: 52ch;
+}
+
+.settings-row .segmented {
+  margin-top: 1rem;
 }

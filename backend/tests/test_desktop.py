@@ -75,3 +75,38 @@ def test_notifier_says_when_focus_ends(client, monkeypatch, clock):
 def test_launch_command_points_at_the_desktop_module():
     assert "myelin.desktop --background" in desktop.launch_command() or desktop.launch_command().endswith(
         "--background")
+
+
+def test_recognises_myelin_processes_only():
+    assert desktop.is_myelin_process("Myelin.exe", r"C:\Users\a\AppData\Local\Programs\Myelin\Myelin.exe")
+    assert desktop.is_myelin_process("pythonw.exe", r"C:\code\myelin\backend\.venv\Scripts\pythonw.exe -m myelin")
+    assert desktop.is_myelin_process("python.exe", "python -m myelin.desktop --background")
+    assert not desktop.is_myelin_process("python.exe", "python -m http.server 8765")
+    assert not desktop.is_myelin_process("chrome.exe", "chrome --myelin")
+
+
+def _app(tmp_path):
+    from myelin.config import Config
+
+    return desktop.DesktopApp(Config(data_dir=tmp_path, host="127.0.0.1", port=8765,
+                                     frontend_dist=tmp_path), background=True)
+
+
+def test_shares_a_server_of_the_same_version(tmp_path, monkeypatch):
+    from myelin import __version__
+
+    monkeypatch.setattr(desktop, "server_version", lambda base: __version__)
+    monkeypatch.setattr(desktop, "stop_old_myelin", lambda port: (_ for _ in ()).throw(AssertionError("stopped")))
+    _app(tmp_path).start_server()  # returns without starting or stopping anything
+
+
+def test_replaces_an_older_server(tmp_path, monkeypatch):
+    stopped = []
+    monkeypatch.setattr(desktop, "server_version", lambda base: "0.1.0")
+    monkeypatch.setattr(desktop, "stop_old_myelin", lambda port: stopped.append(port) or False)
+    app = _app(tmp_path)
+    try:
+        app.start_server()
+    except RuntimeError as e:
+        assert "0.1.0" in str(e)  # couldn't stop it in this test, so it explains what to do
+    assert stopped == [8765]

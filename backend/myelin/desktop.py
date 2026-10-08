@@ -24,6 +24,7 @@ from typing import Callable, Optional
 
 import uvicorn
 
+from . import __version__
 from .__main__ import network_config
 from .app import create_app
 from .config import Config, load_config
@@ -56,6 +57,85 @@ def server_running(base: str) -> bool:
         return False
 
 
+def server_version(base: str) -> Optional[str]:
+    """The version of the Myelin server answering at `base`, or None if nothing answers."""
+    try:
+        health = _get(base, "/api/health", timeout=1)
+    except Exception:
+        return None
+    return str(health.get("version")) if health.get("ok") else None
+
+
+# ---------- Replacing an older Myelin ----------
+# People who ran Myelin from source before installing the app can still have that old server running
+# (often started at sign-in by the old Startup shortcut). It holds port 8765, so the new app would
+# show the old interface. The app replaces it instead.
+
+def is_myelin_process(name: str, cmdline: str) -> bool:
+    name, cmdline = name.lower(), cmdline.lower().replace("\\", "/")
+    if name == "myelin.exe":
+        return True
+    is_python = name.startswith("python") or name.startswith("pythonw")
+    return is_python and ("-m myelin" in cmdline or "myelin/__main__" in cmdline or "myelin.desktop" in cmdline)
+
+
+def stop_old_myelin(port: int, own_pid: Optional[int] = None) -> bool:
+    """Stop an older Myelin listening on `port`. True if the port is free afterwards.
+
+    Never touches a process that isn't Myelin, or this process.
+    """
+    try:
+        import psutil
+    except ImportError:
+        log.warning("psutil is missing, so an older Myelin on port %s can't be replaced.", port)
+        return False
+    import os
+
+    own_pid = own_pid or os.getpid()
+    stopped = False
+    for proc in psutil.process_iter(["pid", "name", "cmdline"]):
+        try:
+            if proc.pid == own_pid:
+                continue
+            if not is_myelin_process(proc.info["name"] or "", " ".join(proc.info["cmdline"] or [])):
+                continue
+            if not any(c.laddr and c.laddr.port == port and c.status == psutil.CONN_LISTEN
+                       for c in proc.net_connections(kind="tcp")):
+                continue
+            log.info("Stopping an older Myelin (pid %s) that holds port %s.", proc.pid, port)
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except psutil.TimeoutExpired:
+                proc.kill()
+            stopped = True
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    if stopped:
+        for _ in range(50):
+            if server_version(f"http://127.0.0.1:{port}") is None:
+                return True
+            time.sleep(0.1)
+    return server_version(f"http://127.0.0.1:{port}") is None
+
+
+def remove_old_startup_shortcut() -> None:
+    """Older versions started Myelin at sign-in with a Startup-folder shortcut to a source checkout."""
+    if sys.platform != "win32":
+        return
+    import os
+    from pathlib import Path
+
+    startup = Path(os.environ.get("APPDATA", "")) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "Startup"
+    shortcut = startup / "Myelin.lnk"
+    try:
+        if shortcut.exists():
+            shortcut.unlink()
+            log.info("Removed the old Startup shortcut %s", shortcut)
+    except OSError:
+        log.warning("Couldn't remove the old Startup shortcut %s", shortcut)
+
+
 # ---------- Single instance ----------
 
 def _single_instance() -> bool:
@@ -66,6 +146,14 @@ def _single_instance() -> bool:
 
     ctypes.windll.kernel32.CreateMutexW(None, False, "Local\\MyelinDesktopApp")
     return ctypes.windll.kernel32.GetLastError() != 183  # ERROR_ALREADY_EXISTS
+
+
+def _message_box(title: str, text: str) -> None:
+    """A plain Windows message box, for errors before the window exists."""
+    if sys.platform == "win32":
+        import ctypes
+
+        ctypes.windll.user32.MessageBoxW(None, text, title, 0x10)  # MB_ICONERROR
 
 
 # ---------- Start with Windows ----------
@@ -247,8 +335,15 @@ class DesktopApp:
 
     # server
     def start_server(self) -> None:
-        if server_running(self.base):
-            return  # e.g. started earlier by scripts\\start.ps1; share it
+        running = server_version(self.base)
+        if running == __version__:
+            return  # the same version, e.g. started by scripts\\start.ps1: share it
+        if running is not None:
+            # An older (or newer) Myelin holds the port. Replace it so the window shows this version.
+            if not stop_old_myelin(self.config.port):
+                raise RuntimeError(
+                    f"Myelin {running} is already running on port {self.config.port} and couldn't be stopped. "
+                    "Quit it from its tray icon or Task Manager, then open Myelin again.")
         engine = make_engine(self.config.db_url)
         self.config = network_config(self.config, engine)
         app = create_app(self.config, engine)
@@ -312,7 +407,13 @@ class DesktopApp:
     def run(self) -> None:
         import webview
 
-        self.start_server()
+        remove_old_startup_shortcut()
+        try:
+            self.start_server()
+        except RuntimeError as e:
+            log.error("%s", e)
+            _message_box("Myelin couldn't start", str(e))
+            return
         self.window = webview.create_window(
             "Myelin",
             self.base + "/",

@@ -24,6 +24,7 @@ from .deps import Ctx, load_settings
 from .routes import appctl, focus, lockscreen as lockscreen_routes, problems, sql, system
 from .routes import settings as settings_routes
 from .routes import today as today_routes
+from .routes import weather as weather_routes
 
 
 def default_clock(tz: Optional[ZoneInfo]) -> datetime:
@@ -83,7 +84,7 @@ def create_app(
         return {"ok": True, "version": __version__}
 
     for router in (settings_routes.router, today_routes.router, focus.router, problems.router,
-                   sql.router, system.router, lockscreen_routes.router, appctl.router):
+                   sql.router, system.router, lockscreen_routes.router, appctl.router, weather_routes.router):
         app.include_router(router)
 
     _mount_frontend(app, config)
@@ -105,7 +106,8 @@ def _mount_frontend(app: FastAPI, config: Config) -> None:
         if path and candidate.is_file() and dist.resolve() in candidate.parents:
             return FileResponse(candidate)
         if index.is_file():
-            return FileResponse(index)
+            # Always revalidate the page itself, so an update shows up on the next load.
+            return FileResponse(index, headers={"Cache-Control": "no-cache"})
         return HTMLResponse(
             "<h1>Myelin is running</h1><p>The web interface has not been built yet. "
             "Run <code>scripts\\setup.ps1</code>, then restart Myelin.</p>",
