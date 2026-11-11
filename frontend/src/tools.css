@@ -143,9 +143,10 @@
   max-width: 26em;
 }
 
+/* --ink, not --myelin: accent text on its own wash is below 4.5:1 by day. The weight carries the emphasis. */
 .focus-badge-time {
   font-weight: 700;
-  color: var(--myelin);
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 
@@ -916,4 +917,22 @@
   display: grid;
   gap: 0.35em;
   max-width: 60ch;
+}
+
+/* ---------- Text on washes ---------- */
+
+/* --muted is below 4.5:1 on a wash in the day theme, so secondary text on a wash uses --ink. */
+.quick-log .field,
+.quick-log .field-label,
+.quick-log .segmented button:not([aria-checked="true"]),
+.quick-log .btn.quiet,
+.focus-badge.is-up .btn.quiet,
+.sql-q.is-free:hover,
+.sql-q.is-free.is-selected {
+  color: var(--ink);
+}
+
+/* Fields inside the log sit on the page colour, so their placeholder text keeps its contrast. */
+.quick-log .input {
+  background: var(--slide);
 }

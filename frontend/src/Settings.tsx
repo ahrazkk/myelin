@@ -11,6 +11,7 @@ import {
   type TextSize,
   type ThemeMode,
 } from "./api";
+import { ACCENT_COLORS } from "./tokens.generated";
 
 const METHODS: [string, string][] = [
   ["NORTH_AMERICA", "ISNA (North America)"],
@@ -51,11 +52,12 @@ const CURSORS: [CursorEffect, string][] = [
   ["off", "Off"],
 ];
 
-const ACCENTS: { id: Accent; label: string; day: string; night: string }[] = [
-  { id: "myelin", label: "Myelin blue", day: "#2d6bad", night: "#57c4e5" },
-  { id: "emerald", label: "Emerald", day: "#1f7a5a", night: "#4fd1a1" },
-  { id: "amber", label: "Amber", day: "#9a5b12", night: "#f2b25c" },
-  { id: "rose", label: "Rose", day: "#b03a6a", night: "#f28bb0" },
+// The swatch colours come from the design tokens (tokens.generated.ts), so they cannot drift.
+const ACCENTS: { id: Accent; label: string }[] = [
+  { id: "myelin", label: "Myelin blue" },
+  { id: "emerald", label: "Emerald" },
+  { id: "amber", label: "Amber" },
+  { id: "rose", label: "Rose" },
 ];
 
 const BACKGROUND_HINT: Record<BackgroundMode, string> = {
@@ -189,7 +191,9 @@ export function Settings({ settings: s, onSave }: { settings: SettingsT; onSave:
                 >
                   <span
                     className="swatch-dot"
-                    style={{ background: `linear-gradient(135deg, ${a.day} 50%, ${a.night} 50%)` }}
+                    style={{
+                      background: `linear-gradient(135deg, ${ACCENT_COLORS[a.id].day} 50%, ${ACCENT_COLORS[a.id].night} 50%)`,
+                    }}
                     aria-hidden="true"
                   />
                   {a.label}

@@ -589,8 +589,11 @@ a:hover {
   vertical-align: 0.08em;
 }
 
-.week-day.is-before {
-  opacity: 0.55;
+/* Days before the start date are quieter. Colour does this, not opacity, so the text stays above 4.5:1. */
+.week-day.is-before .week-day-name,
+.week-day.is-before .week-block-title {
+  color: var(--muted);
+  font-weight: 400;
 }
 
 /* ---------- Progress ---------- */
@@ -756,9 +759,10 @@ a:hover {
   padding: 0.45em 0.65em;
 }
 
+/* Full opacity: fading --muted takes it below 4.5:1. */
 .input::placeholder {
   color: var(--muted);
-  opacity: 0.8;
+  opacity: 1;
 }
 
 select.input option {

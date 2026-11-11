@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { BackgroundMode, CursorEffect, Weather, WeatherScene } from "./api";
+import { DAY_RGB } from "./tokens.generated";
 
 /*
   The living background behind every tab: the sky outside your window, or drifting neurons, plus an
@@ -68,10 +69,10 @@ interface Palette {
 function readPalette(): Palette {
   const s = getComputedStyle(document.documentElement);
   return {
-    slide: parseColor(s.getPropertyValue("--slide"), [237, 239, 245]),
-    ink: parseColor(s.getPropertyValue("--ink"), [27, 33, 66]),
-    accent: parseColor(s.getPropertyValue("--myelin"), [45, 107, 173]),
-    cresyl: parseColor(s.getPropertyValue("--cresyl"), [123, 63, 158]),
+    slide: parseColor(s.getPropertyValue("--slide"), [...DAY_RGB.slide]),
+    ink: parseColor(s.getPropertyValue("--ink"), [...DAY_RGB.ink]),
+    accent: parseColor(s.getPropertyValue("--myelin"), [...DAY_RGB.myelin]),
+    cresyl: parseColor(s.getPropertyValue("--cresyl"), [...DAY_RGB.cresyl]),
   };
 }
 
