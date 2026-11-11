@@ -117,8 +117,31 @@ To build the installer locally on Windows: `npm run build` in `frontend`, then `
 | `backend/myelin/routes` | API routes by feature |
 | `backend/tests` | pytest suite |
 | `frontend/src` | React + TypeScript interface: Today, Week, Progress, Tools, Settings |
+| `design` | Design system tooling: token contract, accessibility linters, MCP server (see below) |
 | `packaging` | PyInstaller recipe, installer script and icon |
 | `scripts` | Run from source on Windows: setup, start, start at sign-in |
+
+## Design system tooling
+
+Myelin's colours are ten design tokens with day and night values and four accents. The [`design`](design)
+folder keeps that system honest and makes it usable by AI coding agents:
+
+- **Token contract:** the tokens are exported from the stylesheet to [`design/tokens.json`](design/tokens.json),
+  checked against a JSON Schema. CI fails if the file drifts from the CSS.
+- **Quality gates:** linters for WCAG 2.1 AA contrast (with translucent colours composited first),
+  hard-coded colours that bypass the tokens, and removed focus outlines.
+- **MCP server:** four read-only tools that give an agent the tokens, a contrast checker, a linter
+  for the code it writes, and the UI guidelines.
+
+```bash
+cd design
+pip install -e ".[dev]"
+python -m myelin_design export --check   # token drift gate
+python -m myelin_design lint             # contrast, token compliance, focus
+python -m myelin_design serve            # MCP server over stdio
+```
+
+How it works: [`design/README.md`](design/README.md). What it found: [`design/RESULTS.md`](design/RESULTS.md).
 
 ## Roadmap
 
