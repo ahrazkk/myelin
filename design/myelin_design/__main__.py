@@ -133,7 +133,17 @@ def _eval(project: Project, args: argparse.Namespace) -> int:
 
     run_dir = project.design_dir / "eval" / "runs" / args.name
     if args.action == "run":
+        import os
+
         import anyio
+
+        # design/.env (ignored by git) may hold ANTHROPIC_API_KEY=... A variable already set wins.
+        env_file = project.design_dir / ".env"
+        if env_file.exists():
+            for line in read_text(env_file).splitlines():
+                name, separator, value = line.strip().partition("=")
+                if separator and name and not name.startswith("#"):
+                    os.environ.setdefault(name.strip(), value.strip().strip("\"'"))
 
         try:
             model = evaluation.AnthropicModel()

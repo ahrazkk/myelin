@@ -1,0 +1,60 @@
+{
+ "task": "alert-banner",
+ "name": "AlertBanner",
+ "condition": "baseline",
+ "repetition": 2,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 8.337,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 295,
+    "output_tokens": 2088,
+    "output_tokens_details": {
+     "thinking_tokens": 632
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps) {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <span className=\"alert-banner__icon\" aria-hidden=\"true\">!</span>\n      <p className=\"alert-banner__message\">{message}</p>\n      <button\n        type=\"button\"\n        className=\"alert-banner__button\"\n        onClick={onRetry}\n      >\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n/*\n * AlertBanner styles.\n * Colors are driven by custom properties. Day is the default. Night applies\n * when an ancestor (typically <html>) carries data-theme=\"night\".\n */\n\n:root {\n  --alert-banner-bg: #fdf1e3;\n  --alert-banner-border: #d9822b;\n  --alert-banner-text: #3d2a14;\n  --alert-banner-icon-bg: #d9822b;\n  --alert-banner-icon-text: #ffffff;\n  --alert-banner-button-bg: #3d2a14;\n  --alert-banner-button-text: #fdf1e3;\n  --alert-banner-button-hover: #5a3f1f;\n  --alert-banner-focus: #1f5fbf;\n}\n\n[data-theme=\"night\"] {\n  --alert-banner-bg: #2a2118;\n  --alert-banner-border: #e0a052;\n  --alert-banner-text: #f3e7d6;\n  --alert-banner-icon-bg: #e0a052;\n  --alert-banner-icon-text: #1d160f;\n  --alert-banner-button-bg: #f3e7d6;\n  --alert-banner-button-text: #1d160f;\n  --alert-banner-button-hover: #ffffff;\n  --alert-banner-focus: #8ab8ff;\n}\n\n.alert-banner {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  width: 100%;\n  box-sizing: border-box;\n  padding: 0.75rem 1rem;\n  border-left: 4px solid var(--alert-banner-border);\n  border-radius: 6px;\n  background-color: var(--alert-banner-bg);\n  color: var(--alert-banner-text);\n  font-family: inherit;\n  font-size: 0.95rem;\n  line-height: 1.4;\n}\n\n.alert-banner__icon {\n  flex: 0 0 auto;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 50%;\n  background-color: var(--alert-banner-icon-bg);\n  color: var(--alert-banner-icon-text);\n  font-weight: 700;\n  font-size: 0.9rem;\n}\n\n.alert-banner__message {\n  flex: 1 1 auto;\n  margin: 0;\n  min-width: 0;\n  overflow-wrap: anywhere;\n}\n\n.alert-banner__button {\n  flex: 0 0 auto;\n  margin: 0;\n  padding: 0.4rem 0.9rem;\n  border: 2px solid transparent;\n  border-radius: 4px;\n  background-color: var(--alert-banner-button-bg);\n  color: var(--alert-banner-button-text);\n  font: inherit;\n  font-weight: 600;\n  cursor: pointer;\n}\n\n.alert-banner__button:hover {\n  background-color: var(--alert-banner-button-hover);\n}\n\n.alert-banner__button:active {\n  transform: translateY(1px);\n}\n\n.alert-banner__button:focus {\n  outline: none;\n}\n\n.alert-banner__button:focus-visible {\n  outline: 3px solid var(--alert-banner-focus);\n  outline-offset: 2px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__button:active {\n    transform: none;\n  }\n}\n\n@media (max-width: 480px) {\n  .alert-banner {\n    flex-wrap: wrap;\n  }\n\n  .alert-banner__message {\n    flex-basis: calc(100% - 2.25rem);\n  }\n\n  .alert-banner__button {\n    margin-left: 2.25rem;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an inline warning banner that says the local server cannot be reached, with a Retry button. Props: message, onRetry.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file AlertBanner.tsx. It imports \"./AlertBanner.css\" and has a named export `AlertBanner`.\n2. A `css` block: the file AlertBanner.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps) {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <span className=\"alert-banner__icon\" aria-hidden=\"true\">!</span>\n      <p className=\"alert-banner__message\">{message}</p>\n      <button\n        type=\"button\"\n        className=\"alert-banner__button\"\n        onClick={onRetry}\n      >\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n/*\n * AlertBanner styles.\n * Colors are driven by custom properties. Day is the default. Night applies\n * when an ancestor (typically <html>) carries data-theme=\"night\".\n */\n\n:root {\n  --alert-banner-bg: #fdf1e3;\n  --alert-banner-border: #d9822b;\n  --alert-banner-text: #3d2a14;\n  --alert-banner-icon-bg: #d9822b;\n  --alert-banner-icon-text: #ffffff;\n  --alert-banner-button-bg: #3d2a14;\n  --alert-banner-button-text: #fdf1e3;\n  --alert-banner-button-hover: #5a3f1f;\n  --alert-banner-focus: #1f5fbf;\n}\n\n[data-theme=\"night\"] {\n  --alert-banner-bg: #2a2118;\n  --alert-banner-border: #e0a052;\n  --alert-banner-text: #f3e7d6;\n  --alert-banner-icon-bg: #e0a052;\n  --alert-banner-icon-text: #1d160f;\n  --alert-banner-button-bg: #f3e7d6;\n  --alert-banner-button-text: #1d160f;\n  --alert-banner-button-hover: #ffffff;\n  --alert-banner-focus: #8ab8ff;\n}\n\n.alert-banner {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  width: 100%;\n  box-sizing: border-box;\n  padding: 0.75rem 1rem;\n  border-left: 4px solid var(--alert-banner-border);\n  border-radius: 6px;\n  background-color: var(--alert-banner-bg);\n  color: var(--alert-banner-text);\n  font-family: inherit;\n  font-size: 0.95rem;\n  line-height: 1.4;\n}\n\n.alert-banner__icon {\n  flex: 0 0 auto;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 50%;\n  background-color: var(--alert-banner-icon-bg);\n  color: var(--alert-banner-icon-text);\n  font-weight: 700;\n  font-size: 0.9rem;\n}\n\n.alert-banner__message {\n  flex: 1 1 auto;\n  margin: 0;\n  min-width: 0;\n  overflow-wrap: anywhere;\n}\n\n.alert-banner__button {\n  flex: 0 0 auto;\n  margin: 0;\n  padding: 0.4rem 0.9rem;\n  border: 2px solid transparent;\n  border-radius: 4px;\n  background-color: var(--alert-banner-button-bg);\n  color: var(--alert-banner-button-text);\n  font: inherit;\n  font-weight: 600;\n  cursor: pointer;\n}\n\n.alert-banner__button:hover {\n  background-color: var(--alert-banner-button-hover);\n}\n\n.alert-banner__button:active {\n  transform: translateY(1px);\n}\n\n.alert-banner__button:focus {\n  outline: none;\n}\n\n.alert-banner__button:focus-visible {\n  outline: 3px solid var(--alert-banner-focus);\n  outline-offset: 2px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__button:active {\n    transform: none;\n  }\n}\n\n@media (max-width: 480px) {\n  .alert-banner {\n    flex-wrap: wrap;\n  }\n\n  .alert-banner__message {\n    flex-basis: calc(100% - 2.25rem);\n  }\n\n  .alert-banner__button {\n    margin-left: 2.25rem;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 295,
+  "output_tokens": 2088,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 8.337,
+ "cost_usd": 0.001074
+}

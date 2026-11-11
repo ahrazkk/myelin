@@ -1,0 +1,252 @@
+{
+ "task": "chip-filter",
+ "name": "ChipFilter",
+ "condition": "mcp",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.932,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1781,
+    "output_tokens": 114,
+    "output_tokens_details": {
+     "thinking_tokens": 57
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 14.971,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10890,
+    "output_tokens": 3830,
+    "output_tokens_details": {
+     "thinking_tokens": 2591
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 3.251,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 15594,
+    "output_tokens": 951,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./ChipFilter.css\";\n\nexport interface ChipOption<T extends string = string> {\n  value: T;\n  label: string;\n}\n\nexport interface ChipFilterProps<T extends string = string> {\n  label: string;\n  options: readonly ChipOption<T>[];\n  selected: readonly T[];\n  onToggle: (value: T) => void;\n}\n\nexport function ChipFilter<T extends string = string>({\n  label,\n  options,\n  selected,\n  onToggle,\n}: ChipFilterProps<T>): ReactElement {\n  const labelId = useId();\n\n  return (\n    <div role=\"group\" aria-labelledby={labelId} className=\"chip-filter\">\n      <span id={labelId} className=\"chip-filter__label\">\n        {label}\n      </span>\n      {options.map((option) => (\n        <button\n          key={option.value}\n          type=\"button\"\n          className=\"chip-filter__chip\"\n          aria-pressed={selected.includes(option.value)}\n          onClick={() => onToggle(option.value)}\n        >\n          {option.label}\n        </button>\n      ))}\n    </div>\n  );\n}\n```\n\n```css\n.chip-filter {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: clamp(0.5rem, 1vw, 0.75rem);\n  font: inherit;\n}\n\n.chip-filter__label {\n  color: var(--muted);\n  font-size: clamp(0.8rem, 0.9vw, 0.95rem);\n  margin-inline-end: clamp(0.25rem, 0.5vw, 0.5rem);\n}\n\n.chip-filter__chip {\n  display: inline-flex;\n  align-items: center;\n  gap: 0.45em;\n  padding: 0.4em 0.9em;\n  border: 1px solid var(--muted);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.85rem, 1vw, 1rem);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.chip-filter__chip:hover {\n  background: var(--myelin-wash);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"] {\n  background: var(--cresyl-wash);\n  border-color: var(--cresyl);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"]::before {\n  content: \"\";\n  width: 0.5em;\n  height: 0.5em;\n  border-radius: 50%;\n  background: var(--cresyl);\n}\n\n:root[data-motion=\"reduce\"] .chip-filter__chip,\n@media (prefers-reduced-motion: reduce) {\n  .chip-filter__chip {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a group of chips that can each be switched on or off, used to filter problems by difficulty. Props: label, options (value and label), selected (a list of values), onToggle.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file ChipFilter.tsx. It imports \"./ChipFilter.css\" and has a named export `ChipFilter`.\n2. A `css` block: the file ChipFilter.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS/wUKEAgTGAI4AUIIdGhpbmtpbmcSDPfl5UFQXKReYNJ8WhoMZvrW/92SPTPLMGMsIjBecsDKSmMmajArxJMLoe1iMy0ClEfztP7NT4jPB5kGzRcHCoehoPknCk7SuLeiZekqnAWTFRqWm+BpivLXt3nXuDH7s4QbC9tEtqn3ge5pwxFoBP7HNyDf9liNpQXEUKOgNLjyjHv1qNHRgH7GiLhi4TXJKb54JzyWwvr3RBAR1wRckGNQzlnf0B8eVCJka4KH7dk+J7Bbo97TUU4NXqoBSgjFhi/Pw3mUUHhC2OI0iH2mAVPnw2R4fFcdu+1cs9xTTeItjnP3lpQswqnZrtJrSff5Y7BrLzUtSbUaKaj4OpzSAE4mQXxoRdOgedFbRpjrUSL26+rLW1n8mzI6g9a9xxMg3o1ZED9/1Zn0Pe15p+3hBe/2J8l3uOvZ7aba3j3m8348dS8wzP2JqgwolJZ0lTP8lKdn0sRTpYZHXwqTUwybTAFoeBaniEcncFOTBogjzFamph1J/KYnY7BuXtUxK2tTGd6pafkILckZAmeyaBzQnd/ipwzG+K6XNmStvNaeBEttSqE8Yrrg/aodzuzTSD0Cl2FLpG0Vy86rgOaTZIOUflydYKYDRI89Eo9J5jAT2X3kkN8fuJuy9QMyOWdWzdFZtYx4iQanEJo9whS9Ch9wNMW8/s7p0r3LLoeDx8DzqVsuId1eEFRdsCwIeDdY7USR4IZhaBxOHMRfDl3E37kyj35LCiCbft3qQIx4rWQVqHLM+ADf4zCOUSP9lUuFWnK7ycXh9nyKH3VLPy7+m3uNhKgBOyTuO7B2r9kRNWBVFmWxdSbHSwZkoHzwNYrWNa5mHyAvbJm01tu4DxCPvYatTV3ccyRNHSucT+rjVyPgmDYhoD7kX8ITSyDVBwH/gPMenY9rHQ6sJOFxJYZG6Bd0ymi/wdPzbElbfQi4XID25VcDIyVTFXbR+DfUy7FUWSp3b5CCOfj0wJDVC84MVvXGK157Myf33bEpjvLw0RgB",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_016hU7gwowgs8okR8zQ27xsu",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01662PKaFTvgarC546t6tt1F",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_016hU7gwowgs8okR8zQ27xsu",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01662PKaFTvgarC546t6tt1F",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_011oJdV4jKbUfUocy2iKa3vF",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".chip-filter {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: clamp(0.5rem, 1vw, 0.75rem);\n  font: inherit;\n}\n\n.chip-filter__label {\n  color: var(--muted);\n  font-size: clamp(0.8rem, 0.9vw, 0.95rem);\n  margin-inline-end: clamp(0.25rem, 0.5vw, 0.5rem);\n}\n\n.chip-filter__chip {\n  display: inline-flex;\n  align-items: center;\n  gap: 0.45em;\n  padding: 0.4em 0.9em;\n  border: 1px solid var(--muted);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.85rem, 1vw, 1rem);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.chip-filter__chip:hover {\n  background: var(--myelin-wash);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"] {\n  background: var(--cresyl-wash);\n  border-color: var(--cresyl);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"]::before {\n  content: \"\";\n  width: 0.5em;\n  height: 0.5em;\n  border-radius: 50%;\n  background: var(--cresyl);\n}\n\n:root[data-motion=\"reduce\"] .chip-filter__chip,\n@media (prefers-reduced-motion: reduce) {\n  .chip-filter__chip {\n    transition: none;\n  }\n}",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01JUm4NtrV1yoMcw25hihqXz",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./ChipFilter.css\";\n\nexport interface ChipOption<T extends string = string> {\n  value: T;\n  label: string;\n}\n\nexport interface ChipFilterProps<T extends string = string> {\n  label: string;\n  options: readonly ChipOption<T>[];\n  selected: readonly T[];\n  onToggle: (value: T) => void;\n}\n\nexport function ChipFilter<T extends string = string>({\n  label,\n  options,\n  selected,\n  onToggle,\n}: ChipFilterProps<T>): ReactElement {\n  const labelId = useId();\n\n  return (\n    <div role=\"group\" aria-labelledby={labelId} className=\"chip-filter\">\n      <span id={labelId} className=\"chip-filter__label\">\n        {label}\n      </span>\n      {options.map((option) => (\n        <button\n          key={option.value}\n          type=\"button\"\n          className=\"chip-filter__chip\"\n          aria-pressed={selected.includes(option.value)}\n          onClick={() => onToggle(option.value)}\n        >\n          {option.label}\n        </button>\n      ))}\n    </div>\n  );\n}",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01EW6EuJvkb4VuXDfAvqMoeu",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--ink)",
+      "background": "var(--cresyl-wash)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01DdZwCY2YcRJ1PJoaZMoirb",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--muted)",
+      "background": "var(--slide)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_011oJdV4jKbUfUocy2iKa3vF",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 7, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 1, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01JUm4NtrV1yoMcw25hihqXz",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01EW6EuJvkb4VuXDfAvqMoeu",
+     "content": "{\"foreground\": \"var(--ink)\", \"background\": \"var(--cresyl-wash)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 11.75, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#1b2142\", \"background\": \"#e2ddec\", \"ratio\": 11.75, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#e4e8f6\", \"background\": \"#29234a\", \"ratio\": 11.97, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": [\"The background is translucent, so it was composited over --slide first.\"]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01DdZwCY2YcRJ1PJoaZMoirb",
+     "content": "{\"foreground\": \"var(--muted)\", \"background\": \"var(--slide)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 5.03, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#5d6485\", \"background\": \"#edeff5\", \"ratio\": 5.03, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#949bbb\", \"background\": \"#0e1530\", \"ratio\": 6.55, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "text": "```tsx\nimport { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./ChipFilter.css\";\n\nexport interface ChipOption<T extends string = string> {\n  value: T;\n  label: string;\n}\n\nexport interface ChipFilterProps<T extends string = string> {\n  label: string;\n  options: readonly ChipOption<T>[];\n  selected: readonly T[];\n  onToggle: (value: T) => void;\n}\n\nexport function ChipFilter<T extends string = string>({\n  label,\n  options,\n  selected,\n  onToggle,\n}: ChipFilterProps<T>): ReactElement {\n  const labelId = useId();\n\n  return (\n    <div role=\"group\" aria-labelledby={labelId} className=\"chip-filter\">\n      <span id={labelId} className=\"chip-filter__label\">\n        {label}\n      </span>\n      {options.map((option) => (\n        <button\n          key={option.value}\n          type=\"button\"\n          className=\"chip-filter__chip\"\n          aria-pressed={selected.includes(option.value)}\n          onClick={() => onToggle(option.value)}\n        >\n          {option.label}\n        </button>\n      ))}\n    </div>\n  );\n}\n```\n\n```css\n.chip-filter {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: clamp(0.5rem, 1vw, 0.75rem);\n  font: inherit;\n}\n\n.chip-filter__label {\n  color: var(--muted);\n  font-size: clamp(0.8rem, 0.9vw, 0.95rem);\n  margin-inline-end: clamp(0.25rem, 0.5vw, 0.5rem);\n}\n\n.chip-filter__chip {\n  display: inline-flex;\n  align-items: center;\n  gap: 0.45em;\n  padding: 0.4em 0.9em;\n  border: 1px solid var(--muted);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.85rem, 1vw, 1rem);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.chip-filter__chip:hover {\n  background: var(--myelin-wash);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"] {\n  background: var(--cresyl-wash);\n  border-color: var(--cresyl);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"]::before {\n  content: \"\";\n  width: 0.5em;\n  height: 0.5em;\n  border-radius: 50%;\n  background: var(--cresyl);\n}\n\n:root[data-motion=\"reduce\"] .chip-filter__chip,\n@media (prefers-reduced-motion: reduce) {\n  .chip-filter__chip {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 28265,
+  "output_tokens": 4895,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 19.154,
+ "cost_usd": 0.005274
+}

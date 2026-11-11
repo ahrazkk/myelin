@@ -1,0 +1,391 @@
+{
+ "task": "time-list",
+ "name": "TimeList",
+ "condition": "mcp",
+ "repetition": 3,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.894,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1775,
+    "output_tokens": 106,
+    "output_tokens_details": {
+     "thinking_tokens": 49
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 13.842,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10876,
+    "output_tokens": 3052,
+    "output_tokens_details": {
+     "thinking_tokens": 2652
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 5.881,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 15034,
+    "output_tokens": 1844,
+    "output_tokens_details": {
+     "thinking_tokens": 73
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 2.754,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 17101,
+    "output_tokens": 711,
+    "output_tokens_details": {
+     "thinking_tokens": 178
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 3.781,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 17897,
+    "output_tokens": 1266,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport \"./TimeList.css\";\n\nexport type TimeState = \"past\" | \"next\" | \"later\";\n\nexport interface TimeItem {\n  readonly id: string;\n  readonly name: string;\n  readonly time: string;\n  readonly state: TimeState;\n}\n\nexport interface TimeListProps {\n  readonly items: readonly TimeItem[];\n  readonly label?: string;\n  readonly onSelect?: (item: TimeItem) => void;\n}\n\nconst STATE_LABEL: Record<TimeState, string> = {\n  past: \"Passed\",\n  next: \"Next\",\n  later: \"Later\",\n};\n\nexport function TimeList({ items, label = \"Today\", onSelect }: TimeListProps) {\n  return (\n    <ol className=\"time-list\" aria-label={label}>\n      {items.map((item) => (\n        <li key={item.id} className={`time-list__item time-list__item--${item.state}`}>\n          <button\n            type=\"button\"\n            className=\"time-list__row\"\n            aria-current={item.state === \"next\" ? \"time\" : undefined}\n            onClick={onSelect ? () => onSelect(item) : undefined}\n          >\n            <span className=\"time-list__name\">{item.name}</span>\n            <time className=\"time-list__time\">{item.time}</time>\n            <span className=\"time-list__state\">{STATE_LABEL[item.state]}</span>\n          </button>\n        </li>\n      ))}\n    </ol>\n  );\n}\n```\n\n```css\n.time-list {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n  color: var(--ink);\n  font: inherit;\n}\n\n.time-list__item {\n  border-bottom: 1px solid var(--hair);\n}\n\n.time-list__item:last-child {\n  border-bottom: 0;\n}\n\n.time-list__row {\n  display: grid;\n  grid-template-columns: 1fr auto auto;\n  align-items: baseline;\n  gap: clamp(0.5rem, 1.5vw, 1rem);\n  width: 100%;\n  margin: 0;\n  padding: clamp(0.6rem, 1.4vh, 0.95rem) clamp(0.75rem, 1.5vw, 1.25rem);\n  border: 0;\n  border-radius: 0;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: start;\n  cursor: pointer;\n}\n\n.time-list__row:hover {\n  background: var(--code-bg);\n}\n\n.time-list__name {\n  font-size: clamp(1rem, 1.6vw, 1.35rem);\n  overflow-wrap: anywhere;\n}\n\n.time-list__time {\n  font-size: clamp(1rem, 1.6vw, 1.35rem);\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n.time-list__state {\n  font-size: clamp(0.7rem, 0.9vw, 0.8rem);\n  letter-spacing: 0.08em;\n  text-transform: uppercase;\n  white-space: nowrap;\n}\n\n/* Passed and later times are quieter than the next one. */\n.time-list__item--past .time-list__name,\n.time-list__item--past .time-list__time,\n.time-list__item--past .time-list__state,\n.time-list__item--later .time-list__state {\n  color: var(--muted);\n}\n\n/* The next time is highlighted with the cresyl wash and a marker bar. */\n.time-list__item--next .time-list__row {\n  background: var(--cresyl-wash);\n  box-shadow: inset 3px 0 0 var(--cresyl);\n}\n\n.time-list__item--next .time-list__name,\n.time-list__item--next .time-list__time {\n  font-weight: 600;\n}\n\n.time-list__item--next .time-list__state {\n  color: var(--cresyl);\n  font-weight: 600;\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a list of named times through the day, such as five prayer times. The next one is highlighted and the ones already past are quieter. Props: items (name, time, state of past, next or later).\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file TimeList.tsx. It imports \"./TimeList.css\" and has a named export `TimeList`.\n2. A `css` block: the file TimeList.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS6gUKEAgTGAI4AUIIdGhpbmtpbmcSDKgd3uHc37aRlKWsOxoMHWavJ49PreRg8BFDIjAUeUD2AtF45F3M0ajfSBMIG2qZJCPcW7fvAvoVoQhc7SxsV8uZ7/sYXX8BuMW8bfEqhwXOqZ7C69AVKwMVhs9mw8ngCV5ojjytrIX+m4Wu8AzvnpUacuwUSg47NCL6neb8BPKI9En0LiBnH/MdiGapGmdz4o/VrU4pw0z6HFjFPl9+WMUBUgu9rWxdQ8TXSGqpxgxT47NfjTMxUWeHaRREyLOfAFCVA+QCZHe/2HxjGSIJJgaQMYiZ8JFt/203O4NNHexPRJtUfW2+dwuuEoyLet0nR5fNr5OZjelKjKMqnBdMdcG3JeV4thK4yUxGBamGWAaLdK+3J59wzySqmkDDirCCLiNsrpj103EfUnGGDUZAacL87txR8kPKbyW2GrArxTMabc4ONPe0LaBjtILc4bfRR3biMBzM6/grDXOs+wAYmtE/TV8dg6PNgGXC0kVt5LW2TtLPgDWC+6BMjNfiTrONbQxq1dDTB7XekWqn6PkoM1HgUjdAaxbpNQYa9AzJUNHvXoXPT/k7s3qHjA5ZjfqQ/z9WH/bjkpMtVJaBfaI84R0KPh1yElYt26/BmMhk2Z1c/NSjEQKHUsC3TMocND2wIikNFdqAL7D/KddArYxcxK9ZN8l8JeHaAlHA0tld8AvLbvKXQAsZvY44187sPTe/ROpt9QFQ2iKUReSSmhlgqSM7bYIEIPrAtrtzubdzShyrS/1VoYB3yG8+39isTQyE2Qv5CKfGwj3HiRtx7/zUduPVWVjLUhh66sMwlyspZMH5Cy4THU3oXr5A41M8PV1LjvQOFh2H9ne0L4tiG3xcOzAWTAGiznpcM04csmvwONeqgBJRZrXjw35Eg94skSiMVoFEteUatvrD8vwGdQ6tUjwV/WQWdWPUwYO9MNdAMAmcTg/JP2NVtlIdfulavhGf8uxo09fIRBgB",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01XXAB7U2WrLXdD1KYFB8XCU",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01F7PSAbD2KLMLWbQYp258Wf",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01XXAB7U2WrLXdD1KYFB8XCU",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01F7PSAbD2KLMLWbQYp258Wf",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01M96Cw1pJhXLSEuvLCBPdmv",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--muted)",
+      "background": "var(--slide)",
+      "theme": "night"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01FzJsr2Xs3kJAFnd5h3fnRK",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--muted)",
+      "background": "var(--code-bg)",
+      "theme": "day"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_014Z3ixNwEvLzk6bnFdTZN6Y",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--cresyl)",
+      "background": "var(--cresyl-wash)",
+      "theme": "night"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01NZr2yUGUVbvcWKTpwWDd76",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--ink)",
+      "background": "var(--cresyl-wash)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01M96Cw1pJhXLSEuvLCBPdmv",
+     "content": "{\"foreground\": \"var(--muted)\", \"background\": \"var(--slide)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 6.55, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"night\", \"accent\": null, \"foreground\": \"#949bbb\", \"background\": \"#0e1530\", \"ratio\": 6.55, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01FzJsr2Xs3kJAFnd5h3fnRK",
+     "content": "{\"foreground\": \"var(--muted)\", \"background\": \"var(--code-bg)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 4.68, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#5d6485\", \"background\": \"#e5e7ee\", \"ratio\": 4.68, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": [\"The background is translucent, so it was composited over --slide first.\"]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_014Z3ixNwEvLzk6bnFdTZN6Y",
+     "content": "{\"foreground\": \"var(--cresyl)\", \"background\": \"var(--cresyl-wash)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 5.35, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"night\", \"accent\": null, \"foreground\": \"#d07be8\", \"background\": \"#29234a\", \"ratio\": 5.35, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": [\"The background is translucent, so it was composited over --slide first.\"]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01NZr2yUGUVbvcWKTpwWDd76",
+     "content": "{\"foreground\": \"var(--ink)\", \"background\": \"var(--cresyl-wash)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 11.75, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#1b2142\", \"background\": \"#e2ddec\", \"ratio\": 11.75, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#e4e8f6\", \"background\": \"#29234a\", \"ratio\": 11.97, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": [\"The background is translucent, so it was composited over --slide first.\"]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS/wYKEAgTGAI4AUIIdGhpbmtpbmcSDG5QuTIpXzUYSk/C+BoMuiXLQ5qfbqx36cWzIjCd/fUkj5mwVLsuKqxBAKsbVInDkWFxNVR68Y6LRjVAnGTGDSt38juA5BR08jEoWHQqnAa3bf/hclqbuuI3QIv+NlP7cjlESZWHjtDc0WPPZJzpwClNy2EPkAe1UJCW/9I6DS8IOb2gOBofKMCIBB4bPRLXhVaZdvnGozg4P4Og04fAtALKHwshdWhNYnoFod1DhK/XDxjI7UKDZRLYmLAOsRHNrzxAMfExn2YkGuJCTwo/5Iq5+aEYNbklKdOAZk1XHZONuiOUjtB23tECUogu0enuGyMAMhYoKAcXFzoBgH9E/vbS1fhyk7bkzeB+6nuuWcX+7YsnlVg9cH782z8zUTwjglcKhWVMsBriaS9zPTd2vEto5P6BhmtBvWd1wa6J/Kav/yyY5JtBQ4ffFqNI26OSdcNRzytJ6Jfgkhrxe5neBZc7taOepjhUz8zeCIHyHGleJf/uhoTO97gQTxQkCv2Uxw3P/GrSUBA5TamB/qh0qrmsPxmC6CGRej/yereNjDp/OM694FkttYDjzgbCBmPs3F54Cf1lQj0+RXEcDjSGrL7v0Cg2E2+x168zgIsuK59GZTSvm3ZLCUBhhQUjqiMnaou9i5ho6vpDhXPMnZo5tIk2iY+uFjY+aTBFK78XU6fhPzN3pbezzHBDmI79C45YAoMK7tCVmMWCcHxlRF5c8RBpim037wjk0xYl+6vqPM1G1YWI+sWSzhLpqJOKX2GspqfuiUpr3cjin85aCB3Zyd5F8/dT0+Hyasy+kJ3auVQmUPGYA1QAmfW9EIMtvGM/USuyKEjoGp2xxLvpd8p3uvlyQJErL9aWuaYct+DBdpq8/KhFpCeT5zBRv65a6Q0dw6E6P79LNa4N5jRR0eFHg+EH+qRNAVa/Hp8D9e2PJMKSJO6OBwzVHh1CGqksconbO6n9AJN87f6VdPW6JWCKH1UUpLX2GO2sioIeJ+k2D+ZpajEctJPXJG1i8fHPpZZ4riNICQir/43HeTXdKJoitwsvat4BVXAz4pKgNq8NMpIesWGDQwdUEDKG5i6vPxfJHaKoeqIACRH5CDwa0MUCqPQmeiHiTFTUl9MXgtfLWCe099CRbCfHT3/P2OrIfVOssvYfv0FTowPIkpfgGAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01RLUMmP7MsaQMHTqSMcjnS4",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import { useCallback } from \"react\";\nimport type { KeyboardEvent } from \"react\";\nimport \"./TimeList.css\";\n\nexport type TimeState = \"past\" | \"next\" | \"later\";\n\nexport interface TimeItem {\n  readonly id: string;\n  readonly name: string;\n  readonly time: string;\n  readonly state: TimeState;\n}\n\nexport interface TimeListProps {\n  readonly items: readonly TimeItem[];\n  readonly label?: string;\n  readonly onSelect?: (item: TimeItem) => void;\n}\n\nconst STATE_LABEL: Record<TimeState, string> = {\n  past: \"Passed\",\n  next: \"Next\",\n  later: \"Later\",\n};\n\nexport function TimeList({ items, label = \"Today\", onSelect }: TimeListProps) {\n  return (\n    <ol className=\"time-list\" aria-label={label}>\n      {items.map((item) => (\n        <TimeRow key={item.id} item={item} onSelect={onSelect} />\n      ))}\n    </ol>\n  );\n}\n\ninterface TimeRowProps {\n  readonly item: TimeItem;\n  readonly onSelect?: (item: TimeItem) => void;\n}\n\nfunction TimeRow({ item, onSelect }: TimeRowProps) {\n  const handleClick = useCallback(() => {\n    onSelect?.(item);\n  }, [onSelect, item]);\n\n  const handleKeyDown = useCallback(\n    (event: KeyboardEvent<HTMLButtonElement>) => {\n      if (event.key === \"Escape\") {\n        event.currentTarget.blur();\n      }\n    },\n    [],\n  );\n\n  return (\n    <li className={`time-list__item time-list__item--${item.state}`}>\n      <button\n        type=\"button\"\n        className=\"time-list__row\"\n        aria-current={item.state === \"next\" ? \"time\" : undefined}\n        onClick={handleClick}\n        onKeyDown={handleKeyDown}\n      >\n        <span className=\"time-list__name\">{item.name}</span>\n        <time className=\"time-list__time\">{item.time}</time>\n        <span className=\"time-list__state\">{STATE_LABEL[item.state]}</span>\n      </button>\n    </li>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01JVub2LxjEDr5epBLmq8UrF",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".time-list {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n  color: var(--ink);\n  font: inherit;\n}\n\n.time-list__item {\n  border-bottom: 1px solid var(--hair);\n}\n\n.time-list__item:last-child {\n  border-bottom: 0;\n}\n\n.time-list__row {\n  display: grid;\n  grid-template-columns: 1fr auto auto;\n  align-items: baseline;\n  gap: clamp(0.5rem, 1.5vw, 1rem);\n  width: 100%;\n  margin: 0;\n  padding: clamp(0.6rem, 1.4vh, 0.95rem) clamp(0.75rem, 1.5vw, 1.25rem);\n  border: 0;\n  border-radius: 0;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: start;\n  cursor: pointer;\n}\n\n.time-list__row:hover {\n  background: var(--code-bg);\n}\n\n.time-list__name {\n  font-size: clamp(1rem, 1.6vw, 1.35rem);\n  overflow-wrap: anywhere;\n}\n\n.time-list__time {\n  font-size: clamp(1rem, 1.6vw, 1.35rem);\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n.time-list__state {\n  font-size: clamp(0.7rem, 0.9vw, 0.8rem);\n  letter-spacing: 0.08em;\n  text-transform: uppercase;\n  white-space: nowrap;\n}\n\n/* Passed and later times are quieter than the next one. */\n.time-list__item--past .time-list__name,\n.time-list__item--past .time-list__time,\n.time-list__item--past .time-list__state,\n.time-list__item--later .time-list__state {\n  color: var(--muted);\n}\n\n/* The next time is highlighted with the cresyl wash and a marker bar. */\n.time-list__item--next .time-list__row {\n  background: var(--cresyl-wash);\n  box-shadow: inset 3px 0 0 var(--cresyl);\n}\n\n.time-list__item--next .time-list__name,\n.time-list__item--next .time-list__time {\n  font-weight: 600;\n}\n\n.time-list__item--next .time-list__state {\n  color: var(--cresyl);\n  font-weight: 600;\n}\n\n:root[data-motion=\"reduce\"] .time-list__row,\n:root[data-motion=\"reduce\"] .time-list__row * {\n  transition: none;\n  animation: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .time-list__row,\n  .time-list__row * {\n    transition: none;\n    animation: none;\n  }\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01RLUMmP7MsaQMHTqSMcjnS4",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01JVub2LxjEDr5epBLmq8UrF",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 7, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQSvwkKEAgTGAI4AUIIdGhpbmtpbmcSDIG2VFzK8soCNPjYIRoM4qJ5pntHgPQhLoTIIjC9M0lnu22CScoUzlJ0sr52W5tdEkW6PIMDJHnrEs12acqWdIgxXpykWA4ukYhXBXwq3AgPqhGBVq5Lwxnp7JirjCEbOXux7hLjKzHe1666IL2RI6BPRFHhEqc9VGmlSXplQ91Nm4KnFG9si3El7/A79dsrNw0wJp5NNwC6fae7SvOiY8DGuE/URRQ64w4AWOPdFK7wamlJWSZOdetQwxXNZYjBfOp5OrgQOOPC/lMk4SidvdYWxyhL5+eER7VorXbpYFcr49RNLfQThOPu9Su6KNv+VImbyrEI+3hcWSuJxZnsVEtZkv+CjbPpHrmex7gQIEQliKGezXfPQoT67MVeh/E/w2WDLHTdyxZgqjr2LyGx0HKlEiyBQL2k4QLsrfZxyfQftRF/4jfiy5aUHLj88PZdUlu/+OoSzCWmzuf8etnBZsWLnBSw52f4Wii+6KXN1j/SbrENxvWo12nEMIpx4rbyyw/8jG0BpISJXKUoUcBbhIcA/hU++qR1gckEdPtaLEVN4PzvZCgckre7mz+4KmqweYCvynKpoulXMUWeBc0x39kzvZLwb6gdnaMNJUiaQ7pSEnZzUOPf/zAd+rW1ZjdKeUX0DhqdKflVcqCImOXAPZ0Bt6bIRfWxS/GRs4r+oJuRXUGwCEU/pP1tSPSBGkXgToHHFcCbQ7WKgWL2peYCxtoydIj/kcJTzWiCT6Pjd/+uYER1e6+v8pWF+ORGaskIhml3OoQ6cZIk+ZZU2YZZAcNyEBTaHLd/mrJ4XAFH3bHWtwRbgvS4KXFVexFJ5LIZgFDLJhUOt8IqPKQVio65uGCMAQCA7J6IAqdarBRgArWSqSGAup0OzDANhd6SpxYXSNmKgaU5iEnbEhlpDG4ggwRGYO0mGoNcQ2Y2gxZaXsG/2OqMeMjLz0n7Br+FPiNgbuGdzgjei1t5yq16AIlzbWWkZzyLG0Na/qEfAJ2CuNHSs/fi848uZWgYCJMhXszcKv5D//nNK109NxAXxIM6OhST5rLKsH7VZMLsrJhGgiHfKwtdXJ2hOFrJH1B1GbF5QkoGSkEgqBUqyyU5T5IXn5l6EOWBSrNiNSV2mjyfJ7WfOA9/CSek5FvNL9ZNe6wSRxdVIXsqcaFKYt673ra8NxB8jeOKcJGnUexywU78dhwsDoBfNDdU10ZeHIY/Z1b2cmsvaXz7lzCuO8+boUyR3QMDIPFEMJ+kAPSqiP+oN6jCGEvFBin+R3vRJoH9gtF21QtlalPK4batJSK0rAcOhc7JGK7VVGmzYSEilETNv5EqL6PY0XpScfhmFi5W4lZXOraYDpjLPyJ3Roqd1Y3ChNjs+R3nAi80BLStb+lv3lH2IHmDAKQJ9m/PwNfzyH31qa6pM9BSjebg5lyu3T3CuYVhQMvzMW58cJIXmJYzXx46KhlU+POlE8cfTGpe4kZ/zdp7k60zOtPohyFaJRaLdVRSjDnBEEgCE1uBXAaaledbxcuMEN4aZykI0/sOy33GE2ueCxoQVErxiohinEjtRQJ7ge60vQlSjTL90+kp6TKSQD8Pwj5B2Qkorr0YAQ==",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01CBx1s5dUbY4QShg62KKuEi",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import \"./TimeList.css\";\n\nexport type TimeState = \"past\" | \"next\" | \"later\";\n\nexport interface TimeItem {\n  readonly id: string;\n  readonly name: string;\n  readonly time: string;\n  readonly state: TimeState;\n}\n\nexport interface TimeListProps {\n  readonly items: readonly TimeItem[];\n  readonly label?: string;\n  readonly onSelect?: (item: TimeItem) => void;\n}\n\nconst STATE_LABEL: Record<TimeState, string> = {\n  past: \"Passed\",\n  next: \"Next\",\n  later: \"Later\",\n};\n\nexport function TimeList({ items, label = \"Today\", onSelect }: TimeListProps) {\n  return (\n    <ol className=\"time-list\" aria-label={label}>\n      {items.map((item) => (\n        <li key={item.id} className={`time-list__item time-list__item--${item.state}`}>\n          <button\n            type=\"button\"\n            className=\"time-list__row\"\n            aria-current={item.state === \"next\" ? \"time\" : undefined}\n            onClick={onSelect ? () => onSelect(item) : undefined}\n          >\n            <span className=\"time-list__name\">{item.name}</span>\n            <time className=\"time-list__time\">{item.time}</time>\n            <span className=\"time-list__state\">{STATE_LABEL[item.state]}</span>\n          </button>\n        </li>\n      ))}\n    </ol>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01CBx1s5dUbY4QShg62KKuEi",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "text": "```tsx\nimport \"./TimeList.css\";\n\nexport type TimeState = \"past\" | \"next\" | \"later\";\n\nexport interface TimeItem {\n  readonly id: string;\n  readonly name: string;\n  readonly time: string;\n  readonly state: TimeState;\n}\n\nexport interface TimeListProps {\n  readonly items: readonly TimeItem[];\n  readonly label?: string;\n  readonly onSelect?: (item: TimeItem) => void;\n}\n\nconst STATE_LABEL: Record<TimeState, string> = {\n  past: \"Passed\",\n  next: \"Next\",\n  later: \"Later\",\n};\n\nexport function TimeList({ items, label = \"Today\", onSelect }: TimeListProps) {\n  return (\n    <ol className=\"time-list\" aria-label={label}>\n      {items.map((item) => (\n        <li key={item.id} className={`time-list__item time-list__item--${item.state}`}>\n          <button\n            type=\"button\"\n            className=\"time-list__row\"\n            aria-current={item.state === \"next\" ? \"time\" : undefined}\n            onClick={onSelect ? () => onSelect(item) : undefined}\n          >\n            <span className=\"time-list__name\">{item.name}</span>\n            <time className=\"time-list__time\">{item.time}</time>\n            <span className=\"time-list__state\">{STATE_LABEL[item.state]}</span>\n          </button>\n        </li>\n      ))}\n    </ol>\n  );\n}\n```\n\n```css\n.time-list {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n  color: var(--ink);\n  font: inherit;\n}\n\n.time-list__item {\n  border-bottom: 1px solid var(--hair);\n}\n\n.time-list__item:last-child {\n  border-bottom: 0;\n}\n\n.time-list__row {\n  display: grid;\n  grid-template-columns: 1fr auto auto;\n  align-items: baseline;\n  gap: clamp(0.5rem, 1.5vw, 1rem);\n  width: 100%;\n  margin: 0;\n  padding: clamp(0.6rem, 1.4vh, 0.95rem) clamp(0.75rem, 1.5vw, 1.25rem);\n  border: 0;\n  border-radius: 0;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: start;\n  cursor: pointer;\n}\n\n.time-list__row:hover {\n  background: var(--code-bg);\n}\n\n.time-list__name {\n  font-size: clamp(1rem, 1.6vw, 1.35rem);\n  overflow-wrap: anywhere;\n}\n\n.time-list__time {\n  font-size: clamp(1rem, 1.6vw, 1.35rem);\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n.time-list__state {\n  font-size: clamp(0.7rem, 0.9vw, 0.8rem);\n  letter-spacing: 0.08em;\n  text-transform: uppercase;\n  white-space: nowrap;\n}\n\n/* Passed and later times are quieter than the next one. */\n.time-list__item--past .time-list__name,\n.time-list__item--past .time-list__time,\n.time-list__item--past .time-list__state,\n.time-list__item--later .time-list__state {\n  color: var(--muted);\n}\n\n/* The next time is highlighted with the cresyl wash and a marker bar. */\n.time-list__item--next .time-list__row {\n  background: var(--cresyl-wash);\n  box-shadow: inset 3px 0 0 var(--cresyl);\n}\n\n.time-list__item--next .time-list__name,\n.time-list__item--next .time-list__time {\n  font-weight: 600;\n}\n\n.time-list__item--next .time-list__state {\n  color: var(--cresyl);\n  font-weight: 600;\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 62683,
+  "output_tokens": 6979,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 27.152,
+ "cost_usd": 0.009758
+}

@@ -1,0 +1,60 @@
+{
+ "task": "chip-filter",
+ "name": "ChipFilter",
+ "condition": "context",
+ "repetition": 2,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 7.014,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 4151,
+    "output_tokens": 1737,
+    "output_tokens_details": {
+     "thinking_tokens": 716
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId } from \"react\";\nimport \"./ChipFilter.css\";\n\nexport interface ChipOption {\n  value: string;\n  label: string;\n}\n\nexport interface ChipFilterProps {\n  label: string;\n  options: readonly ChipOption[];\n  selected: readonly string[];\n  onToggle: (value: string) => void;\n}\n\nexport function ChipFilter({ label, options, selected, onToggle }: ChipFilterProps) {\n  const labelId = useId();\n\n  return (\n    <div role=\"group\" aria-labelledby={labelId} className=\"chip-filter\">\n      <span id={labelId} className=\"chip-filter__label\">\n        {label}\n      </span>\n      <div className=\"chip-filter__chips\">\n        {options.map((option) => {\n          const isOn = selected.includes(option.value);\n          return (\n            <button\n              key={option.value}\n              type=\"button\"\n              aria-pressed={isOn}\n              onClick={() => onToggle(option.value)}\n              className=\"chip-filter__chip\"\n            >\n              <span className=\"chip-filter__dot\" aria-hidden=\"true\" />\n              {option.label}\n            </button>\n          );\n        })}\n      </div>\n    </div>\n  );\n}\n```\n\n```css\n.chip-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 0.5em;\n  color: var(--ink);\n}\n\n.chip-filter__label {\n  font-size: clamp(0.8rem, 0.5rem + 0.6vw, 0.95rem);\n  color: var(--muted);\n}\n\n.chip-filter__chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5em;\n}\n\n.chip-filter__chip {\n  font: inherit;\n  font-size: clamp(0.85rem, 0.55rem + 0.7vw, 1rem);\n  display: inline-flex;\n  align-items: center;\n  gap: 0.45em;\n  padding: 0.35em 0.9em;\n  border: 1px solid var(--muted);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition:\n    background-color 150ms ease,\n    border-color 150ms ease;\n}\n\n.chip-filter__chip:hover {\n  border-color: var(--ink);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"] {\n  border-color: var(--myelin);\n  background: var(--myelin-wash);\n}\n\n.chip-filter__dot {\n  display: inline-block;\n  width: 0.5em;\n  height: 0.5em;\n  border-radius: 999px;\n  border: 1px solid currentColor;\n  background: transparent;\n}\n\n.chip-filter__chip[aria-pressed=\"true\"] .chip-filter__dot {\n  background: var(--myelin);\n  border-color: var(--myelin);\n}\n\n:root[data-motion=\"reduce\"] .chip-filter__chip {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .chip-filter__chip {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a group of chips that can each be switched on or off, used to filter problems by difficulty. Props: label, options (value and label), selected (a list of values), onToggle.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file ChipFilter.tsx. It imports \"./ChipFilter.css\" and has a named export `ChipFilter`.\n2. A `css` block: the file ChipFilter.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport { useId } from \"react\";\nimport \"./ChipFilter.css\";\n\nexport interface ChipOption {\n  value: string;\n  label: string;\n}\n\nexport interface ChipFilterProps {\n  label: string;\n  options: readonly ChipOption[];\n  selected: readonly string[];\n  onToggle: (value: string) => void;\n}\n\nexport function ChipFilter({ label, options, selected, onToggle }: ChipFilterProps) {\n  const labelId = useId();\n\n  return (\n    <div role=\"group\" aria-labelledby={labelId} className=\"chip-filter\">\n      <span id={labelId} className=\"chip-filter__label\">\n        {label}\n      </span>\n      <div className=\"chip-filter__chips\">\n        {options.map((option) => {\n          const isOn = selected.includes(option.value);\n          return (\n            <button\n              key={option.value}\n              type=\"button\"\n              aria-pressed={isOn}\n              onClick={() => onToggle(option.value)}\n              className=\"chip-filter__chip\"\n            >\n              <span className=\"chip-filter__dot\" aria-hidden=\"true\" />\n              {option.label}\n            </button>\n          );\n        })}\n      </div>\n    </div>\n  );\n}\n```\n\n```css\n.chip-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 0.5em;\n  color: var(--ink);\n}\n\n.chip-filter__label {\n  font-size: clamp(0.8rem, 0.5rem + 0.6vw, 0.95rem);\n  color: var(--muted);\n}\n\n.chip-filter__chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5em;\n}\n\n.chip-filter__chip {\n  font: inherit;\n  font-size: clamp(0.85rem, 0.55rem + 0.7vw, 1rem);\n  display: inline-flex;\n  align-items: center;\n  gap: 0.45em;\n  padding: 0.35em 0.9em;\n  border: 1px solid var(--muted);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition:\n    background-color 150ms ease,\n    border-color 150ms ease;\n}\n\n.chip-filter__chip:hover {\n  border-color: var(--ink);\n}\n\n.chip-filter__chip[aria-pressed=\"true\"] {\n  border-color: var(--myelin);\n  background: var(--myelin-wash);\n}\n\n.chip-filter__dot {\n  display: inline-block;\n  width: 0.5em;\n  height: 0.5em;\n  border-radius: 999px;\n  border: 1px solid currentColor;\n  background: transparent;\n}\n\n.chip-filter__chip[aria-pressed=\"true\"] .chip-filter__dot {\n  background: var(--myelin);\n  border-color: var(--myelin);\n}\n\n:root[data-motion=\"reduce\"] .chip-filter__chip {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .chip-filter__chip {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 4151,
+  "output_tokens": 1737,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 7.014,
+ "cost_usd": 0.001284
+}

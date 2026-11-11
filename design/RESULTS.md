@@ -179,3 +179,68 @@ python -m myelin_design export --check     # exit 0: tokens.json matches the CSS
 python -m myelin_design lint --write       # exit 1 while findings remain; writes reports/lint.md
 pytest -q
 ```
+
+## Evaluation: does grounding help?
+
+Run on 10 November 2026 with `claude-haiku-5-5`, default settings. 18 tasks, 3 conditions, 3 runs each:
+162 runs, all finished normally. Total cost $0.57. Raw data: `eval/runs/haiku-5-5/`.
+
+| | baseline | context (tokens pasted in) | mcp (tools) |
+| --- | --- | --- | --- |
+| Compile rate | 98.1% (94.4 to 100) | 100% | 100% |
+| Colour references that are real tokens | 0 of 575 | 530 of 536 (98.9%) | 471 of 474 (99.4%) |
+| Hard-coded colours | 7 | 0 | 0 |
+| References to tokens that do not exist | 568 | 6 | 3 |
+| Contrast: pairs passing 4.5:1 | none measurable | 82 of 87 (94.3%; 92.0 to 96.7) | 83 of 83 (100%) |
+| Focus outline removed, per run | 0.44 (0.39 to 0.56) | 0 | 0 |
+| Seconds per task | 13.2 | 13.1 | 21.7 |
+| Cost per task | $0.0017 | $0.0021 | $0.0068 |
+| Tool calls per run | 0 | 0 | 5.9 |
+
+Ranges in brackets are the lowest and highest of the three repetitions.
+
+### What it shows
+
+- **Without the design system, the model does not hard-code colours. It invents its own tokens.**
+  Every one of the 54 baseline runs wrote `var(--something)` names that do not exist in Myelin
+  (`--streak-bg`, `--streak-fill`, and so on): 568 references, against 7 hard-coded colours and no real
+  token. The output looks tokenised and would not match the app.
+- **Telling the model about the tokens fixes that, with or without tools.** Both grounded conditions
+  used real tokens for about 99% of colour references and hard-coded none.
+- **Grounding removed the focus-outline problem.** Baseline removed a focus outline in 13 of 18
+  tasks at least once; neither grounded condition ever did (paired sign test, 13 tasks lower, 0 higher,
+  p = 0.0002).
+- **Compile rate did not change.** One baseline run of 54 failed to compile (an unused type). That is
+  not a difference.
+- **The tools' only measured gain over pasted context is contrast: 94.3% to 100%.** It comes from two
+  tasks (the button row and the checklist item). Paired, that is 2 tasks higher, 0 lower, p = 0.5, so
+  this run does not establish it. The tools cost 8.5 seconds and about 3.3 times the money per task.
+
+The honest one-line summary: **the information did almost all the work; the tools added a small
+contrast gain that this sample is too small to confirm.**
+
+### Limitations
+
+- 18 tasks, written by the person who built the tools. One model, one day, default effort.
+- The scores are the tools' own checks. In the `mcp` condition the model can run the linter that
+  scores it (it called `lint_snippet` 124 times in 54 runs), so part of its score is "it ran the linter
+  and listened".
+- **The baseline's hard-coded count is understated.** A baseline run typically defines its invented
+  variables itself (`--streak-bg: #...`), and the scanner treats custom-property definitions as token
+  definitions, not uses. So its real colours sit where the scanner does not count them. "0 of 575 are
+  real tokens" is the reliable baseline figure; "7 hard-coded" is not.
+- Baseline contrast could not be measured, because a pair of unknown variables has no colour to measure.
+- The planned "token compliance %" (token uses over token uses plus hard-coded) was 0%, 100% and 100%.
+  It ignores invented tokens, which turned out to be the main baseline behaviour, so the table reports
+  counts instead.
+- Nothing measures whether a component looks right or is usable.
+- The model twice passed a surface name (`sky-myelin-wash`) to `check_contrast`, which takes tokens or
+  colours. The tool returned a readable error and the model carried on. `get_guidelines` shows surface
+  names, so that confusion is the server's fault, not the model's.
+
+### Reproduce
+
+```bash
+python -m myelin_design eval score --name haiku-5-5   # free: recomputes from the saved transcripts
+python -m myelin_design eval run --name again --max-cost 2.00   # about $0.57; results will vary
+```

@@ -1,0 +1,60 @@
+{
+ "task": "form-field-error",
+ "name": "TextField",
+ "condition": "baseline",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 8.79,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 293,
+    "output_tokens": 2159,
+    "output_tokens_details": {
+     "thinking_tokens": 661
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId, type ChangeEvent } from \"react\";\nimport \"./TextField.css\";\n\nexport interface TextFieldProps {\n  label: string;\n  value: string;\n  onChange: (value: string) => void;\n  error?: string;\n  placeholder?: string;\n}\n\nexport function TextField({\n  label,\n  value,\n  onChange,\n  error,\n  placeholder,\n}: TextFieldProps) {\n  const id = useId();\n  const inputId = `${id}-input`;\n  const errorId = `${id}-error`;\n  const hasError = Boolean(error);\n\n  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {\n    onChange(event.target.value);\n  };\n\n  return (\n    <div className={hasError ? \"text-field text-field--error\" : \"text-field\"}>\n      <label className=\"text-field__label\" htmlFor={inputId}>\n        {label}\n      </label>\n      <input\n        id={inputId}\n        className=\"text-field__input\"\n        type=\"text\"\n        value={value}\n        onChange={handleChange}\n        placeholder={placeholder}\n        aria-invalid={hasError}\n        aria-describedby={hasError ? errorId : undefined}\n      />\n      {hasError ? (\n        <p id={errorId} className=\"text-field__error\" aria-live=\"polite\">\n          {error}\n        </p>\n      ) : null}\n    </div>\n  );\n}\n```\n\n```css\n/* Day theme (default) */\n:root {\n  --myelin-field-bg: #fbfaf7;\n  --myelin-field-text: #1f2a2e;\n  --myelin-field-label: #4a5a60;\n  --myelin-field-border: #c9d1d4;\n  --myelin-field-border-hover: #98a5aa;\n  --myelin-field-placeholder: #7d8b8f;\n  --myelin-field-accent: #2f6f61;\n  --myelin-field-error: #b3261e;\n  color-scheme: light;\n}\n\n/* Night theme */\n:root[data-theme=\"night\"] {\n  --myelin-field-bg: #14191c;\n  --myelin-field-text: #e6ecee;\n  --myelin-field-label: #a6b3b8;\n  --myelin-field-border: #3a464b;\n  --myelin-field-border-hover: #5d6c72;\n  --myelin-field-placeholder: #6d7c81;\n  --myelin-field-accent: #7fc4b2;\n  --myelin-field-error: #ff8a80;\n  color-scheme: dark;\n}\n\n.text-field {\n  display: flex;\n  flex-direction: column;\n  gap: 0.375rem;\n  width: 100%;\n  font-family: inherit;\n}\n\n.text-field__label {\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: var(--myelin-field-label);\n  cursor: pointer;\n}\n\n.text-field__input {\n  box-sizing: border-box;\n  width: 100%;\n  min-height: 2.75rem;\n  padding: 0.625rem 0.875rem;\n  border: 1px solid var(--myelin-field-border);\n  border-radius: 0.5rem;\n  background-color: var(--myelin-field-bg);\n  color: var(--myelin-field-text);\n  font: inherit;\n  font-size: 1rem;\n  line-height: 1.4;\n  transition: border-color 150ms ease, box-shadow 150ms ease;\n}\n\n.text-field__input::placeholder {\n  color: var(--myelin-field-placeholder);\n  opacity: 1;\n}\n\n.text-field__input:hover {\n  border-color: var(--myelin-field-border-hover);\n}\n\n.text-field__input:focus {\n  outline: none;\n}\n\n.text-field__input:focus-visible {\n  border-color: var(--myelin-field-accent);\n  box-shadow: 0 0 0 3px color-mix(in srgb, var(--myelin-field-accent) 35%, transparent);\n}\n\n.text-field--error .text-field__input,\n.text-field--error .text-field__input:hover {\n  border-color: var(--myelin-field-error);\n}\n\n.text-field--error .text-field__input:focus-visible {\n  border-color: var(--myelin-field-error);\n  box-shadow: 0 0 0 3px color-mix(in srgb, var(--myelin-field-error) 35%, transparent);\n}\n\n.text-field__error {\n  margin: 0;\n  font-size: 0.8125rem;\n  line-height: 1.4;\n  color: var(--myelin-field-error);\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a labelled text field that shows an error message under it when the error prop is set. Props: label, value, onChange, error (optional), placeholder (optional).\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file TextField.tsx. It imports \"./TextField.css\" and has a named export `TextField`.\n2. A `css` block: the file TextField.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport { useId, type ChangeEvent } from \"react\";\nimport \"./TextField.css\";\n\nexport interface TextFieldProps {\n  label: string;\n  value: string;\n  onChange: (value: string) => void;\n  error?: string;\n  placeholder?: string;\n}\n\nexport function TextField({\n  label,\n  value,\n  onChange,\n  error,\n  placeholder,\n}: TextFieldProps) {\n  const id = useId();\n  const inputId = `${id}-input`;\n  const errorId = `${id}-error`;\n  const hasError = Boolean(error);\n\n  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {\n    onChange(event.target.value);\n  };\n\n  return (\n    <div className={hasError ? \"text-field text-field--error\" : \"text-field\"}>\n      <label className=\"text-field__label\" htmlFor={inputId}>\n        {label}\n      </label>\n      <input\n        id={inputId}\n        className=\"text-field__input\"\n        type=\"text\"\n        value={value}\n        onChange={handleChange}\n        placeholder={placeholder}\n        aria-invalid={hasError}\n        aria-describedby={hasError ? errorId : undefined}\n      />\n      {hasError ? (\n        <p id={errorId} className=\"text-field__error\" aria-live=\"polite\">\n          {error}\n        </p>\n      ) : null}\n    </div>\n  );\n}\n```\n\n```css\n/* Day theme (default) */\n:root {\n  --myelin-field-bg: #fbfaf7;\n  --myelin-field-text: #1f2a2e;\n  --myelin-field-label: #4a5a60;\n  --myelin-field-border: #c9d1d4;\n  --myelin-field-border-hover: #98a5aa;\n  --myelin-field-placeholder: #7d8b8f;\n  --myelin-field-accent: #2f6f61;\n  --myelin-field-error: #b3261e;\n  color-scheme: light;\n}\n\n/* Night theme */\n:root[data-theme=\"night\"] {\n  --myelin-field-bg: #14191c;\n  --myelin-field-text: #e6ecee;\n  --myelin-field-label: #a6b3b8;\n  --myelin-field-border: #3a464b;\n  --myelin-field-border-hover: #5d6c72;\n  --myelin-field-placeholder: #6d7c81;\n  --myelin-field-accent: #7fc4b2;\n  --myelin-field-error: #ff8a80;\n  color-scheme: dark;\n}\n\n.text-field {\n  display: flex;\n  flex-direction: column;\n  gap: 0.375rem;\n  width: 100%;\n  font-family: inherit;\n}\n\n.text-field__label {\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: var(--myelin-field-label);\n  cursor: pointer;\n}\n\n.text-field__input {\n  box-sizing: border-box;\n  width: 100%;\n  min-height: 2.75rem;\n  padding: 0.625rem 0.875rem;\n  border: 1px solid var(--myelin-field-border);\n  border-radius: 0.5rem;\n  background-color: var(--myelin-field-bg);\n  color: var(--myelin-field-text);\n  font: inherit;\n  font-size: 1rem;\n  line-height: 1.4;\n  transition: border-color 150ms ease, box-shadow 150ms ease;\n}\n\n.text-field__input::placeholder {\n  color: var(--myelin-field-placeholder);\n  opacity: 1;\n}\n\n.text-field__input:hover {\n  border-color: var(--myelin-field-border-hover);\n}\n\n.text-field__input:focus {\n  outline: none;\n}\n\n.text-field__input:focus-visible {\n  border-color: var(--myelin-field-accent);\n  box-shadow: 0 0 0 3px color-mix(in srgb, var(--myelin-field-accent) 35%, transparent);\n}\n\n.text-field--error .text-field__input,\n.text-field--error .text-field__input:hover {\n  border-color: var(--myelin-field-error);\n}\n\n.text-field--error .text-field__input:focus-visible {\n  border-color: var(--myelin-field-error);\n  box-shadow: 0 0 0 3px color-mix(in srgb, var(--myelin-field-error) 35%, transparent);\n}\n\n.text-field__error {\n  margin: 0;\n  font-size: 0.8125rem;\n  line-height: 1.4;\n  color: var(--myelin-field-error);\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 293,
+  "output_tokens": 2159,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 8.79,
+ "cost_usd": 0.001109
+}

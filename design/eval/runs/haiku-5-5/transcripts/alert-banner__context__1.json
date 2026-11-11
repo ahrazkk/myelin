@@ -1,0 +1,60 @@
+{
+ "task": "alert-banner",
+ "name": "AlertBanner",
+ "condition": "context",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 6.448,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 4136,
+    "output_tokens": 1521,
+    "output_tokens_details": {
+     "thinking_tokens": 827
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps) {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75em 1.25em;\n  padding: 0.85em 1.1em;\n  border: 1px solid var(--cresyl);\n  border-radius: 12px;\n  background: var(--cresyl-wash);\n  color: var(--ink);\n  font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);\n}\n\n.alert-banner__message {\n  margin: 0;\n  flex: 1 1 16em;\n  min-width: 0;\n  color: var(--ink);\n  overflow-wrap: anywhere;\n}\n\n.alert-banner__retry {\n  font: inherit;\n  font-weight: 600;\n  padding: 0.4em 1.1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: var(--slide);\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.alert-banner__retry:hover {\n  background: var(--myelin-wash);\n  border-color: var(--myelin);\n}\n\n.alert-banner__retry:focus-visible {\n  border-color: var(--cresyl);\n}\n\n:root[data-motion=\"reduce\"] .alert-banner__retry {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__retry {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an inline warning banner that says the local server cannot be reached, with a Retry button. Props: message, onRetry.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file AlertBanner.tsx. It imports \"./AlertBanner.css\" and has a named export `AlertBanner`.\n2. A `css` block: the file AlertBanner.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps) {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75em 1.25em;\n  padding: 0.85em 1.1em;\n  border: 1px solid var(--cresyl);\n  border-radius: 12px;\n  background: var(--cresyl-wash);\n  color: var(--ink);\n  font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);\n}\n\n.alert-banner__message {\n  margin: 0;\n  flex: 1 1 16em;\n  min-width: 0;\n  color: var(--ink);\n  overflow-wrap: anywhere;\n}\n\n.alert-banner__retry {\n  font: inherit;\n  font-weight: 600;\n  padding: 0.4em 1.1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: var(--slide);\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.alert-banner__retry:hover {\n  background: var(--myelin-wash);\n  border-color: var(--myelin);\n}\n\n.alert-banner__retry:focus-visible {\n  border-color: var(--cresyl);\n}\n\n:root[data-motion=\"reduce\"] .alert-banner__retry {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__retry {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 4136,
+  "output_tokens": 1521,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 6.448,
+ "cost_usd": 0.001174
+}

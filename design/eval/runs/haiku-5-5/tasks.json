@@ -1,0 +1,97 @@
+{
+  "about": "Component requests for the evaluation. Written on 10 November 2026, before any model was run. Do not edit after results exist: add a new file instead.",
+  "app": "Myelin is a calm, full-screen habit dashboard built with React 19 and strict TypeScript, styled with plain CSS.",
+  "request_template": "Build a React component for Myelin: {request}\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file {name}.tsx. It imports \"./{name}.css\" and has a named export `{name}`.\n2. A `css` block: the file {name}.css.",
+  "tasks": [
+    {
+      "id": "settings-toggle-row",
+      "name": "SettingsToggleRow",
+      "request": "a settings row with a label, a one-line hint under it, and an on/off switch on the right. Props: label, hint, checked, onChange."
+    },
+    {
+      "id": "streak-badge",
+      "name": "StreakBadge",
+      "request": "a badge that shows the current streak, such as \"Day 12 of 66\", with a small bar showing how far along it is. Props: day, total."
+    },
+    {
+      "id": "empty-state",
+      "name": "EmptyState",
+      "request": "an empty state for a list that has nothing in it yet: a heading, one sentence of explanation, and a primary action button. Props: title, message, actionLabel, onAction."
+    },
+    {
+      "id": "tab-strip",
+      "name": "TabStrip",
+      "request": "a tab strip with one panel under it. The selected tab is clearly marked. Props: tabs (id and label), selected, onSelect, children for the panel."
+    },
+    {
+      "id": "form-field-error",
+      "name": "TextField",
+      "request": "a labelled text field that shows an error message under it when the error prop is set. Props: label, value, onChange, error (optional), placeholder (optional)."
+    },
+    {
+      "id": "button-row",
+      "name": "ButtonRow",
+      "request": "a row of three buttons: a primary button, a secondary button and a quiet text-only button. Each can be disabled. Props: primaryLabel, secondaryLabel, quietLabel, handlers for each, and a disabled flag for each."
+    },
+    {
+      "id": "time-list",
+      "name": "TimeList",
+      "request": "a list of named times through the day, such as five prayer times. The next one is highlighted and the ones already past are quieter. Props: items (name, time, state of past, next or later)."
+    },
+    {
+      "id": "status-message",
+      "name": "StatusMessage",
+      "request": "a message that appears after something is saved, with a dismiss button. Screen readers should hear it when it appears. Props: text, onDismiss."
+    },
+    {
+      "id": "progress-bar",
+      "name": "FocusProgress",
+      "request": "a labelled progress bar for a focus session, showing minutes elapsed out of the total. Props: label, elapsedMinutes, totalMinutes."
+    },
+    {
+      "id": "segmented-control",
+      "name": "SegmentedControl",
+      "request": "a segmented control for choosing exactly one of a few options. Props: label, options (value and label), value, onChange."
+    },
+    {
+      "id": "checklist-item",
+      "name": "ChecklistItem",
+      "request": "a checklist row: a round check button, a title, a quieter detail line, and a duration on the right. When done, the check is filled and the title is quieter. Props: title, detail, minutes, done, onToggle."
+    },
+    {
+      "id": "code-card",
+      "name": "CodeCard",
+      "request": "a card that shows a short SQL snippet in a monospace block, with a title above it and a Copy button. Props: title, code, onCopy."
+    },
+    {
+      "id": "confirm-dialog",
+      "name": "ConfirmDialog",
+      "request": "a confirmation dialog that asks whether to delete a note, with Cancel and Delete buttons. Props: open, noteTitle, onCancel, onConfirm."
+    },
+    {
+      "id": "chip-filter",
+      "name": "ChipFilter",
+      "request": "a group of chips that can each be switched on or off, used to filter problems by difficulty. Props: label, options (value and label), selected (a list of values), onToggle."
+    },
+    {
+      "id": "data-table",
+      "name": "ProblemTable",
+      "request": "a small table of solved problems with a header row. Columns: title, pattern, minutes, next review. A row that is due for review today has its review cell highlighted. Props: rows (title, pattern, minutes, review, due)."
+    },
+    {
+      "id": "command-input",
+      "name": "CommandBox",
+      "request": "a single-line command input with a placeholder, and a small reply box under it that shows the result. The reply has a normal style and an error style. Props: value, onChange, onSubmit, reply (optional: text and whether it is an error)."
+    },
+    {
+      "id": "accent-picker",
+      "name": "AccentPicker",
+      "request": "a picker for the app's accent colour. It offers the four accents (myelin blue, emerald, amber, rose), each with a small colour swatch and its name, and marks the selected one. Props: value, onChange."
+    },
+    {
+      "id": "alert-banner",
+      "name": "AlertBanner",
+      "request": "an inline warning banner that says the local server cannot be reached, with a Retry button. Props: message, onRetry."
+    }
+  ]
+}

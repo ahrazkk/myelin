@@ -1,0 +1,60 @@
+{
+ "task": "alert-banner",
+ "name": "AlertBanner",
+ "condition": "context",
+ "repetition": 3,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 8.519,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 4136,
+    "output_tokens": 2128,
+    "output_tokens_details": {
+     "thinking_tokens": 1490
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport type { ReactElement } from \"react\";\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps): ReactElement {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem 1rem;\n  padding: 0.85rem 1rem;\n  border: 1px solid var(--cresyl);\n  border-left-width: 4px;\n  border-radius: 10px;\n  background: var(--cresyl-wash);\n  color: var(--ink);\n  font-size: clamp(0.9rem, 0.8rem + 0.4vw, 1.05rem);\n}\n\n.alert-banner__message {\n  margin: 0;\n  flex: 1 1 16rem;\n}\n\n.alert-banner__retry {\n  font: inherit;\n  font-weight: 600;\n  color: var(--ink);\n  background: transparent;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  padding: 0.35rem 0.9rem;\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.alert-banner__retry:hover {\n  background: var(--myelin-wash);\n}\n\n:root[data-motion=\"reduce\"] .alert-banner__retry {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__retry {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an inline warning banner that says the local server cannot be reached, with a Retry button. Props: message, onRetry.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file AlertBanner.tsx. It imports \"./AlertBanner.css\" and has a named export `AlertBanner`.\n2. A `css` block: the file AlertBanner.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS3CIKEAgTGAI4AUIIdGhpbmtpbmcSDDyjBy93bHr4oGSUUhoMs6E5UUIF26f+Qne6IjA4GAmNwEPRXptZKvou144uCaNTUtRnQoYOCThBbeYNyG0Ftnu/wGCCXF4xMzzD5q0q+SH8qGaRwrFqcXK1q0w0r5jmOaAHxHCATxwfBHSFyE5ZDokTTNu/CYfK00yILN3+lN3Zv1LWFnr2w5j6OHNOA2KRsAOcXG0plsiecBREDRGnsETgoLDBpY8961a3HmiDxK2qOgLrJ1PtIx41O/p4TlKFfe32/+32iE/f9cfyjq8E6gdTy9KJayE5iLWMdz3mD7u76SyDmiOU9lqQZGic9xP+5Vqm/aX2MsEqgldNw1Vnf5hwQk3nsBF8d+/uOY5yb0m7B3b5VIe0PmwEdZDJYWCiKjfwbjO3E9D/G6hmm/x3hn0b7/obD8iHXlA3Ms+w/nYgxghmjSoE0pksoAUs/tv5oJP0tJvUt70QMtXDsGeQvslE0H7/KyOXaiu3UnGaGvWboETIv4oN6LwpfBgoeQhRea18kaqauGrHUOlImi3qc2EEpbcVfsgv6zl638FBmc1CPV/nF8WASEr/UgVVoKhAcMVnfNnHnkrHXm80GF2M7lYUM+bN4BRor6b4uVTJiTsovLTKsuL4eZq3dH5hL7HAeUsoPXWqc+X7lWeUFAz/2c/fRiTPYw2uBPIWGME+BZ4Z/4DK0kZD7lshl90hgPvHbdOL6B8Anh9ZsYOBnr/FWwF11RxwR3vI6TFT2umNaFezSbd4LYvZZj6J+0kEQf6GUVQoksKYauc0NrWmiH1Qgge4p2/taGXmGAM1+iTCD+6QuStDvdlXquCAUWsEtctpNj+UJ6I7r5w7COqBYhb65+rzOwiuhxOfwwXo+RENq8BtqcyP84ayu+2TpvFCR/Ych78oL9bXGS4vC8EpxBjTteDCpgFR2jnmupyn+Qbc4Md+a26bDfXcxJDtfk0W+YbPiwqN4wG53e08jUNEGtP9fPvHrqYEfQZlz7PFm+h8QzobSrDNwBu55mTky1wt9l/RmRTSjud+5z+K+Ni24ir+0sm8H3A3MOrvVJf2OuBWOrCGiLwKzg44USd1xDB25NP2QICAbWmE3P0Rsef4uYx9QrZh3TMvDuVRZFGdyQQTjH5HiimDcFrTVhLvCHds6+plerZY2GCvcQHfXA3/08b0FRabxmbrO0G36hUXd7qpCtAr1IgnPiCwwWKjVzsxumcRXSVRM4EhK0W/frG4KpwBOYEIVMjupePqmP0Y3H7yjx0F+0UMJtV6HTvUU1w4D1ZrEfu94nNlx9SKzfLCDSBMIlVrEEKK1vSaFXp86lQKtUTWIUZz/OgPrbiz5oCvv/zqZVjAlKrRQrKV7Q3UwHDiMw3pTp+1j4OHP1WnmmCl7vVwlniYE2JT232VglcZG+LUotejHie1YFH0en/dVtWBBXctRmIVXBWQfPivmF8q7cy8haQPjpFqs1jjAZZErGXAoxONZw7FPju9Fmar+Djg3pY5NMzyo2S/83MLVaVRwtRSykvUMk484FC765mSRzn7EGaHNiwbyZsPPJGkmS8/WtfMcHAwQcxEFamBozVXgwF0fJl1YShHy08Klmq38DaZjnGom1wPwcYPVxsg+3415MV21ficZ9Pl+5b2GiK1Jl5YEejQDji3dZFWcLYRgouk49XK9zl4l+Jv4KanEH4fFMArpFBJHsIgLepPLiGQbsJSPrdm2BIrX2OGmaQG+B7megJ3cIA3EnNtAzJw0IR5+9mGRoU11l/c1gvuFXKbLDLUnp3flqAkBfsv0NNMgv4Q5CB2UgiXB4fbgrblVxnY8yvKtZcL4APDPuw6Sf0GCpiVeQPZW4pbjemjXOLyA+OWCYUTIB1mJKzhH62Mjpt0G7nhIqwaoP22SdPEj47+E04v3Lan2Bj+ZHJ9h5Giw3+QcfJK4+SCHLOMsEI0bdALqlDoUMU7JRRApD3SuN4BXtE2i/sghdb6Pcin50edK+mW7j7wG/oEE9RuGVei+gVRFuiD+NGhVgFmx7fqlPV7lgLdGX/xSGRaWGP16hbJAEM8bF3UDOWJW+ZzTkHum0hEpprQ6/0WuclTXHAlj/JZo0RL0YS67NTZr6uicC6UWQPPj1dkeVZuoq68l071UDuuHpqN5o0XivhcRGBzlh9xbMxV87AgsSKYuqZNZle2vFTCc0J/OY2S3PhPV3nmkZ7BeoYi3eSWcC6iskNE/xocBzRdLNYXtgtVLueunOsVHX6IOmdLSuxgTT1t1PbprJ3TDG0/CrRih7fa03nP5YnnK7UZFBFzrPoiqKTIFeXAM+2u95i2btBoxqEYfgV21hEuGD70JRCeqWJzPVQyFVTIfXioL3CojGMBKcW4I7U8lq528daC3RpXvGSMqGVCe9wg09CvZ8BmxC5s90wKpEcIsHJPUd4f88dqkXKmLmwZLKDd+MNukruIboFkWY0RP3a04qs1BkqcPnF4wb6XdLRX3wan9/MM3CJi/8NI8f7JB/fB9oXfsY+LnGFey0x1zwtowUgHJiwCjr9e8rZ8QOtDASIklbqOp1oLiDWZbDDarGfUWkxEpo9kY7h6b4QMLApXSBDhW1Qw6IG34QX9B1l9DqZJqChZnyErbyltyWJ1FROqTpB7S6sahTAnj0r/9w/Ed9BuY+2gMGWeCKHdUOo3vQXBg1fDM+8IxfxVAKe360Ne47ntOhrr1Q2XTZeXKw8mkqJomtnWH1g9VAI5KuCEy9ZAlnISkzHmWeX/kiyBJBUHZJSJ3BQpP0mKEo7LXRFo+onmAScjZLpp3PIB26o0C9/OuH09Zu0/Sfkp3hu4lmtxxTD1taSHKU99fOngowKCkOEAIwue2OTMGOAh6EWyjo3vVVe197r9NWZGGwe1W0JJNbuLhuXKFz65iPpNMaL6dOd4Fq+tS4/VqBNi04Wcbxb+ilqqvwq5bf9W9AL4QeXSQ0IUZLJVt97XduZB6tdAKLBFmW0LB12XKCY3TvTAK4lxeZHUs4WWHVo6fhJ1tstKVjwhXh4Vpzi63mTcpkv2+WE132Eavbg2sZh+aZN2mkr+MlOTVJCuH/vOQ8hj69IIbCLoskjQSaFMFEri6SHJgGn+UbWIFwQ/q1B1hYneoR2m6xCGmn+1G1tF9N9X5sAXaOgTug3Nf7Xq2TIyd3INwM2CGy2XvJVZRvN1IAWRLrjfBkGpJUCFrOeQYhaSJYVy+qVYjxerrwWfGI7Ozp00W4/hEc+bDwJSunuY7Il3iQIxImBsiUUAOqXHPpF5jYnyoxHAUHtl0AqLQW7Z6XEMrj0H20czl8Dj6WWG0mHaiNVO55Cj/u6vVUFoqXMw1O2w6gS/AiydVm/1WQu7fekBqrSoxJfZgeAxO6HKE1V7zzJLqlYpSisZENqAyi8Y7D9jvKZY7R62M57TNuEn859Vcj0SJKCaYIH8hMYVbogpV9OzYjsygkegavtIWeutLJp+cduC8Lzi218lfQ1iVuY5n5iqLPVRrl7mAtaO6iZAnjuNuZUQaUBx6QA7cY3gaqVRSLFXX2Kbe0M8+UIK49JdT/OdViTCgcf/k0z554kpwCKBpXcEXlHTaSVwmfjRrM/BhrzwyZMict27I60FsBSB94tKA8JvXwUy6EU72hh80yvPRuV79om8pngCrqGGzY9lNUuvP+xO6kQZ4I/OfBjjSN2qjtKWWBuOgzeBxkrmWE2Q3GGCLbRtYKqW0r/9Th+GRZNoYNIdN0RPp6JjJHykPKj677+PbETRApCsUHi+DBwFNWJmvTev+EpmvTWwE+pQ4Z5WqAN7vuEMh7jWmYyQWaeUtPdhY3Nywz2dJxT3ZPFH5uxDe3JxiVIaAKG4qmgfC5wj15ZHyYJ1qYXzY6L8pNvjnM9451ih/3jSyIt9fZAoZNICqEiztxwzq2tjld1ivMOy0Vw1tqh8rUzeSbFD9pSsnb1MGgB/fJwOwH5rjxjKcnxEF9OTqCyCJ4tohPIXEotMl/REZKf01wfgxUvrxYPvI20YxfvClgNG2aAaBuNyb4HPspLrJewSkocnHk/a8FjrQ7yoYoc2ZrGnPSfpv4ErO5c+g4t6O3NaFMq0JhGF1MCjgy/A879ajZf4h576jG4YO+SgYDhsPsJpSIOj3t9xt0z4i7CqlpxIqqK6+kOLF3wBuwPO+nohJMpK669w1TkPe1T5LZPYMBNcgxMcIj7S9Ztk0VSriBtw4YAn5IzWkWG3xldoDYmEYrMJdz7al0UUmZG45aN//WhojQT0BevnBw2ZUGHp9lcCLvWmFXivdWXyoGR0gaS3SAryFWqFhnyX+eemnOtmn+hLbnFM8zHtvpNv9wWwmpO5Dkf97cVRDQbDRiEGObRpMGwaUmCcazf6Pwa9BIWgqvfjYv4Z7a8Uz4AjNg07SR5x1nGCd+pznWIwCQRUypNS9A0+cV0E5KDmnUcVd+yOxwVjIiVAaqTGPi5xlFKCqqw2xmR1oelOw2jCsMfYMsWf977inHj8RGomA9mBgPZ/B8C8Lf2UV4OdLf/PWD0MxzwzdffdoFdhnJaR+pP+yQjDFUmBX16FhwjT7HuvgYRl/n+qnU7lUkiF/AD5XChiQpA3MAC6Jf9DfeBSTSRmt5fxOGKamyHHZNR+ik5nzE3eLAQnHad4XMq0MT4Bpy830uY0AZqnS9wC3daOsXTpHtMt4S14UxZo8F3+9gu7hGmWuwpjjVYV17WAoMn4Q0wrreBKZPIYFElG0ua0gl3w16/QCaqXDDPp/IlboR9oTZegHE1y4KVO51AyRQATejlokntyU8wLGEJLvYKcaL1Mx/HnGaohEv/lIHw6y3i7SRcsHjEMpnQlE7zm88+z0iqN/nPbaexBgX5gQD3BLRWh8VWOym2mo3cyJgtbsrwVwwwD04bmso9E0Wqk/bPIeWKuJCXVTLo5sMD7joRjAuwvQPZEY6RETqPz3ooy4k8YBjf1op6bwQUwZiMD47qqeSeLzc+uQx2zNpqzfZIfWBp9gzUKsgT7RcgRzro8nqoq/nLkTjcVftxCynQUNChLYEe/aKf5izrpHlN0uw+1gXusi/Lklo3QiKGpEmdBbtVLeUug1PB+qdvBK6OxoYNCXSze2+Zja6vXyZIi4gU7dWDBkFnkJgKDzLQai8TdJRxbHfycXowC5K5z/SKOZ1AUDNsB3sWz7sd14Y6jhc1ES3XnHamhX/4ezItNb8AQI0IilBxlVBiEpV6e9RhtnthutSkiEi60xz8r1cdZP11OgX8ziC7IY9Er0JTwnPWcv/ZlGEjyHRlLppD/nGZajDcgzhQNVfqUkTpmnet9y0RWvuKGgKYPwSRoVGiBStp3hF5/tFluDi2lq4/oYZuEW6fSWpjBJJAXS6zGDTkmE9wAo+Rri+iCHzM3IJgdiKtxYHM2e+jmZGwi2FFKw36M7Dz/7mhI6+QRro2LJylxZU4JTuzHY6oKznzfpYVSbwFQJv9MSFQpEBHkioy/9ohrZSrTk4k7W9buqI9GO2gIN0mFapNWGlooQqXwQY03XP/lTlWopr19J3oydv8JYAVaMTc3oN9WqhSY0tpYWgcdmXllgsQA3asKSK/377o9TMeKwCfYkgAQGhHZoygA3/zyTPkVOrFSiiZ2x/zAg6tqoDDC6jJA9rqVEsuYjRwFpS7xtW3pvOh6oGAOMSVlm5E2s9E859iXvJpXWsiIt0FitUcUv7D+NcfcCizxgscNWHyzZDLk95qaC87Gu7qmCadkI8X8Ul81OxoqZ/DweYbxCg6bvcjMHRWxhYvsP1SMrKjC/aJQUMjQvwDdoag+XTe5ee5BoBL4TYH9p0qUbWJ4oNf4ru2FMCw7Iuw+Ls6vQ77X3IcFgrwpPmdPX67efgPoTsMcagR0+zQglKWN3h/e48wFv3jOg3DqxxeouxHLU/K61VTjFTzxGAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport type { ReactElement } from \"react\";\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps): ReactElement {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem 1rem;\n  padding: 0.85rem 1rem;\n  border: 1px solid var(--cresyl);\n  border-left-width: 4px;\n  border-radius: 10px;\n  background: var(--cresyl-wash);\n  color: var(--ink);\n  font-size: clamp(0.9rem, 0.8rem + 0.4vw, 1.05rem);\n}\n\n.alert-banner__message {\n  margin: 0;\n  flex: 1 1 16rem;\n}\n\n.alert-banner__retry {\n  font: inherit;\n  font-weight: 600;\n  color: var(--ink);\n  background: transparent;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  padding: 0.35rem 0.9rem;\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.alert-banner__retry:hover {\n  background: var(--myelin-wash);\n}\n\n:root[data-motion=\"reduce\"] .alert-banner__retry {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__retry {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 4136,
+  "output_tokens": 2128,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 8.519,
+ "cost_usd": 0.001478
+}

@@ -1,0 +1,309 @@
+{
+ "task": "status-message",
+ "name": "StatusMessage",
+ "condition": "mcp",
+ "repetition": 3,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.71,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1774,
+    "output_tokens": 104,
+    "output_tokens_details": {
+     "thinking_tokens": 47
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 10.269,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10873,
+    "output_tokens": 2525,
+    "output_tokens_details": {
+     "thinking_tokens": 1301
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 2.295,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 14774,
+    "output_tokens": 567,
+    "output_tokens_details": {
+     "thinking_tokens": 172
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 2.662,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 15426,
+    "output_tokens": 877,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport type { JSX } from \"react\";\nimport \"./StatusMessage.css\";\n\nexport interface StatusMessageProps {\n  /** The message to announce, for example \"Habit saved\". */\n  readonly text: string;\n  /** Called when the user dismisses the message. */\n  readonly onDismiss: () => void;\n}\n\n/**\n * A message shown after something is saved. It is a polite live region, so\n * screen readers announce it when it mounts. It does not take focus, so\n * keyboard users keep their place; the dismiss button is reachable with Tab.\n */\nexport function StatusMessage({ text, onDismiss }: StatusMessageProps): JSX.Element {\n  return (\n    <div className=\"status-message\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">\n      <p className=\"status-message__text\">{text}</p>\n      <button type=\"button\" className=\"status-message__dismiss\" onClick={onDismiss}>\n        Dismiss\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.status-message {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  padding: 0.6rem 0.9rem;\n  border: 1px solid var(--myelin);\n  border-radius: 0.75rem;\n  background: var(--myelin-wash);\n  color: var(--ink);\n  font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);\n  animation: status-message-in 200ms ease-out;\n}\n\n.status-message__text {\n  flex: 1;\n  min-width: 0;\n  margin: 0;\n  overflow-wrap: anywhere;\n}\n\n.status-message__dismiss {\n  flex: none;\n  font: inherit;\n  color: var(--ink);\n  background: transparent;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  padding: 0.25rem 0.75rem;\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.status-message__dismiss:hover {\n  background: var(--cresyl-wash);\n}\n\n@keyframes status-message-in {\n  from {\n    opacity: 0;\n    transform: translateY(0.25rem);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n:root[data-motion=\"reduce\"] .status-message,\n:root[data-motion=\"reduce\"] .status-message__dismiss {\n  animation: none;\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .status-message,\n  .status-message__dismiss {\n    animation: none;\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a message that appears after something is saved, with a dismiss button. Screen readers should hear it when it appears. Props: text, onDismiss.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file StatusMessage.tsx. It imports \"./StatusMessage.css\" and has a named export `StatusMessage`.\n2. A `css` block: the file StatusMessage.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS3wUKEAgTGAI4AUIIdGhpbmtpbmcSDLxHy9lIRbyhkaYQABoMDoAAl2mw63OkQMNmIjCGstdj9euLb5nHH6O+iOnEWH/0QfeWozFwr5xC7GMFSAzTkGzuSuWjUcdzTfe9N7Uq/ARPO/0gU+OCMcif81SaSq98cmCxY3hn9UuRtNbYVlzXUeEXFfdkrTYmHiHyClTn1w90ZKIJ83zaShNNwh4onuLrLvXoM68oDCK4M4wXYHFSKJRnyErDIt2bwJ+tlWX3ulX9M3E3AuUiAffkkUBD1FwGrNkuexCC0j7j4ln6tqL/CSMC1MjUmfolUGJNxTm6FhlL4xLAQusRkSwZsifmG8jp3z1mRyVzAwoNZXFrJ7ayJrDj4XsOIKoNmdIow4ZdGMIsrwJzk3pcvn7xBLWqK/jZvEZp7VI3qxUAXWmo9ZtnfoiFlsuzBISNX4mw3prggwXldLbe+91LnzpPPYE1g8sKvzLBSILg8XMW6db6/NgCyut9rqtH3ZYzM+8etulCijsFnZXuop8wOzqAH9gVZFOrI6BGXB4H0Z1+bmolCy3qQP14Q4mzsD0C+jBqhSiQF6qH1TwF2mdivM6Atj490ng0nR//4LPUZot6oBxhQNkZXwEx6yaRMusSEfabCfZo5rnW1p9a6pTNsOU44X+W6UaicaXuRJ1c2U3z9oVePMDrVRyvUuQN1E4m201YK7J/uki4HYY0HbbV/gd0++ijIL8eclyG+5l7uaEGRXybP8MRestr5XhVqdV8qeAY5zQkLND8hNWr42bk12POG+s+LlFZCtFrbutf5QhqVaJL3WQ4e9HyfC9SpgMB6MBBTVoVuyGlI7ZyA7v+JiYWcC7N0vWuVxJ5HU0EG0hMMWYg2M3tu5beKSaUH1cPTeBZK0rzYMr+wWaSoeP7PYyhg76XBpttSyweg2xV48vNGYgUm7C6S/DytODa16dJ4SuKSspJMhw0T3G9IaVOupe384kYAQ==",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01E3fkUiKiD47LFxDv9FFKLD",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01Kc7Wj7pZE1gVn8WBdCXp4p",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01E3fkUiKiD47LFxDv9FFKLD",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01Kc7Wj7pZE1gVn8WBdCXp4p",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01MJ2XznXNPUhDAoaQT2Pscw",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--ink)",
+      "background": "var(--myelin-wash)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01H981gJvnxfPTE5yckYzM3y",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--ink)",
+      "background": "var(--cresyl-wash)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01GvNsgFzrJMjCsxAcrvzTDQ",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import { useId } from \"react\";\nimport type { JSX } from \"react\";\nimport \"./StatusMessage.css\";\n\nexport interface StatusMessageProps {\n  /** The message to announce, for example \"Habit saved\". */\n  readonly text: string;\n  /** Called when the user dismisses the message. */\n  readonly onDismiss: () => void;\n}\n\n/**\n * A message shown after something is saved. It is a polite live region, so\n * screen readers announce it when it mounts. It does not take focus, so\n * keyboard users keep their place; the dismiss button is reachable with Tab.\n */\nexport function StatusMessage({ text, onDismiss }: StatusMessageProps): JSX.Element {\n  const textId = useId();\n\n  return (\n    <div\n      className=\"status-message\"\n      role=\"status\"\n      aria-live=\"polite\"\n      aria-atomic=\"true\"\n      aria-labelledby={textId}\n    >\n      <p className=\"status-message__text\" id={textId}>\n        {text}\n      </p>\n      <button type=\"button\" className=\"status-message__dismiss\" onClick={onDismiss}>\n        Dismiss\n      </button>\n    </div>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01JBmPF8oTGBZGGMkT8bKdrB",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".status-message {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  padding: 0.6rem 0.9rem;\n  border: 1px solid var(--myelin);\n  border-radius: 0.75rem;\n  background: var(--myelin-wash);\n  color: var(--ink);\n  font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);\n  animation: status-message-in 200ms ease-out;\n}\n\n.status-message__text {\n  flex: 1;\n  min-width: 0;\n  margin: 0;\n  overflow-wrap: anywhere;\n}\n\n.status-message__dismiss {\n  flex: none;\n  font: inherit;\n  color: var(--ink);\n  background: transparent;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  padding: 0.25rem 0.75rem;\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.status-message__dismiss:hover {\n  background: var(--cresyl-wash);\n}\n\n@keyframes status-message-in {\n  from {\n    opacity: 0;\n    transform: translateY(0.25rem);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n:root[data-motion=\"reduce\"] .status-message,\n:root[data-motion=\"reduce\"] .status-message__dismiss {\n  animation: none;\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .status-message,\n  .status-message__dismiss {\n    animation: none;\n    transition: none;\n  }\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01MJ2XznXNPUhDAoaQT2Pscw",
+     "content": "{\"foreground\": \"var(--ink)\", \"background\": \"var(--myelin-wash)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 12.02, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": \"myelin\", \"foreground\": \"#1b2142\", \"background\": \"#dce3ef\", \"ratio\": 12.12, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"emerald\", \"foreground\": \"#1b2142\", \"background\": \"#dae4e7\", \"ratio\": 12.08, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"amber\", \"foreground\": \"#1b2142\", \"background\": \"#e6e2e1\", \"ratio\": 12.16, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"rose\", \"foreground\": \"#1b2142\", \"background\": \"#e8dfe8\", \"ratio\": 12.02, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"myelin\", \"foreground\": \"#e4e8f6\", \"background\": \"#152742\", \"ratio\": 12.25, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"emerald\", \"foreground\": \"#e4e8f6\", \"background\": \"#15283b\", \"ratio\": 12.27, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"amber\", \"foreground\": \"#e4e8f6\", \"background\": \"#252534\", \"ratio\": 12.32, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"rose\", \"foreground\": \"#e4e8f6\", \"background\": \"#25213d\", \"ratio\": 12.59, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": [\"The background is translucent, so it was composited over --slide first.\"]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01H981gJvnxfPTE5yckYzM3y",
+     "content": "{\"foreground\": \"var(--ink)\", \"background\": \"var(--cresyl-wash)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 11.75, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#1b2142\", \"background\": \"#e2ddec\", \"ratio\": 11.75, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#e4e8f6\", \"background\": \"#29234a\", \"ratio\": 11.97, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": [\"The background is translucent, so it was composited over --slide first.\"]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01GvNsgFzrJMjCsxAcrvzTDQ",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01JBmPF8oTGBZGGMkT8bKdrB",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 6, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 2, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQSowkKEAgTGAI4AUIIdGhpbmtpbmcSDL1CezUkIJYyNHcFWBoMdAvfTynPS/Em9IoQIjC5vDej3ulqLHbQIEEh45tU6KgxFOOMYb4du3uo8mu8RLQVj7WgPc8SEYN6bBiXNHUqwAiyCOAndoV8HVH4XZx+dnLlG3fn1M5tkjGNvYD3A4PZ5xUTY4Qh0WV+E+gr9H2ec7jIcxFt5hAp1nB+0jcq9fvD/3QZXgWMRW0RToxas3wsjVxTdQngJCw+1cyo+fUzMeoQKSfa8HhUUknThT/0+ckwAym0LwK5IAbBRGYnPhM4mLCUwo3DKGxSJy+zsHutF26ea9ExmUNhmZIlR62udAGu/+l3ndEAkhJUzig3YihNYnq+O4jYz9/GgwK0xUWugm9T/H/tl3T77B6LDEIAkpwUiXMiLlSgDJWk8V4Yl+qznbAtF3Vc8YlxU0OTQqzYDhZh++hmOoa0i63QjHW6XWKN7LSqoIagUxT/LNJKayHfae5VTCOtQE9ac4PHAVaJg0FZHl9YBQ91HG5SbHv3HycGNYg1irH925Ir2tC6Q1KICf+TgjwR7rwf91LevI5fNpu3rQPZ6DiqqHHbm+6exo6trkt4mYUX70QEcVGcUMTnS+M3PAcdfqqSeISFiAzbqIcl+MA/SXA5x1li43AtdKe+n5ubQiRBHmrQkDN0+/R1qVYExVvg4jUSS9m85mzK8oALteE2Ltk2UDuFODPq1jetzv9Pj/Pz7uildnql2Ek1rDuivSVmJxK658JniIeHbqtJ/rKG+637AFMUWXO0Z+rwAgK1rlZpgQCgA14oMmxWgd2m7h8Ic1cbz6u2r4EIHHDgOlVxcP9ld9VmB9HN3wNanepLiputOGMLK3zBt9xu0eK2ZhDcJMoGdr0LeC5l/fel7/I6tkS4kz4TBbQpyUDpJ0IZuSBXBxe9iHgeVokfvruEoB4AAkuKajmcTlts50mbJp37CrFrNTKGrMpDxQyD2kC/cXXu1lhH8VC5Jc7ziynAdqy1nj/fAyj5NFUD388oHKafzUJUkgniMpkcOuglAgLbCgZTECA1Z6ijeRwkCE22mP+0Hz4sIYXaJFiv4IVE5REeMV8LW9ap3dH1SKFOzfF13JdOoL5laeZms6TiY/Cv3smqruet7ZAe4VqobL0wouQccbl0lk0Z//jv/WFag9hHLEAnw88/Az7stp+0ElOclxp/7jfYTA8WpPWOAQ0rnMt5ayDUz7fxgW15Jx3M2CD8+0vAyFgeUWvZVJGwCb/JmCVJkhGpPkyQyCEKw/TE2tZt0yfIWfEL5A8zyqGRx+njn9X9UAaQ+Q+VFLGdQYo1EYweQwMdx+teDI7d9ZU8jvN5W7O/9mrgGyUcryyd/vNzeXYq5B474A9WO8BjWth2ZilO8yZUJZFQ3if3+xLkDJGwxTlKSoPMt1Ob9aTMuYHqpCEcDWiQYem4L8YewZE/Nbvnoby9xdlEw0MobbZrR1w+dZSbLvmzWC58n3KVZ0lt8V437VcMOp+bS4opIHW64HzB1mr9QT+Iia+ibAFpIrhNh5Gffa1Co2huRQhMP9vdgye+4k9I7TcZ1t6rbhgB",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01XwoNrG1xJ4V4fmswfQyTvs",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import type { JSX } from \"react\";\nimport \"./StatusMessage.css\";\n\nexport interface StatusMessageProps {\n  /** The message to announce, for example \"Habit saved\". */\n  readonly text: string;\n  /** Called when the user dismisses the message. */\n  readonly onDismiss: () => void;\n}\n\n/**\n * A message shown after something is saved. It is a polite live region, so\n * screen readers announce it when it mounts. It does not take focus, so\n * keyboard users keep their place; the dismiss button is reachable with Tab.\n */\nexport function StatusMessage({ text, onDismiss }: StatusMessageProps): JSX.Element {\n  return (\n    <div className=\"status-message\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">\n      <p className=\"status-message__text\">{text}</p>\n      <button type=\"button\" className=\"status-message__dismiss\" onClick={onDismiss}>\n        Dismiss\n      </button>\n    </div>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01XwoNrG1xJ4V4fmswfQyTvs",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "text": "```tsx\nimport type { JSX } from \"react\";\nimport \"./StatusMessage.css\";\n\nexport interface StatusMessageProps {\n  /** The message to announce, for example \"Habit saved\". */\n  readonly text: string;\n  /** Called when the user dismisses the message. */\n  readonly onDismiss: () => void;\n}\n\n/**\n * A message shown after something is saved. It is a polite live region, so\n * screen readers announce it when it mounts. It does not take focus, so\n * keyboard users keep their place; the dismiss button is reachable with Tab.\n */\nexport function StatusMessage({ text, onDismiss }: StatusMessageProps): JSX.Element {\n  return (\n    <div className=\"status-message\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">\n      <p className=\"status-message__text\">{text}</p>\n      <button type=\"button\" className=\"status-message__dismiss\" onClick={onDismiss}>\n        Dismiss\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.status-message {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  padding: 0.6rem 0.9rem;\n  border: 1px solid var(--myelin);\n  border-radius: 0.75rem;\n  background: var(--myelin-wash);\n  color: var(--ink);\n  font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);\n  animation: status-message-in 200ms ease-out;\n}\n\n.status-message__text {\n  flex: 1;\n  min-width: 0;\n  margin: 0;\n  overflow-wrap: anywhere;\n}\n\n.status-message__dismiss {\n  flex: none;\n  font: inherit;\n  color: var(--ink);\n  background: transparent;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  padding: 0.25rem 0.75rem;\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.status-message__dismiss:hover {\n  background: var(--cresyl-wash);\n}\n\n@keyframes status-message-in {\n  from {\n    opacity: 0;\n    transform: translateY(0.25rem);\n  }\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n:root[data-motion=\"reduce\"] .status-message,\n:root[data-motion=\"reduce\"] .status-message__dismiss {\n  animation: none;\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .status-message,\n  .status-message__dismiss {\n    animation: none;\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 42847,
+  "output_tokens": 4073,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 15.936,
+ "cost_usd": 0.006321
+}

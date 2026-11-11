@@ -1,0 +1,60 @@
+{
+ "task": "alert-banner",
+ "name": "AlertBanner",
+ "condition": "baseline",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 7.976,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 295,
+    "output_tokens": 1940,
+    "output_tokens_details": {
+     "thinking_tokens": 627
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport type { JSX } from \"react\";\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  readonly message: string;\n  readonly onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps): JSX.Element {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <span className=\"alert-banner__icon\" aria-hidden=\"true\">!</span>\n      <p className=\"alert-banner__message\">{message}</p>\n      <button\n        type=\"button\"\n        className=\"alert-banner__retry\"\n        onClick={onRetry}\n      >\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n/* Day theme (default). Night theme applies when the root carries\n   data-theme=\"night\", or when the OS prefers dark and no theme is set. */\n:root {\n  --alert-bg: #fdf1ee;\n  --alert-border: #d9826f;\n  --alert-text: #5c1f12;\n  --alert-icon-bg: #b5432c;\n  --alert-icon-text: #fff8f6;\n  --alert-button-bg: #b5432c;\n  --alert-button-text: #fff8f6;\n  --alert-button-hover: #963421;\n  --alert-focus: #1f5fbf;\n}\n\n:root[data-theme=\"night\"] {\n  --alert-bg: #2a1714;\n  --alert-border: #8a4537;\n  --alert-text: #f6d6cd;\n  --alert-icon-bg: #e0735b;\n  --alert-icon-text: #1e0d0a;\n  --alert-button-bg: #e0735b;\n  --alert-button-text: #1e0d0a;\n  --alert-button-hover: #ec8b76;\n  --alert-focus: #8ab8ff;\n}\n\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme=\"day\"]) {\n    --alert-bg: #2a1714;\n    --alert-border: #8a4537;\n    --alert-text: #f6d6cd;\n    --alert-icon-bg: #e0735b;\n    --alert-icon-text: #1e0d0a;\n    --alert-button-bg: #e0735b;\n    --alert-button-text: #1e0d0a;\n    --alert-button-hover: #ec8b76;\n    --alert-focus: #8ab8ff;\n  }\n}\n\n.alert-banner {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  padding: 0.75rem 1rem;\n  border: 1px solid var(--alert-border);\n  border-radius: 8px;\n  background: var(--alert-bg);\n  color: var(--alert-text);\n  font-family: inherit;\n  font-size: 0.95rem;\n  line-height: 1.4;\n}\n\n.alert-banner__icon {\n  flex: 0 0 auto;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 50%;\n  background: var(--alert-icon-bg);\n  color: var(--alert-icon-text);\n  font-weight: 700;\n}\n\n.alert-banner__message {\n  flex: 1 1 auto;\n  margin: 0;\n  min-width: 0;\n}\n\n.alert-banner__retry {\n  flex: 0 0 auto;\n  padding: 0.4rem 0.9rem;\n  border: 1px solid transparent;\n  border-radius: 6px;\n  background: var(--alert-button-bg);\n  color: var(--alert-button-text);\n  font: inherit;\n  font-weight: 600;\n  cursor: pointer;\n}\n\n.alert-banner__retry:hover {\n  background: var(--alert-button-hover);\n}\n\n.alert-banner__retry:focus-visible {\n  outline: 2px solid var(--alert-focus);\n  outline-offset: 2px;\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an inline warning banner that says the local server cannot be reached, with a Retry button. Props: message, onRetry.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file AlertBanner.tsx. It imports \"./AlertBanner.css\" and has a named export `AlertBanner`.\n2. A `css` block: the file AlertBanner.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQSpxIKEAgTGAI4AUIIdGhpbmtpbmcSDNak59gR7ZVRibc6wxoM2cAcYkTPa0M2K1Z0IjCM1rt4iEzwoU4+rF3sUpC+LQy4jLFZTkGhtxwPn45ISNcgQf2dTWCkOgxiAYeJYDYqxBGUX+IRMBjnqA4VxElMzJdkr8zZ77qmvUDDydoD/SfbFjmLT73W8bUnaSo3hyTzmiYKBJAFxF6rn5xcOTegpEEacOiCcWlxhgPmBEAjVsp4nZVUniVqp9CIaOxaWD9g5Zl6GhcJIPThEgX/J9EpmSPd95Pjv0IeFrpo844MhX4GrY1Qa1vFuFiIcjumFKu8qK5VeMgXRlB5w6kORL8r8hBvxxgAlIYY9Un44fRoF0WBtgJaU8UaEDUehOydQIrpYqB2hu8krUSBY1rCFL9K1ZaI4IVz6zxi9lgA42kaMApjYJGV+MSNpJxXi7My7SI2l8KwxSdfAP1s1TqqwzEOLvXuwiPeev/tRQpBMfS27739Sg057gdoOGY18e5dav0a2O4qqdkHrUhVjojipZGKLpGI+TuA2uyJhsF0lxB+udFabiVBqDE8S5HD1VdzmoKwI8Mzae3bzqIH82LoNrqM1lBGx2EP8tAbKgC4d4fxrEFhswPB1DTjXi9tm2dwQSZe/6Wxz6JSWNczp6aZeUgYZenqARICfwFRAT8VTYW0/4j9NFcGnErpexf7gMohd73FaRvq5d4sGHynRUEKTAHzerhhwmuS+fDmrfE2jMcivMPaXncM5ctvDzG2C8VxU/Z/pvFNiwD8qVSfEtRGDUY4+ZBabgTM7LeFug2K8YngGyJOMwsXAgqDMHxPqSfCVqxuUW73W9FnjIINvGPqEg0eq9sQ9bKZz1xt067V3lUdOP0CFeyZOrJt6jUweKMtWuCUg+5jzT5lNdo+5QGTMb7YCgmp6WZ9Ojo801ip/Hv8wTlBEN2DrR+SGqDRKKmROfEa3zd2LVR2kLJemL26sNbYXPl+/8Pgmof8ZkB2kjAnC5gRX9WiYk957Vas8DTLz1bYGAz1pIJse92ydHxngRBGy0ABwhM0q9tQTvX1lH6lS0iANF/y25TTRK4T2eUxJVveKYSmW/PDz7uvtzl5KFRo5q1V8a0YIDU+FruLaNb9TzKXiHswZT+PDAMaG3yVF20l+bFjoozHQ8O8GyqOwWKxAgBM1Xn1OJ3emcd2IjepY5mgbQQEjIVkdjPCm+/oo7dRBiVwQTA7D6/hmNe3HX16il8pw9qLqufEP2GUUPvwMvuTaP2rUhkfVwz3TRpBEewJvVTNHdOHbe6oKFCUV2vZS9rQk/yCtfIW+nfbW4qxSrs38zFqUdiYmnyg4SZjm+AX8NTlKf00XTJtGQBTDTo/aelh4NYP336zPQynFq1U+BY9XKCe48pBhHuo1XRJYWKetq25H63lGALS0gVesdH8haPEtoXjcqfmOaYMlEHyTUgUrr5mCW70qLhA5r+hkw+RS63L9lAirSh3lcdUr/GT8Ii7XRNxEf1NvoaEz7p9cOVK7iELtf1tu+qo6kU6OiG29osTqFzOHsFp6l9XkhYpHp4xFR5LKU3nQB3iWDSJeivvpWKhwdRa2nJRxaVOFL9cVBYaCnWQUy+9XyZM/kTthLo58Up6qALjn6I38TTPem2oB82rNJTse1PKeGEfYZ7Oi0N1bA3JHH7vKZZDWYkpeuR74GGYhFvANGmoUs0Rj/m1dPBzXQpWi5loDjbPJ8ZK8fPSk7AAFcom0n/60kz9v/9piEyZ/Qe6EnGhGIJHlWc//5xYvwmX+fIw6hvz3LNkjPP03L/Dsu1mnNvkpJyQPidDg05G75YgZeFI3u0W2gqVJTf9EWkFlkm42USmvyCz8cRapMlVlM8di4EXOSmTpS/++JJhfGxws8kwvOBMsk54NxxPSQjGITXh4TqtrP+80YoMBYG9Qp5M0PCBhgLVlPhxdsj5X9OQjWMh4ZNQdJjs/Ytj5CgXJOu6DKA+NKeK28VBE3J5/UZH7wnLaD2pki4PzXNWL1nX7n4fL3QlsH1dQ0Hb6N0QgKSnost9wBXyUUAom7LrM7rn1cjnnArc442oErTQzAN8yJummqvabFjhH2eRqQqWCTHE9lY5lJS7uytqah2iGKplyTuvvRICSPwglOUmsoClpqZJ2NKGN4f004Zmkyn1diOQYXlYrN/wnKRIcafZw0h3C6yWDM6455vw1yzYpgBynBWP0IyrvrEPwU1bqXYQhUG733ZGymadm8QVcBYax9GuN79Sx55HN9Y0QPTKL0DbaEWFg3DBYgFTFpYpavZxZss/bhUgPc2b7/HI9LYZZKq5CIePOG9SUNrn8pwnOzYtNHynELIe7ySLKB+7TRg0uReXE0xiFZtog4zFmmwuG4ry9l3iLXOJlJVRIf8x6/WQY0CthCt73LEuiUn4nuYvWvn4YoRq0yJq99kPHaB72Dw2vSnU4cbiRJN/vK8kqrCKnZRxycpa5fwBt3Ouhz0M45ETxXciczxLJ87c/IH6EwGJgpvMyW3L75nU+Te8/rszQh9dJOlqtyIY5h9FuF3XhCq1MmPkWIWjtWtWLavYyjtb6PTushA1o2BWvd11SZ17THob6Be8Hw0Ns+eanWSdeh65yEfUmgkgETGgZlx4fA6modqiU1/gJFz/qgbM1aP/T9rvzmG3I+DYzsr8YpNkBsk1jLY/n0K89u9oO+wJ8FUhqu85QE3YQ8kJT6Ke/HbtGyVDb5ANwp+huO1j8LsoBr4uOyJKhJe3RkHJroeubwNfLuf+Xqx5WRa96fbFOG3Q+aSpmZZPQQYHtO3iZ9aR4j2TSwI1PCDCzmoBvwmfiGGDxZSOyRLsPPaJa0Od5/RkMXs4AhdtjGswzxxQi2NKtsvwHrHCSUFHOL1OFEx6BmlonHjyb4KSM3quTmRKmN0cafiHxz7NHRbtSfDXfsL0Jm6tVUKNPeNLydH7zbWrNdw1cQpHCBq4Gy5XtQl2JagdRYosJ7yMo8CUy0yNWMKpgytB8ylPbX65fCUpjUy6Ju8MX86KoesvzB2c8orvbF+g0zkmOgZXVWh62qW61aW4xqg7qxaXLh2UnzR0waMnibHbH2kMR3d7lLC/iBVL3WOgSLgoV6+ElZPNSgRNKfwYAQ==",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport type { JSX } from \"react\";\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  readonly message: string;\n  readonly onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps): JSX.Element {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <span className=\"alert-banner__icon\" aria-hidden=\"true\">!</span>\n      <p className=\"alert-banner__message\">{message}</p>\n      <button\n        type=\"button\"\n        className=\"alert-banner__retry\"\n        onClick={onRetry}\n      >\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n/* Day theme (default). Night theme applies when the root carries\n   data-theme=\"night\", or when the OS prefers dark and no theme is set. */\n:root {\n  --alert-bg: #fdf1ee;\n  --alert-border: #d9826f;\n  --alert-text: #5c1f12;\n  --alert-icon-bg: #b5432c;\n  --alert-icon-text: #fff8f6;\n  --alert-button-bg: #b5432c;\n  --alert-button-text: #fff8f6;\n  --alert-button-hover: #963421;\n  --alert-focus: #1f5fbf;\n}\n\n:root[data-theme=\"night\"] {\n  --alert-bg: #2a1714;\n  --alert-border: #8a4537;\n  --alert-text: #f6d6cd;\n  --alert-icon-bg: #e0735b;\n  --alert-icon-text: #1e0d0a;\n  --alert-button-bg: #e0735b;\n  --alert-button-text: #1e0d0a;\n  --alert-button-hover: #ec8b76;\n  --alert-focus: #8ab8ff;\n}\n\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme=\"day\"]) {\n    --alert-bg: #2a1714;\n    --alert-border: #8a4537;\n    --alert-text: #f6d6cd;\n    --alert-icon-bg: #e0735b;\n    --alert-icon-text: #1e0d0a;\n    --alert-button-bg: #e0735b;\n    --alert-button-text: #1e0d0a;\n    --alert-button-hover: #ec8b76;\n    --alert-focus: #8ab8ff;\n  }\n}\n\n.alert-banner {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  padding: 0.75rem 1rem;\n  border: 1px solid var(--alert-border);\n  border-radius: 8px;\n  background: var(--alert-bg);\n  color: var(--alert-text);\n  font-family: inherit;\n  font-size: 0.95rem;\n  line-height: 1.4;\n}\n\n.alert-banner__icon {\n  flex: 0 0 auto;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 50%;\n  background: var(--alert-icon-bg);\n  color: var(--alert-icon-text);\n  font-weight: 700;\n}\n\n.alert-banner__message {\n  flex: 1 1 auto;\n  margin: 0;\n  min-width: 0;\n}\n\n.alert-banner__retry {\n  flex: 0 0 auto;\n  padding: 0.4rem 0.9rem;\n  border: 1px solid transparent;\n  border-radius: 6px;\n  background: var(--alert-button-bg);\n  color: var(--alert-button-text);\n  font: inherit;\n  font-weight: 600;\n  cursor: pointer;\n}\n\n.alert-banner__retry:hover {\n  background: var(--alert-button-hover);\n}\n\n.alert-banner__retry:focus-visible {\n  outline: 2px solid var(--alert-focus);\n  outline-offset: 2px;\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 295,
+  "output_tokens": 1940,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 7.976,
+ "cost_usd": 0.000999
+}

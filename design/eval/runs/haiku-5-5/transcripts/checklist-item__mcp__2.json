@@ -1,0 +1,270 @@
+{
+ "task": "checklist-item",
+ "name": "ChecklistItem",
+ "condition": "mcp",
+ "repetition": 2,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.757,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1799,
+    "output_tokens": 114,
+    "output_tokens_details": {
+     "thinking_tokens": 57
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 15.146,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10908,
+    "output_tokens": 3916,
+    "output_tokens_details": {
+     "thinking_tokens": 2522
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 1.995,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 15176,
+    "output_tokens": 474,
+    "output_tokens_details": {
+     "thinking_tokens": 180
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 4.362,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 15736,
+    "output_tokens": 1376,
+    "output_tokens_details": {
+     "thinking_tokens": 99
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./ChecklistItem.css\";\n\nexport interface ChecklistItemProps {\n  title: string;\n  detail: string;\n  minutes: number;\n  done: boolean;\n  onToggle: () => void;\n}\n\nexport function ChecklistItem({\n  title,\n  detail,\n  minutes,\n  done,\n  onToggle,\n}: ChecklistItemProps): ReactElement {\n  const titleId = useId();\n  const detailId = useId();\n\n  return (\n    <div className={done ? \"checklist-item is-done\" : \"checklist-item\"}>\n      <button\n        type=\"button\"\n        className=\"checklist-check\"\n        aria-pressed={done}\n        aria-labelledby={titleId}\n        aria-describedby={detailId}\n        onClick={onToggle}\n      >\n        <span className=\"checklist-tick\" aria-hidden=\"true\" />\n      </button>\n      <div className=\"checklist-text\">\n        <span id={titleId} className=\"checklist-title\">\n          {title}\n        </span>\n        <span id={detailId} className=\"checklist-detail\">\n          {detail}\n        </span>\n      </div>\n      <span className=\"checklist-minutes\">{minutes} min</span>\n    </div>\n  );\n}\n```\n\n```css\n.checklist-item {\n  display: grid;\n  grid-template-columns: auto minmax(0, 1fr) auto;\n  align-items: center;\n  gap: clamp(0.75rem, 2vw, 1rem);\n  padding: clamp(0.75rem, 1.6vw, 1rem) 0;\n  border-bottom: 1px solid var(--hair);\n  color: var(--ink);\n}\n\n.checklist-check {\n  font: inherit;\n  display: grid;\n  place-items: center;\n  flex: none;\n  inline-size: clamp(1.75rem, 3vw, 2.125rem);\n  aspect-ratio: 1;\n  padding: 0;\n  border-radius: 999px;\n  border: 2px solid var(--muted);\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.checklist-check:hover {\n  border-color: var(--ink);\n}\n\n.checklist-tick {\n  display: none;\n  inline-size: 40%;\n  block-size: 20%;\n  border-left: 3px solid currentColor;\n  border-bottom: 3px solid currentColor;\n  transform: translateY(-15%) rotate(-45deg);\n}\n\n.checklist-item.is-done .checklist-check {\n  background: var(--myelin);\n  border-color: var(--myelin);\n  color: var(--slide);\n}\n\n.checklist-item.is-done .checklist-tick {\n  display: block;\n}\n\n.checklist-text {\n  display: grid;\n  gap: 0.125rem;\n  min-inline-size: 0;\n}\n\n.checklist-title {\n  font-size: clamp(1rem, 1.6vw, 1.15rem);\n  color: var(--ink);\n  overflow-wrap: anywhere;\n}\n\n.checklist-item.is-done .checklist-title {\n  color: var(--muted);\n  text-decoration: line-through;\n}\n\n.checklist-detail {\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  color: var(--muted);\n}\n\n.checklist-minutes {\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  color: var(--muted);\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n:root[data-motion=\"reduce\"] .checklist-check {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .checklist-check {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a checklist row: a round check button, a title, a quieter detail line, and a duration on the right. When done, the check is filled and the title is quieter. Props: title, detail, minutes, done, onToggle.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file ChecklistItem.tsx. It imports \"./ChecklistItem.css\" and has a named export `ChecklistItem`.\n2. A `css` block: the file ChecklistItem.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS/gUKEAgTGAI4AUIIdGhpbmtpbmcSDJhuf0aVZik5aRfH5RoMMwCU1BJkux4xmQufIjAsgXwsW8H9TtCg+crxiDPOOzP3whgn7+O+VzM7zw0kQZ6F5PByn2lH1xDC54VBxk8qmwXFkTRqBGi/h1IbIGLZeG3USKhaMSPnnymnAikcf5aY60J6jor50Oi3X1hxcfMqHxU76kUqNaQAJLStlDiDwuWBoAtrXqc5Y/E/kbuK80i1xRbwN5QAuAOvORbwLQKUtvxig0E5rdmNBJfocP6jqz7hK5he7qwMUq+QTab4UMlVk2A9b/XnmXbXglkwrSn0nM6IzQ/Yl2PP0KjrB/G9HbHrAwWBLvpEU70jWUMZOB9QGeTJ2d/8sadEljeYIfMYQz2jMlZgVzk/Y2MaQHlsZoarELBPHGHWTQOlyHjWUNA5A5IamxhK5l0jCWhogNQ6Q/WnK+1Tb8lrpqbrUBoDFZkVOwy3W5zbvyQUtsvLH0gPpDuMHuzxkD8vYWX7TKJlRybXsPO7UQm0Jgs/icLpvUdZDZHFObzGxGKweMUvFT+MczJHqcgrWl5tJ3DFozidVpnwb1ER07CJhAg4J3XJJT6DF2ig0D0BCrB1EHv+1KGyZYOQ9wew6U/ku1N53rn/uV0kuWz2zAV9m2x+O7NrWC2E61L+hyYvDrG8L5Y6lbJzR5lu1/+hYWeZdqomYu/FUHOF+PEW6iFBlibe1s1BmgwbyFHlNCqKvFLZ+y+FnVPbcxJpVIvxYlZlRObkA7w9DOpP9Wr5W8KAV5BeW63XSdrWvl0FZw98icGLgou14AFZt7SZqjzp+eLrS3Qw55Ry5JBeO5YftEPktY0NMGhEozPj9P+SIGXVp3MfIUOAuuW2xGRwrKVgwKVFfPkLSzPXNq0DCrAQMSa0m78Dh8EKHyk7n3IrQaRv9JVxX4HNdHq9iQFv0wwp3noIo4ulsGXBH7hoHoBE/jOXsvxleXnEdLFbz5MSXCcz02oNDFa/JdcVcCkSLjuIM1t2UueIGAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01JptVD5Lz2ooVF5DxsUT36U",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01HcU13mQcwpVpmWXbyY9ubW",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01JptVD5Lz2ooVF5DxsUT36U",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01HcU13mQcwpVpmWXbyY9ubW",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_012ZpecY3wXzMzKjT32HhE1u",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".checklist-item {\n  display: grid;\n  grid-template-columns: auto minmax(0, 1fr) auto;\n  align-items: center;\n  gap: clamp(0.75rem, 2vw, 1rem);\n  padding: clamp(0.75rem, 1.6vw, 1rem) 0;\n  border-bottom: 1px solid var(--hair);\n  color: var(--ink);\n}\n\n.checklist-check {\n  font: inherit;\n  display: grid;\n  place-items: center;\n  flex: none;\n  inline-size: clamp(1.75rem, 3vw, 2.125rem);\n  aspect-ratio: 1;\n  padding: 0;\n  border-radius: 999px;\n  border: 2px solid var(--muted);\n  background: transparent;\n  color: var(--slide);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.checklist-check:hover {\n  border-color: var(--ink);\n}\n\n.checklist-tick {\n  display: none;\n  inline-size: 40%;\n  block-size: 20%;\n  border-left: 3px solid currentColor;\n  border-bottom: 3px solid currentColor;\n  transform: translateY(-15%) rotate(-45deg);\n}\n\n.checklist-item.is-done .checklist-check {\n  background: var(--myelin);\n  border-color: var(--myelin);\n}\n\n.checklist-item.is-done .checklist-tick {\n  display: block;\n}\n\n.checklist-text {\n  display: grid;\n  gap: 0.125rem;\n  min-inline-size: 0;\n}\n\n.checklist-title {\n  font-size: clamp(1rem, 1.6vw, 1.15rem);\n  color: var(--ink);\n  overflow-wrap: anywhere;\n}\n\n.checklist-item.is-done .checklist-title {\n  color: var(--muted);\n  text-decoration: line-through;\n}\n\n.checklist-detail {\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  color: var(--muted);\n}\n\n.checklist-minutes {\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  color: var(--muted);\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n:root[data-motion=\"reduce\"] .checklist-check {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .checklist-check {\n    transition: none;\n  }\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01VJtGnbj9tuRGjHzh2jPorM",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./ChecklistItem.css\";\n\nexport interface ChecklistItemProps {\n  title: string;\n  detail: string;\n  minutes: number;\n  done: boolean;\n  onToggle: () => void;\n}\n\nexport function ChecklistItem({\n  title,\n  detail,\n  minutes,\n  done,\n  onToggle,\n}: ChecklistItemProps): ReactElement {\n  const titleId = useId();\n  const detailId = useId();\n\n  return (\n    <div className={done ? \"checklist-item is-done\" : \"checklist-item\"}>\n      <button\n        type=\"button\"\n        className=\"checklist-check\"\n        aria-pressed={done}\n        aria-labelledby={titleId}\n        aria-describedby={detailId}\n        onClick={onToggle}\n      >\n        <span className=\"checklist-tick\" aria-hidden=\"true\" />\n      </button>\n      <div className=\"checklist-text\">\n        <span id={titleId} className=\"checklist-title\">\n          {title}\n        </span>\n        <span id={detailId} className=\"checklist-detail\">\n          {detail}\n        </span>\n      </div>\n      <span className=\"checklist-minutes\">{minutes} min</span>\n    </div>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_012ZpecY3wXzMzKjT32HhE1u",
+     "content": "{\"language\": \"css\", \"ok\": false, \"token_compliance\": {\"token_uses\": 11, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 1, \"failing\": 1}, \"findings\": [{\"rule\": \"contrast\", \"kind\": \"low-contrast-text\", \"line\": 11, \"text\": \".checklist-check { color: var(--slide); background: transparent }\", \"message\": \"text contrast is 1.00:1 in day; WCAG 2.1 AA needs 4.5:1\", \"suggestion\": \"Use --ink for text on this background, or check a pair with check_contrast before using it.\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01VJtGnbj9tuRGjHzh2jPorM",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS0gkKEAgTGAI4AUIIdGhpbmtpbmcSDOwZj683kNAaPeBV4RoMAW2fJgR3snlHZT/9IjA/lI92yu5RKf684UYB6MxqwFkuz/sa8e/G65V0gJgJXv/yhpqRjB7SE12Nd6RevhAq7wge8J8iZBMFrziHEquEhNtalz74S7Tim8RxDWN990qpK1WyqzbdQ/vu/fe9SWdkrPUNoEg41/2lJKobu6heRXoUA1T5SOv4FQxFWn01XerRJGEwRWPZSpDotCgy2/DIjYcisiShB9nhRhY1QqVgrczDbPoq6FFvmZaLhIYlAbZ9/fMNaOUQ8CZzV4i4b+KfD+J+57UGphK0be2TtQ0FdNwmqFRkYpe6CWBd1LwiM6kPHIqO7AZ9U+Ja2TP8twz2qIqohwBGJhMKXI+h/DkRtLz5RGUl+57WybAfMhg0eCyYT/j2zu4XiRPO/KNeXnFpF2ifeq9EtSYNj8BTZ4lTpcfllbxvtvjGrZySL71Kqz8v1+XQ9HocQ84ZA3Z3AzCa3B/BjY6v6LZzj/7ERSppTxlCV8Wiz1uD+2OB3gRFSZ0wh2Z+52PAzXhHmTagepUyMFA1QROjQDPPh4OKSsCHMnt+zFr8aekdajAM7pPyW51n1//BLGQkWp26ipGuOZK5WQfzhsfxOR1ZvXjFYlMcPgqx2z7x0h6tvBsW8MhQDxQUGnoCoH4pJOS0tVw8Sx3XwiNTU27ajj5QzX2csy5L04q3hpJMX89t4FH7KBIzbaYNdMyK3nR0l7GTWu11Pc5MM8NJWpUdec/3rkOAQWT4yFb236+kBrHXN2dBPYtzqktWVxLuzkCIIWUuP6sS9O6h++gEFAlNiNjgdICUPKOmfF0MSkXdAX5Qhmw9/Rjpif4L1lXeor9492lqNq5Ao6d3HBhClf2JrN2VJtRBRyQOfijyr+JBPFt7kU7nXYzEyNkLutRMQFHANRwqQPatBu634AbOSdWE6YjInX1Pio/5GLxapfAxgQjD2L2B92dRaBy6lat6AcMEd4DyjqItSrxOhltZMOHD4r6G9si2E6pZqZE7KZAAvS+9O5Vm7OgHapv2EGQOnFviSr3ITuac3SogOinTQsFrvapGWjRy7P6tGYLhOJ+qEdhemUMH7gmKqZNX4ifwqj8zvGf++loAsvyl8NUcvACiXy5KUhsBgCXRgxDVlkRHyXzT6PwyPYnoIOg3HeIEsLhexAUPtk3kFBVq8LPB+n0YNgIR2XIg8me1a48MSCY/laUszWgLM213z8HpxKM5g5p1+qpdwuucUAYYdOiRWiszzqB/off/TDp61xw3HfS6BkKHSKidUQX3HjSVhgs0QvfGGsDQmbFhyk0hmZOKDfM+tzsumMlUyiGSenT0fpqeQBfGCHmglIgzD0DBNTxdiXg0k9U1bVU3YhafV8XBTmpNEnHxEqh8r+G0Ana21AqPxpK8+Ovsi6/eAtJAH96MqriTkvhhhhqX/LPO+GjfLxKTMVFe+E6BhDffm0oB8lNMIKRRb1MPj7RtPHxnjrjzA6EgwqZpDgQN2GI9BlasD4XebQ3vGufhYfQD0sFAOh3o3fz1qu2SabxIxiM750K4CXM6B/Bv4LrATNIKOitk07Bev6IdEVSNVXyXc4IVgBiryS545NtRHxdnZ/8/GAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01Co47cNb81BVUqQyUnHREG5",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".checklist-check {\n  font: inherit;\n  display: grid;\n  place-items: center;\n  flex: none;\n  inline-size: clamp(1.75rem, 3vw, 2.125rem);\n  aspect-ratio: 1;\n  padding: 0;\n  border-radius: 999px;\n  border: 2px solid var(--muted);\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.checklist-item.is-done .checklist-check {\n  background: var(--myelin);\n  border-color: var(--myelin);\n  color: var(--slide);\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01Co47cNb81BVUqQyUnHREG5",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 5, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 2, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS6wcKEAgTGAI4AUIIdGhpbmtpbmcSDBUiQ6+nTI3Y+4hiDxoMHdlXzhrgELL+8Do4IjCvMW7tdviLOAzL/nKvjGSUm+gBgjxDEm3OSK74bUXNFl1n3foMxge2xnpNd71TPdEqiAcPKS3WNS3b6fLPpDQ6B1OOu9Rk/lCFoQQO1KteIxVdFLK2dDjSAOZ+anryTCa+4FRVw1zvJf0C2YofZp9g65uq3OBCaOd/iUTF7hnaEKN5OIj5DcZhKspvfsRiP3GXUXsZW8tnFPC8SQZ2riccpy0QMNQkkaK1SMpVYHUr7barcD3u3RmF9q6UihBHQ9H49v7ygyJ6l2hYbQGJE4xrz8ezbTyvViBHtog+nLMnN95tOhJRUbnNMCoXinT25QFkBkEO4yFo6Me0823m9r0CK8jNNeMxwczN/oaDNusB2qGa1Y45MRbgE+NrZnzzjNjWrDKIvqP5n/CA8lA3wIOImkRHuP1jPlnfTDAeel3dMPJqyshXNuvR2doae3YZDEVwuqV5ztyTxzqW2IzSp2tmhxuurEzMaVq3iw+GkkMmG/HyrnNyShzICguv69itNLrXZcmEovHkVIx8q+eObB/bgaEm4WsLsiCl9IFeZCVMJjHoQsOWxf9KHd0jjmL4omSVHB9UtgF8ZgaNeUUcd3ct1wUoiAh+KKT0tNrr+Pytg/fTgxzIut2cEgxflAg5A5++HCVkZCUbO1GTcW3Eq0eQd/XJf0hcM4efvqVk97Ti5LNuBjZQEj7R6Gx54YIN6uf44Wpo+VhZj9EBvjxJrLdbD/BT9w9mK9iQPiAHWl2rMYYMSkcvkR00coHMC4hIKNiNyHUnfWkzWYJ7fpIoyksInfkiy2ISSEbYhhdXfga+q/H5/rsditGaswWhN6XS0yuaVtTHtkqNkwusgEv/Ujyw3eoNHwXDPEtAR4f5x5boZcjKXETPhBPd2So5QRXArwR6/O/o3eP6KrOwWwkpQgE0Vtw1IrLU2ZmseaTvdUQoslTMgymlbLnZr4bsVI6V5te5AXHna/iGm35Lv51u1KCZ3t6J8idwzNK+UQ4ZPEOGYjs/8wPCfcK7H7jegu41UAgCr9BQEsRrOILTGi68kg3puxFuuiYkJH0fSI7aJ3qnfnixJgN+Fi4Jk8SXlJyiO5sAyZCfhWd/2digbDq/4zzkfp0DifWAg7IqfSs6xfwy8MqQ492q9o4GRFge56r5vN2b+IfHJvsaYevjAEFTEZ3zNqrieqMzPa4gX3Ex+b6lFSBhRYTdVKRUJrt26IIx8H3TAWglV52BOOROEJIGl4CXVhc1XXTDYTzu8aveV0HjY82jSf3xTcpQbll0GAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./ChecklistItem.css\";\n\nexport interface ChecklistItemProps {\n  title: string;\n  detail: string;\n  minutes: number;\n  done: boolean;\n  onToggle: () => void;\n}\n\nexport function ChecklistItem({\n  title,\n  detail,\n  minutes,\n  done,\n  onToggle,\n}: ChecklistItemProps): ReactElement {\n  const titleId = useId();\n  const detailId = useId();\n\n  return (\n    <div className={done ? \"checklist-item is-done\" : \"checklist-item\"}>\n      <button\n        type=\"button\"\n        className=\"checklist-check\"\n        aria-pressed={done}\n        aria-labelledby={titleId}\n        aria-describedby={detailId}\n        onClick={onToggle}\n      >\n        <span className=\"checklist-tick\" aria-hidden=\"true\" />\n      </button>\n      <div className=\"checklist-text\">\n        <span id={titleId} className=\"checklist-title\">\n          {title}\n        </span>\n        <span id={detailId} className=\"checklist-detail\">\n          {detail}\n        </span>\n      </div>\n      <span className=\"checklist-minutes\">{minutes} min</span>\n    </div>\n  );\n}\n```\n\n```css\n.checklist-item {\n  display: grid;\n  grid-template-columns: auto minmax(0, 1fr) auto;\n  align-items: center;\n  gap: clamp(0.75rem, 2vw, 1rem);\n  padding: clamp(0.75rem, 1.6vw, 1rem) 0;\n  border-bottom: 1px solid var(--hair);\n  color: var(--ink);\n}\n\n.checklist-check {\n  font: inherit;\n  display: grid;\n  place-items: center;\n  flex: none;\n  inline-size: clamp(1.75rem, 3vw, 2.125rem);\n  aspect-ratio: 1;\n  padding: 0;\n  border-radius: 999px;\n  border: 2px solid var(--muted);\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease;\n}\n\n.checklist-check:hover {\n  border-color: var(--ink);\n}\n\n.checklist-tick {\n  display: none;\n  inline-size: 40%;\n  block-size: 20%;\n  border-left: 3px solid currentColor;\n  border-bottom: 3px solid currentColor;\n  transform: translateY(-15%) rotate(-45deg);\n}\n\n.checklist-item.is-done .checklist-check {\n  background: var(--myelin);\n  border-color: var(--myelin);\n  color: var(--slide);\n}\n\n.checklist-item.is-done .checklist-tick {\n  display: block;\n}\n\n.checklist-text {\n  display: grid;\n  gap: 0.125rem;\n  min-inline-size: 0;\n}\n\n.checklist-title {\n  font-size: clamp(1rem, 1.6vw, 1.15rem);\n  color: var(--ink);\n  overflow-wrap: anywhere;\n}\n\n.checklist-item.is-done .checklist-title {\n  color: var(--muted);\n  text-decoration: line-through;\n}\n\n.checklist-detail {\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  color: var(--muted);\n}\n\n.checklist-minutes {\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  color: var(--muted);\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n:root[data-motion=\"reduce\"] .checklist-check {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .checklist-check {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 43619,
+  "output_tokens": 5880,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 22.26,
+ "cost_usd": 0.007302
+}

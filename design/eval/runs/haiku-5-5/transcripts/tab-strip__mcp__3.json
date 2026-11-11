@@ -1,0 +1,287 @@
+{
+ "task": "tab-strip",
+ "name": "TabStrip",
+ "condition": "mcp",
+ "repetition": 3,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.854,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1775,
+    "output_tokens": 90,
+    "output_tokens_details": {
+     "thinking_tokens": 33
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 19.597,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10860,
+    "output_tokens": 5085,
+    "output_tokens_details": {
+     "thinking_tokens": 3419
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 1.177,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 16168,
+    "output_tokens": 216,
+    "output_tokens_details": {
+     "thinking_tokens": 53
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 4.358,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 17495,
+    "output_tokens": 1539,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId, useRef, type KeyboardEvent, type ReactNode } from \"react\";\nimport \"./TabStrip.css\";\n\nexport interface Tab {\n  id: string;\n  label: string;\n}\n\nexport interface TabStripProps {\n  tabs: readonly Tab[];\n  selected: string;\n  onSelect: (id: string) => void;\n  children: ReactNode;\n}\n\nexport function TabStrip({ tabs, selected, onSelect, children }: TabStripProps) {\n  const baseId = useId();\n  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);\n\n  if (tabs.length === 0) {\n    return null;\n  }\n\n  const selectedIndex = tabs.findIndex((tab) => tab.id === selected);\n  const activeIndex = selectedIndex >= 0 ? selectedIndex : 0;\n  const last = tabs.length - 1;\n\n  const activate = (index: number) => {\n    const tab = tabs[index];\n    if (tab === undefined) {\n      return;\n    }\n    buttonRefs.current[index]?.focus();\n    onSelect(tab.id);\n  };\n\n  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {\n    let next: number;\n    switch (event.key) {\n      case \"ArrowRight\":\n        next = index === last ? 0 : index + 1;\n        break;\n      case \"ArrowLeft\":\n        next = index === 0 ? last : index - 1;\n        break;\n      case \"Home\":\n        next = 0;\n        break;\n      case \"End\":\n        next = last;\n        break;\n      default:\n        return;\n    }\n    event.preventDefault();\n    activate(next);\n  };\n\n  const panelId = `${baseId}-panel`;\n  const tabId = (index: number) => `${baseId}-tab-${index}`;\n\n  return (\n    <div className=\"tab-strip\">\n      <div className=\"tab-strip__list\" role=\"tablist\">\n        {tabs.map((tab, index) => {\n          const isSelected = index === activeIndex;\n          return (\n            <button\n              key={tab.id}\n              ref={(element) => {\n                buttonRefs.current[index] = element;\n              }}\n              id={tabId(index)}\n              type=\"button\"\n              role=\"tab\"\n              className=\"tab-strip__tab\"\n              aria-selected={isSelected}\n              aria-controls={panelId}\n              tabIndex={isSelected ? 0 : -1}\n              onClick={() => onSelect(tab.id)}\n              onKeyDown={(event) => handleKeyDown(event, index)}\n            >\n              {tab.label}\n            </button>\n          );\n        })}\n      </div>\n      <div\n        id={panelId}\n        role=\"tabpanel\"\n        className=\"tab-strip__panel\"\n        aria-labelledby={tabId(activeIndex)}\n        tabIndex={0}\n      >\n        {children}\n      </div>\n    </div>\n  );\n}\n```\n\n```css\n.tab-strip {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n  color: var(--ink);\n  font: inherit;\n}\n\n.tab-strip__list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.25rem;\n  border-bottom: 1px solid var(--hair);\n}\n\n.tab-strip__tab {\n  position: relative;\n  padding: 0.6rem 0.9rem;\n  border: 0;\n  border-radius: 0;\n  background: none;\n  color: var(--muted);\n  font: inherit;\n  font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.1rem);\n  cursor: pointer;\n  transition: color 150ms ease, background-color 150ms ease;\n}\n\n.tab-strip__tab:hover {\n  color: var(--ink);\n  background-color: var(--myelin-wash);\n}\n\n.tab-strip__tab[aria-selected=\"true\"] {\n  color: var(--ink);\n  font-weight: 700;\n}\n\n.tab-strip__tab[aria-selected=\"true\"]::after {\n  content: \"\";\n  position: absolute;\n  left: 0.5rem;\n  right: 0.5rem;\n  bottom: -1px;\n  height: 3px;\n  border-radius: 999px;\n  background-color: var(--myelin);\n}\n\n.tab-strip__panel {\n  color: var(--ink);\n}\n\n:root[data-motion=\"reduce\"] .tab-strip__tab {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .tab-strip__tab {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a tab strip with one panel under it. The selected tab is clearly marked. Props: tabs (id and label), selected, onSelect, children for the panel.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file TabStrip.tsx. It imports \"./TabStrip.css\" and has a named export `TabStrip`.\n2. A `css` block: the file TabStrip.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQSuQUKEAgTGAI4AUIIdGhpbmtpbmcSDFlxJYTr8jlg8iDRwRoMsL9SM4TrdlnSNCicIjBMHvHqdpr5/ZWQu/3Y702B/yqzvjhjdYYZpIbVEiNj1qTNTL74D7afum1lmXcoSR0q1gT+wkKhPfi8/NeVQuxNHf6VSiQOaKXKypuvvyOe5Or3PDKi7S6SGd7DXm5ilo/M4Mmk6OW8rj6FjSgIYbLJPk45BR8nQhwAlRKBMBgZquyt8zoIrlLe5cPZfBztNYt9sq8OyPS4b8B2fFfXiorEMWpKZhxJCGRKLPSVnBibRMl9qDDSH3JJMsL5B5mTlw6+P+T819I7eGMZBnEx8bdbr/MNzj6+UkaGUed3pMcd+hn5/1jQNPiiEFynHXqWN2kydXy81hCyT95vzJzVdJ91dUtvkV0GvoReGPBoTMwzV6UrTZcOx9ECIlNtJ97pZCMi03VcnW7aMu3xl9w8lyq/x/m8ayqx5o53+mdYdsdGN6Trn0K1NnXxwNTkSYtDycd6JO8QZssF1XBPC9VI2uU7c73aRveieCL3ppFhWk+y1ZYnc2C8R6lzqdfH+f2gOgV7YseR7HIt2rNug+yT/2yu6MNGLqekjqK2KjqTJIJ9b1cMtLmGRqekRUt4heoPjnvNGVLkVbRadftZb4Q+AGH6BvejnfTzIoRcm0KODjpt2pLlL5Ee5wxi/0HCWb8JiuiAZ5PsNKWY7hfKAn73WvW0wsa49uUm5YAoJRLsZJHd9eUdmdX98pVCMTTa1CgGhiJdLlBZyzAxSPKok2RsMm1DWVh776vcsN9c1mTrvGVpMDjtpoC9NOp/EDuPhyxXIGr/Li5EyFC/mV6D/bl9Pc1uA0PHVOJAcD5wlFSGhANtNjrVAbM0ftHExIuH/u30+xkyJQkovVOceGtf/SSv6h3ssDo/WdqKK84WGAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01Qe8qxZQEcuFRCHjGRfF5TC",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_0171cxKq8YvFygCsuosTumUp",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01Qe8qxZQEcuFRCHjGRfF5TC",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_0171cxKq8YvFygCsuosTumUp",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_012vFMLJcuNHcLxzMDEhome1",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import { useId, useRef, type KeyboardEvent, type ReactNode } from \"react\";\nimport \"./TabStrip.css\";\n\nexport interface Tab {\n  id: string;\n  label: string;\n}\n\nexport interface TabStripProps {\n  tabs: readonly Tab[];\n  selected: string;\n  onSelect: (id: string) => void;\n  children: ReactNode;\n}\n\nexport function TabStrip({ tabs, selected, onSelect, children }: TabStripProps) {\n  const baseId = useId();\n  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);\n\n  if (tabs.length === 0) {\n    return null;\n  }\n\n  const selectedIndex = tabs.findIndex((tab) => tab.id === selected);\n  const activeIndex = selectedIndex >= 0 ? selectedIndex : 0;\n  const last = tabs.length - 1;\n\n  const activate = (index: number) => {\n    const tab = tabs[index];\n    if (tab === undefined) {\n      return;\n    }\n    buttonRefs.current[index]?.focus();\n    onSelect(tab.id);\n  };\n\n  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {\n    let next: number;\n    switch (event.key) {\n      case \"ArrowRight\":\n        next = index === last ? 0 : index + 1;\n        break;\n      case \"ArrowLeft\":\n        next = index === 0 ? last : index - 1;\n        break;\n      case \"Home\":\n        next = 0;\n        break;\n      case \"End\":\n        next = last;\n        break;\n      default:\n        return;\n    }\n    event.preventDefault();\n    activate(next);\n  };\n\n  const panelId = `${baseId}-panel`;\n  const tabId = (index: number) => `${baseId}-tab-${index}`;\n\n  return (\n    <div className=\"tab-strip\">\n      <div className=\"tab-strip__list\" role=\"tablist\">\n        {tabs.map((tab, index) => {\n          const isSelected = index === activeIndex;\n          return (\n            <button\n              key={tab.id}\n              ref={(element) => {\n                buttonRefs.current[index] = element;\n              }}\n              id={tabId(index)}\n              type=\"button\"\n              role=\"tab\"\n              className=\"tab-strip__tab\"\n              aria-selected={isSelected}\n              aria-controls={panelId}\n              tabIndex={isSelected ? 0 : -1}\n              onClick={() => onSelect(tab.id)}\n              onKeyDown={(event) => handleKeyDown(event, index)}\n            >\n              {tab.label}\n            </button>\n          );\n        })}\n      </div>\n      <div\n        id={panelId}\n        role=\"tabpanel\"\n        className=\"tab-strip__panel\"\n        aria-labelledby={tabId(activeIndex)}\n        tabIndex={0}\n      >\n        {children}\n      </div>\n    </div>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_013iJvxLJJ4qmvTrSJheaQxA",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".tab-strip {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n  color: var(--ink);\n  font: inherit;\n}\n\n.tab-strip__list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.25rem;\n  border-bottom: 1px solid var(--hair);\n}\n\n.tab-strip__tab {\n  position: relative;\n  padding: 0.6rem 0.9rem;\n  border: 0;\n  border-radius: 0;\n  background: none;\n  color: var(--muted);\n  font: inherit;\n  font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.1rem);\n  cursor: pointer;\n  transition: color 150ms ease, background-color 150ms ease;\n}\n\n.tab-strip__tab:hover {\n  color: var(--ink);\n  background-color: var(--myelin-wash);\n}\n\n.tab-strip__tab[aria-selected=\"true\"] {\n  color: var(--ink);\n  font-weight: 700;\n}\n\n.tab-strip__tab[aria-selected=\"true\"]::after {\n  content: \"\";\n  position: absolute;\n  left: 0.5rem;\n  right: 0.5rem;\n  bottom: -1px;\n  height: 3px;\n  border-radius: 999px;\n  background-color: var(--myelin);\n}\n\n.tab-strip__panel {\n  color: var(--ink);\n}\n\n:root[data-motion=\"reduce\"] .tab-strip__tab {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .tab-strip__tab {\n    transition: none;\n  }\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_012vFMLJcuNHcLxzMDEhome1",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_013iJvxLJJ4qmvTrSJheaQxA",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 8, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 1, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQSyQYKEAgTGAI4AUIIdGhpbmtpbmcSDCWB07Yucq50/lTEAxoMoAm3QYfsUnZGk2AlIjBNrRlxao2cAeVfTHduYSGt2qG/2+Nyp2NbQen4q/kkjKiH8/ippWhllAH+xfnhsakq5gXwTTC/Kgc/ylhzDtYM5/LDWLF2IvVFsu50WXJXLyweWLdFJLTtppRprPfR7dJPL5YgPVdny8H108fkK6YSWylIkcPZ6HAuyQt115V9z2v+fAF9MJlvXxvt4jaX1uDDrR9YpWVtT6Nrb4wOF8rWULyw4TioNea89OAPr97gu2QRwzJfCcfpVoDZZ8aS+rwRGgo7l88SRXvPo9g9NmPI4FNadgba1+b/34NKR7cL1K5NehrV2xdf6dmB8PZ461K9c+1JLS6AO4hEDtPvRBgqmjuxWS44s3SzgJh29iPJxu+CQyZUEb+iZdrVAY+SF1ofl2PNGTY6dB0u/YEB+oKD9pacMRL6aEflHRVdSuPRPkk1r3MhcAnbi+x9pKGgIWjR13PBfKU6CMZMjzkemxcLE+b/HLX7Eh/PDHxQcaKLK3nZ3uH8lT7tmIYSZ52iw8FcPDvjx30ZWFmFOCSOah7tfujAl8Yxt29LhoKpLmAouIiY+BpmE0Pk9ZAfn55Cfv3hMXsAvxSkZacJT6CRcnIJJnRQNxIpgkIRI1i5u5svwO8qfreLiCl6MGKmK2B/FTEcbt16zbGPLNv/0X74vogu7GOXdYG3cGuVOqBDMSriEVstG/VLvy8c70auPS6pZBy5+3DXDM6ugFxeAnphAbaQU0UQYLuqpVNrEjT3SI+URqOIn0ouHm3YcUKKA4O787zyxxPIoFgU/zvqt4ykbBUnoFaSB2GaC/LzOp3ValRke7TaoGaOeqi9DiZ9qgNjjtxzeVY8aPLMfyAhwYPu/Df4R4uyAtYof+g5HHgf8LZVYvuh2RrkoJ8aSme9q0q0rpWDNDxMyIzTIrVjc+YZbnlulCZciB6K+mYfhvYaj8HAPruoH308jnhuAByxgOcXdhEl98mHJ3erR+yQB1w2BqDFvwZRiEkUyyUR6mOA23ZTjU/6fPLgiRGG/lkBycfcTzSPOz1Vo7A5ZCAxtnZ5q5itTb6gWhp/dKbhGAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_0126T1L1FSVCXj1q1XANYQou",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--muted)",
+      "background": "var(--slide)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01RJF3X1614es9HragJL1UCc",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--myelin)",
+      "background": "var(--slide)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_0126T1L1FSVCXj1q1XANYQou",
+     "content": "{\"foreground\": \"var(--muted)\", \"background\": \"var(--slide)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 5.03, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#5d6485\", \"background\": \"#edeff5\", \"ratio\": 5.03, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#949bbb\", \"background\": \"#0e1530\", \"ratio\": 6.55, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01RJF3X1614es9HragJL1UCc",
+     "content": "{\"foreground\": \"var(--myelin)\", \"background\": \"var(--slide)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 4.57, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": \"myelin\", \"foreground\": \"#2d6bad\", \"background\": \"#edeff5\", \"ratio\": 4.78, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"emerald\", \"foreground\": \"#1f7a5a\", \"background\": \"#edeff5\", \"ratio\": 4.57, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"amber\", \"foreground\": \"#9a5b12\", \"background\": \"#edeff5\", \"ratio\": 4.7, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"rose\", \"foreground\": \"#b03a6a\", \"background\": \"#edeff5\", \"ratio\": 4.99, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"myelin\", \"foreground\": \"#57c4e5\", \"background\": \"#0e1530\", \"ratio\": 8.92, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"emerald\", \"foreground\": \"#4fd1a1\", \"background\": \"#0e1530\", \"ratio\": 9.38, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"amber\", \"foreground\": \"#f2b25c\", \"background\": \"#0e1530\", \"ratio\": 9.66, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"rose\", \"foreground\": \"#f28bb0\", \"background\": \"#0e1530\", \"ratio\": 7.78, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "text": "```tsx\nimport { useId, useRef, type KeyboardEvent, type ReactNode } from \"react\";\nimport \"./TabStrip.css\";\n\nexport interface Tab {\n  id: string;\n  label: string;\n}\n\nexport interface TabStripProps {\n  tabs: readonly Tab[];\n  selected: string;\n  onSelect: (id: string) => void;\n  children: ReactNode;\n}\n\nexport function TabStrip({ tabs, selected, onSelect, children }: TabStripProps) {\n  const baseId = useId();\n  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);\n\n  if (tabs.length === 0) {\n    return null;\n  }\n\n  const selectedIndex = tabs.findIndex((tab) => tab.id === selected);\n  const activeIndex = selectedIndex >= 0 ? selectedIndex : 0;\n  const last = tabs.length - 1;\n\n  const activate = (index: number) => {\n    const tab = tabs[index];\n    if (tab === undefined) {\n      return;\n    }\n    buttonRefs.current[index]?.focus();\n    onSelect(tab.id);\n  };\n\n  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {\n    let next: number;\n    switch (event.key) {\n      case \"ArrowRight\":\n        next = index === last ? 0 : index + 1;\n        break;\n      case \"ArrowLeft\":\n        next = index === 0 ? last : index - 1;\n        break;\n      case \"Home\":\n        next = 0;\n        break;\n      case \"End\":\n        next = last;\n        break;\n      default:\n        return;\n    }\n    event.preventDefault();\n    activate(next);\n  };\n\n  const panelId = `${baseId}-panel`;\n  const tabId = (index: number) => `${baseId}-tab-${index}`;\n\n  return (\n    <div className=\"tab-strip\">\n      <div className=\"tab-strip__list\" role=\"tablist\">\n        {tabs.map((tab, index) => {\n          const isSelected = index === activeIndex;\n          return (\n            <button\n              key={tab.id}\n              ref={(element) => {\n                buttonRefs.current[index] = element;\n              }}\n              id={tabId(index)}\n              type=\"button\"\n              role=\"tab\"\n              className=\"tab-strip__tab\"\n              aria-selected={isSelected}\n              aria-controls={panelId}\n              tabIndex={isSelected ? 0 : -1}\n              onClick={() => onSelect(tab.id)}\n              onKeyDown={(event) => handleKeyDown(event, index)}\n            >\n              {tab.label}\n            </button>\n          );\n        })}\n      </div>\n      <div\n        id={panelId}\n        role=\"tabpanel\"\n        className=\"tab-strip__panel\"\n        aria-labelledby={tabId(activeIndex)}\n        tabIndex={0}\n      >\n        {children}\n      </div>\n    </div>\n  );\n}\n```\n\n```css\n.tab-strip {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n  color: var(--ink);\n  font: inherit;\n}\n\n.tab-strip__list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.25rem;\n  border-bottom: 1px solid var(--hair);\n}\n\n.tab-strip__tab {\n  position: relative;\n  padding: 0.6rem 0.9rem;\n  border: 0;\n  border-radius: 0;\n  background: none;\n  color: var(--muted);\n  font: inherit;\n  font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.1rem);\n  cursor: pointer;\n  transition: color 150ms ease, background-color 150ms ease;\n}\n\n.tab-strip__tab:hover {\n  color: var(--ink);\n  background-color: var(--myelin-wash);\n}\n\n.tab-strip__tab[aria-selected=\"true\"] {\n  color: var(--ink);\n  font-weight: 700;\n}\n\n.tab-strip__tab[aria-selected=\"true\"]::after {\n  content: \"\";\n  position: absolute;\n  left: 0.5rem;\n  right: 0.5rem;\n  bottom: -1px;\n  height: 3px;\n  border-radius: 999px;\n  background-color: var(--myelin);\n}\n\n.tab-strip__panel {\n  color: var(--ink);\n}\n\n:root[data-motion=\"reduce\"] .tab-strip__tab {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .tab-strip__tab {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 46298,
+  "output_tokens": 6930,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 25.986,
+ "cost_usd": 0.008095
+}

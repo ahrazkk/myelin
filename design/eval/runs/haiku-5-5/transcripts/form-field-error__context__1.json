@@ -1,0 +1,60 @@
+{
+ "task": "form-field-error",
+ "name": "TextField",
+ "condition": "context",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 9.361,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 4134,
+    "output_tokens": 2270,
+    "output_tokens_details": {
+     "thinking_tokens": 1278
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId } from \"react\";\nimport type { ChangeEvent } from \"react\";\nimport \"./TextField.css\";\n\nexport interface TextFieldProps {\n  label: string;\n  value: string;\n  onChange: (value: string) => void;\n  error?: string;\n  placeholder?: string;\n}\n\nexport function TextField({\n  label,\n  value,\n  onChange,\n  error,\n  placeholder,\n}: TextFieldProps) {\n  const inputId = useId();\n  const errorId = `${inputId}-error`;\n  const hasError = Boolean(error);\n\n  function handleChange(event: ChangeEvent<HTMLInputElement>) {\n    onChange(event.target.value);\n  }\n\n  return (\n    <div className=\"text-field\">\n      <label className=\"text-field__label\" htmlFor={inputId}>\n        {label}\n      </label>\n      <input\n        id={inputId}\n        className=\"text-field__input\"\n        type=\"text\"\n        value={value}\n        onChange={handleChange}\n        placeholder={placeholder}\n        aria-invalid={hasError || undefined}\n        aria-describedby={hasError ? errorId : undefined}\n      />\n      {hasError && (\n        <p id={errorId} className=\"text-field__error\" role=\"alert\">\n          {error}\n        </p>\n      )}\n    </div>\n  );\n}\n```\n\n```css\n.text-field {\n  display: flex;\n  flex-direction: column;\n  gap: 0.4em;\n  font: inherit;\n}\n\n.text-field__label {\n  color: var(--ink);\n  font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);\n  font-weight: 600;\n}\n\n.text-field__input {\n  font: inherit;\n  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);\n  color: var(--ink);\n  background: var(--slide);\n  border: 1px solid var(--muted);\n  border-radius: 4px;\n  padding: 0.6em 0.75em;\n  min-height: 44px;\n  box-sizing: border-box;\n  width: 100%;\n  transition: border-color 150ms ease;\n}\n\n.text-field__input::placeholder {\n  color: var(--muted);\n  opacity: 1;\n}\n\n.text-field__input:focus-visible {\n  border-color: var(--myelin);\n}\n\n.text-field__input[aria-invalid=\"true\"] {\n  border-color: var(--cresyl);\n  border-width: 2px;\n  padding: calc(0.6em - 1px) calc(0.75em - 1px);\n}\n\n.text-field__error {\n  margin: 0;\n  color: var(--cresyl);\n  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.9375rem);\n  font-weight: 600;\n}\n\n:root[data-motion=\"reduce\"] .text-field__input {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .text-field__input {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a labelled text field that shows an error message under it when the error prop is set. Props: label, value, onChange, error (optional), placeholder (optional).\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file TextField.tsx. It imports \"./TextField.css\" and has a named export `TextField`.\n2. A `css` block: the file TextField.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport { useId } from \"react\";\nimport type { ChangeEvent } from \"react\";\nimport \"./TextField.css\";\n\nexport interface TextFieldProps {\n  label: string;\n  value: string;\n  onChange: (value: string) => void;\n  error?: string;\n  placeholder?: string;\n}\n\nexport function TextField({\n  label,\n  value,\n  onChange,\n  error,\n  placeholder,\n}: TextFieldProps) {\n  const inputId = useId();\n  const errorId = `${inputId}-error`;\n  const hasError = Boolean(error);\n\n  function handleChange(event: ChangeEvent<HTMLInputElement>) {\n    onChange(event.target.value);\n  }\n\n  return (\n    <div className=\"text-field\">\n      <label className=\"text-field__label\" htmlFor={inputId}>\n        {label}\n      </label>\n      <input\n        id={inputId}\n        className=\"text-field__input\"\n        type=\"text\"\n        value={value}\n        onChange={handleChange}\n        placeholder={placeholder}\n        aria-invalid={hasError || undefined}\n        aria-describedby={hasError ? errorId : undefined}\n      />\n      {hasError && (\n        <p id={errorId} className=\"text-field__error\" role=\"alert\">\n          {error}\n        </p>\n      )}\n    </div>\n  );\n}\n```\n\n```css\n.text-field {\n  display: flex;\n  flex-direction: column;\n  gap: 0.4em;\n  font: inherit;\n}\n\n.text-field__label {\n  color: var(--ink);\n  font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);\n  font-weight: 600;\n}\n\n.text-field__input {\n  font: inherit;\n  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);\n  color: var(--ink);\n  background: var(--slide);\n  border: 1px solid var(--muted);\n  border-radius: 4px;\n  padding: 0.6em 0.75em;\n  min-height: 44px;\n  box-sizing: border-box;\n  width: 100%;\n  transition: border-color 150ms ease;\n}\n\n.text-field__input::placeholder {\n  color: var(--muted);\n  opacity: 1;\n}\n\n.text-field__input:focus-visible {\n  border-color: var(--myelin);\n}\n\n.text-field__input[aria-invalid=\"true\"] {\n  border-color: var(--cresyl);\n  border-width: 2px;\n  padding: calc(0.6em - 1px) calc(0.75em - 1px);\n}\n\n.text-field__error {\n  margin: 0;\n  color: var(--cresyl);\n  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.9375rem);\n  font-weight: 600;\n}\n\n:root[data-motion=\"reduce\"] .text-field__input {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .text-field__input {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 4134,
+  "output_tokens": 2270,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 9.361,
+ "cost_usd": 0.001548
+}

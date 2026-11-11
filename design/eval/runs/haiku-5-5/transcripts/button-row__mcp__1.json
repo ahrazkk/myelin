@@ -1,0 +1,314 @@
+{
+ "task": "button-row",
+ "name": "ButtonRow",
+ "condition": "mcp",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.739,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1806,
+    "output_tokens": 100,
+    "output_tokens_details": {
+     "thinking_tokens": 43
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 11.169,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10901,
+    "output_tokens": 2702,
+    "output_tokens_details": {
+     "thinking_tokens": 2460
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 5.102,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 15027,
+    "output_tokens": 1566,
+    "output_tokens_details": {
+     "thinking_tokens": 105
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 4.553,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 16816,
+    "output_tokens": 1446,
+    "output_tokens_details": {
+     "thinking_tokens": 132
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport type { ReactElement } from \"react\";\nimport \"./ButtonRow.css\";\n\nexport interface ButtonRowProps {\n  primaryLabel: string;\n  onPrimary: () => void;\n  primaryDisabled?: boolean;\n  secondaryLabel: string;\n  onSecondary: () => void;\n  secondaryDisabled?: boolean;\n  quietLabel: string;\n  onQuiet: () => void;\n  quietDisabled?: boolean;\n}\n\nexport function ButtonRow({\n  primaryLabel,\n  onPrimary,\n  primaryDisabled = false,\n  secondaryLabel,\n  onSecondary,\n  secondaryDisabled = false,\n  quietLabel,\n  onQuiet,\n  quietDisabled = false,\n}: ButtonRowProps): ReactElement {\n  return (\n    <div className=\"button-row\">\n      <button\n        type=\"button\"\n        className=\"btn btn-primary\"\n        onClick={onPrimary}\n        disabled={primaryDisabled}\n      >\n        {primaryLabel}\n      </button>\n      <button\n        type=\"button\"\n        className=\"btn btn-secondary\"\n        onClick={onSecondary}\n        disabled={secondaryDisabled}\n      >\n        {secondaryLabel}\n      </button>\n      <button\n        type=\"button\"\n        className=\"btn btn-quiet\"\n        onClick={onQuiet}\n        disabled={quietDisabled}\n      >\n        {quietLabel}\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.button-row {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 12px;\n}\n\n.button-row .btn {\n  font: inherit;\n  font-size: clamp(0.9rem, 0.8rem + 0.4vw, 1.05rem);\n  line-height: 1.2;\n  padding: 0.6em 1.2em;\n  border: 1px solid transparent;\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;\n}\n\n.button-row .btn:focus-visible {\n  outline: 3px solid var(--cresyl);\n  outline-offset: 3px;\n}\n\n/* Primary: solid accent fill, text on it uses --slide */\n.button-row .btn-primary {\n  background: var(--myelin);\n  border-color: var(--myelin);\n  color: var(--slide);\n}\n\n.button-row .btn-primary:hover:not(:disabled) {\n  border-color: var(--ink);\n}\n\n/* Secondary: outlined */\n.button-row .btn-secondary {\n  border-color: var(--ink);\n  color: var(--ink);\n}\n\n.button-row .btn-secondary:hover:not(:disabled) {\n  background: var(--myelin-wash);\n}\n\n/* Quiet: text only, underlined so it still reads as a control */\n.button-row .btn-quiet {\n  padding-inline: 0.4em;\n  color: var(--ink);\n  text-decoration: underline;\n  text-decoration-thickness: 1px;\n  text-underline-offset: 0.25em;\n}\n\n.button-row .btn-quiet:hover:not(:disabled) {\n  text-decoration-thickness: 2px;\n}\n\n/* Disabled: muted text and outline, no fill; no opacity so text keeps its token colour */\n.button-row .btn:disabled {\n  cursor: not-allowed;\n  background: transparent;\n  color: var(--muted);\n  border-color: var(--muted);\n}\n\n.button-row .btn-quiet:disabled {\n  border-color: transparent;\n  text-decoration: none;\n}\n\n:root[data-motion=\"reduce\"] .button-row .btn {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .button-row .btn {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a row of three buttons: a primary button, a secondary button and a quiet text-only button. Each can be disabled. Props: primaryLabel, secondaryLabel, quietLabel, handlers for each, and a disabled flag for each.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file ButtonRow.tsx. It imports \"./ButtonRow.css\" and has a named export `ButtonRow`.\n2. A `css` block: the file ButtonRow.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQSzwUKEAgTGAI4AUIIdGhpbmtpbmcSDPzerTJMtaaE/34BxxoM9zJqUv8ScHv3ixgdIjAzFnmHq1b9HcJjhXma125lT0Y1+F5agW4q43GNSlLERNCnY8BiNHQXE5gvn7EoGEgq7ATNNU1iq142l9VcTj34QNlJ/sTN3HxlngkhoxRorYubJYwTIknBMu4Qv7FdV8t5fVnTHHCXIITYNYnC0KWf8B/D6zyDsXX3GaUFvBc1sGkmw6JIFkwClDh2GtS8XrgWgnoQbnmnG1UiiE902YXvnJ6DpVWfNre31WeE63u//LkMeBfCG2kM8qanujeDuzojj5QqQblnplhayjs0DJHdRWHFJIr8lHkdRuaoKwT6DL1xZzubfF784JYoXEOysZvW7MSW+0z5cHRvkCQc2admB5X6M0Zew+GCXXEjarK2HQr1m0fTNml44SbURklwJx1R/V72/t7/yMKhxfwCC5IzG2G8HbVolnIcFSPOQP0iHiZLVXH+1YYOg/sJjuVtPLhg/H+SINF3Q2nwAUXk81MONGAeJwK0kaKW75fbB1DBEB19dpqvAYLTBl2mlePd+wBgENKucJO/oO9C44W3pMMapWmkBH7grALi9FX+GTiYcMIVRKIK/nhZ75ufPwoi/heOX5RO6rWQ/rJZV2d3BXVQfwpPDV8hyMvX+yDcpd8enmg3ofquE2ySXK4r3MgUN0Of2sb3IiVlX4ZRqgIFpwEVMV4nQOhCIpiP363LjkL6yMl+M0A0MJHhvDQl6uVCsIHpclHZlTOlJLjNWVDM1dmulfY0Ie5VmghGFNbYIeBSQExDLsaLtrnQR9FXRXGjNdXQkjN5tG+r422dGFbz08laD40ViPwnCR1z3Zxx98wdD8NLZuHo/Lg+3i6yt3t9EUv9biRH8KyPC2cqCFPZWTl1NHMtJgwXFBckW25JVIuyOLgsJcPAQVv5wEZ3s2eI7RgB",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01CrajwPguGnYvmNGMDsfBMS",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01Jcs2Q6ZRxeExtnzEa89cFs",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01CrajwPguGnYvmNGMDsfBMS",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01Jcs2Q6ZRxeExtnzEa89cFs",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_014YU8mub991qMFvz8pEU2V4",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--muted)",
+      "background": "var(--hair)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01M2UWzxNyeZdFkLG4dQLq3Y",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--slide)",
+      "background": "var(--myelin)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01URjZUip3bs1ZXsQo1JF8LZ",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--muted)",
+      "background": "var(--slide)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_014YU8mub991qMFvz8pEU2V4",
+     "content": "{\"foreground\": \"var(--muted)\", \"background\": \"var(--hair)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 3.79, \"passes_everywhere\": {\"aa_text\": false, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#5d6485\", \"background\": \"#ccd1e0\", \"ratio\": 3.79, \"aa_text\": false, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#949bbb\", \"background\": \"#27305a\", \"ratio\": 4.62, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01M2UWzxNyeZdFkLG4dQLq3Y",
+     "content": "{\"foreground\": \"var(--slide)\", \"background\": \"var(--myelin)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 4.57, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": \"myelin\", \"foreground\": \"#edeff5\", \"background\": \"#2d6bad\", \"ratio\": 4.78, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"emerald\", \"foreground\": \"#edeff5\", \"background\": \"#1f7a5a\", \"ratio\": 4.57, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"amber\", \"foreground\": \"#edeff5\", \"background\": \"#9a5b12\", \"ratio\": 4.7, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"day\", \"accent\": \"rose\", \"foreground\": \"#edeff5\", \"background\": \"#b03a6a\", \"ratio\": 4.99, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"myelin\", \"foreground\": \"#0e1530\", \"background\": \"#57c4e5\", \"ratio\": 8.92, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"emerald\", \"foreground\": \"#0e1530\", \"background\": \"#4fd1a1\", \"ratio\": 9.38, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"amber\", \"foreground\": \"#0e1530\", \"background\": \"#f2b25c\", \"ratio\": 9.66, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": \"rose\", \"foreground\": \"#0e1530\", \"background\": \"#f28bb0\", \"ratio\": 7.78, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01URjZUip3bs1ZXsQo1JF8LZ",
+     "content": "{\"foreground\": \"var(--muted)\", \"background\": \"var(--slide)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 5.03, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#5d6485\", \"background\": \"#edeff5\", \"ratio\": 5.03, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#949bbb\", \"background\": \"#0e1530\", \"ratio\": 6.55, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS0wcKEAgTGAI4AUIIdGhpbmtpbmcSDEM6GVUNj96+vupj3RoMbdHOCYPp7lBtJuWKIjDAGgTcKTPMva0cuGyFNw9ZLDRiul1u3L7iU+hSC1tFDMzCUfgogHGMFSB5UNGFRJMq8AbpkcfBkm+ZAXfMDyBG9Q9xbUgGEfsYpfxzvTKIVbRcFj8dWZykjO1L7sH3+7UrUsQsnCdpRT1dCGBBtp5H36A8tz+YCDwGbH/yo3DKWMuQrFPTEFeXWWSS61VLnmdy1v79uQUYeTKrAEWQHeyOHPp80wlDJxiG47IoPyjNf3BLh33Lhg3ahtWMqScK7603hyEAeIrteXy4NOhOM8/q+YaMK6Z8Qjl5yXITYgX3QAVcM4S4eBsu2k34K55NS/YqnNRD/HFfDlub3KSzT4XaXTgahnskOWyXItk+oE7JqxCHyPg8SlJrgbV041dciVAdqOIcEPArefv7GKexNaD6DgpXwGkoP/GtMqWvbvjBTKrGTN9eOH8YiCp58LkusKlMZmu023KH/oWZXSZa5fd2nMn1O0JgljN479n8rZOmEkiJ3HbSpoadi05Cy+3W+/uVhr7sD3FxUMk/UMuQyTnAaVFy4ELQNfaXEwr2F5NsaOYb475KZarmYO+Kg0w7vfIeH67C7eOPZBOdmuh0h+9fL99nLi19syc5nSBrcJ89N2TXf0jzR5vtfOooh/F+OEIRTZTM+WgXZ2e3683y3nso2iFBUZUXLjq+tmmhgbkrQ8/+n/zkLg2yaFUe8kMll1M8+qYomKumdll4d0iFyGnOqkfy0MFcrhrlvoD4NjA4IK72GoaoeGYO11h6+v5NII8VtA/itDOZ/wC3oeLlc0wPMDDUjgM4E+UvswGCi0wjR4PE4IuoDxZfkjvCJ6VwpKo+gNW2I+y+uqPZBU03SmsvPO179bAy3kVwbRwAGI2pKGDvv/fqkZRWUtgdUQvdv6fIvO2uXR7FtVdm0TTofU5iLJTODw1RdRVijrx3U5YHhZ6pesGIEtngoQuqTwv5ZOXFTt4AUhqWpSetu+oOh31rtdliF2h+soc44cYEgPyiNBbkzHG9GzevkzkhPjXGZNwcLfLx80coLrwVD4MOE9djrxhIiwPTWF9RP98yZOxgqpq6Un/LxROlYxDI4RewkfcQrrjfGOCDgCQ36aKDWsCZIhLFcDpyRtp8hXlgH3Iq2GTAby4kOyYspl+sZfUqsPtadED9unzjZKW2lmLrwcY81c+pxzkm6ZHWNVjqXavn4lJjxCThZGYh3FKpv3FZApr7dodZqKc42pqUj2ELSMPZ0pkJGAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01EJ8YuuHjSnKfb8u6KhjWtM",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".button-row {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 12px;\n}\n\n.button-row .btn {\n  font: inherit;\n  font-size: clamp(0.9rem, 0.8rem + 0.4vw, 1.05rem);\n  line-height: 1.2;\n  padding: 0.6em 1.2em;\n  border: 1px solid transparent;\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;\n}\n\n.button-row .btn:focus-visible {\n  outline: 3px solid var(--cresyl);\n  outline-offset: 3px;\n}\n\n/* Primary: solid accent fill, text on it uses --slide */\n.button-row .btn-primary {\n  background: var(--myelin);\n  border-color: var(--myelin);\n  color: var(--slide);\n}\n\n.button-row .btn-primary:hover:not(:disabled) {\n  border-color: var(--ink);\n}\n\n/* Secondary: outlined */\n.button-row .btn-secondary {\n  border-color: var(--ink);\n  color: var(--ink);\n}\n\n.button-row .btn-secondary:hover:not(:disabled) {\n  background: var(--myelin-wash);\n}\n\n/* Quiet: text only, underlined so it still reads as a control */\n.button-row .btn-quiet {\n  padding-inline: 0.4em;\n  color: var(--ink);\n  text-decoration: underline;\n  text-decoration-thickness: 1px;\n  text-underline-offset: 0.25em;\n}\n\n.button-row .btn-quiet:hover:not(:disabled) {\n  text-decoration-thickness: 2px;\n}\n\n/* Disabled: muted text and outline, no fill; no opacity so text keeps its token colour */\n.button-row .btn:disabled {\n  cursor: not-allowed;\n  background: transparent;\n  color: var(--muted);\n  border-color: var(--muted);\n}\n\n.button-row .btn-quiet:disabled {\n  border-color: transparent;\n  text-decoration: none;\n}\n\n:root[data-motion=\"reduce\"] .button-row .btn,\n.button-row .btn[data-motion=\"reduce\"] {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .button-row .btn {\n    transition: none;\n  }\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01VL8FjxAwEhNQ4vFeRBArWz",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import type { ReactElement } from \"react\";\nimport \"./ButtonRow.css\";\n\nexport interface ButtonRowProps {\n  primaryLabel: string;\n  onPrimary: () => void;\n  primaryDisabled?: boolean;\n  secondaryLabel: string;\n  onSecondary: () => void;\n  secondaryDisabled?: boolean;\n  quietLabel: string;\n  onQuiet: () => void;\n  quietDisabled?: boolean;\n}\n\nexport function ButtonRow({\n  primaryLabel,\n  onPrimary,\n  primaryDisabled = false,\n  secondaryLabel,\n  onSecondary,\n  secondaryDisabled = false,\n  quietLabel,\n  onQuiet,\n  quietDisabled = false,\n}: ButtonRowProps): ReactElement {\n  return (\n    <div className=\"button-row\">\n      <button\n        type=\"button\"\n        className=\"btn btn-primary\"\n        onClick={onPrimary}\n        disabled={primaryDisabled}\n      >\n        {primaryLabel}\n      </button>\n      <button\n        type=\"button\"\n        className=\"btn btn-secondary\"\n        onClick={onSecondary}\n        disabled={secondaryDisabled}\n      >\n        {secondaryLabel}\n      </button>\n      <button\n        type=\"button\"\n        className=\"btn btn-quiet\"\n        onClick={onQuiet}\n        disabled={quietDisabled}\n      >\n        {quietLabel}\n      </button>\n    </div>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01EJ8YuuHjSnKfb8u6KhjWtM",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 12, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 3, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01VL8FjxAwEhNQ4vFeRBArWz",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQSlggKEAgTGAI4AUIIdGhpbmtpbmcSDM/eTbtg1m1rlw90HhoMzqjJTLO2ngJM2gMSIjAmjJyWMswaED55x3Jk46OvusIaos0mNbhjzN1Mr9cKjHrrJbZGi6zndLAzj9rb8I8qswdIcutJCbG2U29ry8P17FqlSrEoB6uWtGcSl0fjjJsKP3R2EzQubf92HWzdbBXDgujeJ2UJCm4+9xF4enHDdmNBW8GcbX92w2MzzW8Yfsv5/iVbsWZtW/IkQRWntvx539wBZ6n5Do/LO2JxxVIPEjc6mUqR/jGIS2bEeJka5GwaLcjbvmekpKEn6/EQCSNvw0bySVnL0Z06zSgZ1cyJiw4VqX0IBLq44U59tEYcNkX6UE3qZuwjBCXTx4Ber0zuWlzl7qfzajR9RutzRuqZdVPNxZwHDpAGj5bSOJK3AThCdKNp/T12ufeLjcF43KTIr/DyngKI+eCXrBrT0e9dpbrMAZGfqr2GU7TqYxtfJDOr3RDL5rm57jBN/kIR4feD2co1gExVCUDKtyslPK4W3kf8Ci0Pt+Ge+JMS/BQvFOXdZDwjgKL/odheqWz3PreLndoQyi3qfJT3mu491oHTlMbu5JzI4XmZaLme3niM2mb+1dO3IDYDRdSIDwfUshfUJC3ARf5b8ZHWtA+OD37qDVCf6Hp31DXURFI5NtL1y9OWjEu5a41vwg9+jhjV0LZBnrtJ2eZ+9ZYnLQEuvPMTKyLMzck7v4xe1MW3SsjeFlDjFFsLmoi1EapiXxBV4/33uQAtzYIBD6OFrIlE6IrI73MWxkXw8sXjjmZTdWa9xAqprVwssgHErOFslQVO8mFQYWrx4woj2WD1pcx9mLsHj04/UFfllzvCF474b0RunHfJngKTRq1yte3Yo8y4SMQHwqdiddJFVQXLtIma8LHcT0WFClIxt3tAXWDhUlUzVxPVciNIRphAH/1BVMyJy+UUk/yjXC9wI+nhWHPTr/gmSM8YWLzIa0VS07wfWRLmDdmyfPin7BEihP1ThAFhuYPg0kTJrcU8H6qjEXnUDMpGupvub4R/GddlLrBX0GPGKpIfCIhhZjXFW3XHpOAdLRboBN0mYvoYUAXHGJcfggMk7KWRJygIR7SEujfHfvGidV7kwA0RsQJz+t1oMYHwyI1yORCUhNgzbA1+wJjbf1csE7RO1gkcTTDBpGblKPaOs+q8000pvvvi/Un3+zDveQPDJ/ZdGYPmgjAh5CEU9eWQYrrpgNMjky/4Wjq+DAOs/jRwlQzAfr9f29KAbbdAgINvS/p3pjDPABdL8bJFdz0XJdQi1tX3lQupbXqvw5Feu0gJazRG+kO5YWlz1L+ZI87U+AeyTjostWsYdT42ReNTAOYOz5zvml++50XxTnqPfdrjKNvbFBgB",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport type { ReactElement } from \"react\";\nimport \"./ButtonRow.css\";\n\nexport interface ButtonRowProps {\n  primaryLabel: string;\n  onPrimary: () => void;\n  primaryDisabled?: boolean;\n  secondaryLabel: string;\n  onSecondary: () => void;\n  secondaryDisabled?: boolean;\n  quietLabel: string;\n  onQuiet: () => void;\n  quietDisabled?: boolean;\n}\n\nexport function ButtonRow({\n  primaryLabel,\n  onPrimary,\n  primaryDisabled = false,\n  secondaryLabel,\n  onSecondary,\n  secondaryDisabled = false,\n  quietLabel,\n  onQuiet,\n  quietDisabled = false,\n}: ButtonRowProps): ReactElement {\n  return (\n    <div className=\"button-row\">\n      <button\n        type=\"button\"\n        className=\"btn btn-primary\"\n        onClick={onPrimary}\n        disabled={primaryDisabled}\n      >\n        {primaryLabel}\n      </button>\n      <button\n        type=\"button\"\n        className=\"btn btn-secondary\"\n        onClick={onSecondary}\n        disabled={secondaryDisabled}\n      >\n        {secondaryLabel}\n      </button>\n      <button\n        type=\"button\"\n        className=\"btn btn-quiet\"\n        onClick={onQuiet}\n        disabled={quietDisabled}\n      >\n        {quietLabel}\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.button-row {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 12px;\n}\n\n.button-row .btn {\n  font: inherit;\n  font-size: clamp(0.9rem, 0.8rem + 0.4vw, 1.05rem);\n  line-height: 1.2;\n  padding: 0.6em 1.2em;\n  border: 1px solid transparent;\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  cursor: pointer;\n  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;\n}\n\n.button-row .btn:focus-visible {\n  outline: 3px solid var(--cresyl);\n  outline-offset: 3px;\n}\n\n/* Primary: solid accent fill, text on it uses --slide */\n.button-row .btn-primary {\n  background: var(--myelin);\n  border-color: var(--myelin);\n  color: var(--slide);\n}\n\n.button-row .btn-primary:hover:not(:disabled) {\n  border-color: var(--ink);\n}\n\n/* Secondary: outlined */\n.button-row .btn-secondary {\n  border-color: var(--ink);\n  color: var(--ink);\n}\n\n.button-row .btn-secondary:hover:not(:disabled) {\n  background: var(--myelin-wash);\n}\n\n/* Quiet: text only, underlined so it still reads as a control */\n.button-row .btn-quiet {\n  padding-inline: 0.4em;\n  color: var(--ink);\n  text-decoration: underline;\n  text-decoration-thickness: 1px;\n  text-underline-offset: 0.25em;\n}\n\n.button-row .btn-quiet:hover:not(:disabled) {\n  text-decoration-thickness: 2px;\n}\n\n/* Disabled: muted text and outline, no fill; no opacity so text keeps its token colour */\n.button-row .btn:disabled {\n  cursor: not-allowed;\n  background: transparent;\n  color: var(--muted);\n  border-color: var(--muted);\n}\n\n.button-row .btn-quiet:disabled {\n  border-color: transparent;\n  text-decoration: none;\n}\n\n:root[data-motion=\"reduce\"] .button-row .btn {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .button-row .btn {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 44550,
+  "output_tokens": 5814,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 21.563,
+ "cost_usd": 0.007362
+}

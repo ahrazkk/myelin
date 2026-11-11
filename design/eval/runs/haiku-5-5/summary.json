@@ -1,0 +1,229 @@
+{
+  "conditions": {
+    "baseline": {
+      "runs": 54,
+      "mean": {
+        "compile_rate": 98.14814814814815,
+        "token_compliance": 0.0,
+        "contrast_pass_rate": null,
+        "focus_findings_per_run": 0.4444444444444444,
+        "seconds": 13.18312962962963,
+        "cost_usd": 0.0017361296296296296
+      },
+      "range_across_repetitions": {
+        "compile_rate": [
+          94.44444444444444,
+          100.0
+        ],
+        "token_compliance": [
+          0.0,
+          0.0
+        ],
+        "contrast_pass_rate": null,
+        "focus_findings_per_run": [
+          0.3888888888888889,
+          0.5555555555555556
+        ],
+        "seconds": [
+          12.624611111111111,
+          13.556055555555554
+        ],
+        "cost_usd": [
+          0.0016775,
+          0.0017723333333333332
+        ]
+      },
+      "runs_with_no_colours": 48,
+      "runs_not_ended_normally": 0,
+      "contrast_pairs_measured": 0,
+      "tool_calls_per_run": 0.0
+    },
+    "context": {
+      "runs": 54,
+      "mean": {
+        "compile_rate": 100.0,
+        "token_compliance": 100.0,
+        "contrast_pass_rate": 94.25287356321839,
+        "focus_findings_per_run": 0.0,
+        "seconds": 13.122111111111112,
+        "cost_usd": 0.0020697222222222224
+      },
+      "range_across_repetitions": {
+        "compile_rate": [
+          100.0,
+          100.0
+        ],
+        "token_compliance": [
+          100.0,
+          100.0
+        ],
+        "contrast_pass_rate": [
+          92.0,
+          96.66666666666667
+        ],
+        "focus_findings_per_run": [
+          0.0,
+          0.0
+        ],
+        "seconds": [
+          12.950777777777779,
+          13.305611111111112
+        ],
+        "cost_usd": [
+          0.002054166666666667,
+          0.0020891666666666667
+        ]
+      },
+      "runs_with_no_colours": 0,
+      "runs_not_ended_normally": 0,
+      "contrast_pairs_measured": 87,
+      "tool_calls_per_run": 0.0
+    },
+    "mcp": {
+      "runs": 54,
+      "mean": {
+        "compile_rate": 100.0,
+        "token_compliance": 100.0,
+        "contrast_pass_rate": 100.0,
+        "focus_findings_per_run": 0.0,
+        "seconds": 21.692444444444444,
+        "cost_usd": 0.006808814814814815
+      },
+      "range_across_repetitions": {
+        "compile_rate": [
+          100.0,
+          100.0
+        ],
+        "token_compliance": [
+          100.0,
+          100.0
+        ],
+        "contrast_pass_rate": [
+          100.0,
+          100.0
+        ],
+        "focus_findings_per_run": [
+          0.0,
+          0.0
+        ],
+        "seconds": [
+          21.24,
+          22.040277777777778
+        ],
+        "cost_usd": [
+          0.006641166666666667,
+          0.0069737777777777775
+        ]
+      },
+      "runs_with_no_colours": 0,
+      "runs_not_ended_normally": 0,
+      "contrast_pairs_measured": 83,
+      "tool_calls_per_run": 5.851851851851852
+    }
+  },
+  "paired": {
+    "context vs baseline": {
+      "compile_rate": {
+        "tasks_compared": 18,
+        "mean_difference": 1.8518518518518516,
+        "tasks_higher": 1,
+        "tasks_same": 17,
+        "tasks_lower": 0,
+        "sign_test_p": 1.0
+      },
+      "token_compliance": {
+        "tasks_compared": 2,
+        "mean_difference": 100.0,
+        "tasks_higher": 2,
+        "tasks_same": 0,
+        "tasks_lower": 0,
+        "sign_test_p": 0.5
+      },
+      "contrast_pass_rate": {
+        "tasks_compared": 0,
+        "mean_difference": null,
+        "tasks_higher": 0,
+        "tasks_same": 0,
+        "tasks_lower": 0,
+        "sign_test_p": null
+      },
+      "focus_findings_per_run": {
+        "tasks_compared": 18,
+        "mean_difference": -0.4444444444444444,
+        "tasks_higher": 0,
+        "tasks_same": 5,
+        "tasks_lower": 13,
+        "sign_test_p": 0.000244140625
+      },
+      "seconds": {
+        "tasks_compared": 18,
+        "mean_difference": -0.061018518518517945,
+        "tasks_higher": 9,
+        "tasks_same": 0,
+        "tasks_lower": 9,
+        "sign_test_p": 1.0
+      },
+      "cost_usd": {
+        "tasks_compared": 18,
+        "mean_difference": 0.0003335925925925926,
+        "tasks_higher": 16,
+        "tasks_same": 0,
+        "tasks_lower": 2,
+        "sign_test_p": 0.001312255859375
+      }
+    },
+    "mcp vs baseline": {
+      "compile_rate": {
+        "tasks_compared": 18,
+        "mean_difference": 1.8518518518518516,
+        "tasks_higher": 1,
+        "tasks_same": 17,
+        "tasks_lower": 0,
+        "sign_test_p": 1.0
+      },
+      "token_compliance": {
+        "tasks_compared": 2,
+        "mean_difference": 100.0,
+        "tasks_higher": 2,
+        "tasks_same": 0,
+        "tasks_lower": 0,
+        "sign_test_p": 0.5
+      },
+      "contrast_pass_rate": {
+        "tasks_compared": 0,
+        "mean_difference": null,
+        "tasks_higher": 0,
+        "tasks_same": 0,
+        "tasks_lower": 0,
+        "sign_test_p": null
+      },
+      "focus_findings_per_run": {
+        "tasks_compared": 18,
+        "mean_difference": -0.4444444444444444,
+        "tasks_higher": 0,
+        "tasks_same": 5,
+        "tasks_lower": 13,
+        "sign_test_p": 0.000244140625
+      },
+      "seconds": {
+        "tasks_compared": 18,
+        "mean_difference": 8.509314814814815,
+        "tasks_higher": 18,
+        "tasks_same": 0,
+        "tasks_lower": 0,
+        "sign_test_p": 7.62939453125e-06
+      },
+      "cost_usd": {
+        "tasks_compared": 18,
+        "mean_difference": 0.005072685185185185,
+        "tasks_higher": 18,
+        "tasks_same": 0,
+        "tasks_lower": 0,
+        "sign_test_p": 7.62939453125e-06
+      }
+    }
+  },
+  "tasks": 18,
+  "repetitions": 3,
+  "runs": 162
+}

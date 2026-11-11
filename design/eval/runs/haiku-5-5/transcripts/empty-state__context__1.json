@@ -1,0 +1,60 @@
+{
+ "task": "empty-state",
+ "name": "EmptyState",
+ "condition": "context",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 7.767,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 4150,
+    "output_tokens": 2044,
+    "output_tokens_details": {
+     "thinking_tokens": 1151
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId } from \"react\";\nimport \"./EmptyState.css\";\n\nexport interface EmptyStateProps {\n  title: string;\n  message: string;\n  actionLabel: string;\n  onAction: () => void;\n}\n\nexport function EmptyState({ title, message, actionLabel, onAction }: EmptyStateProps) {\n  const titleId = useId();\n  const messageId = useId();\n\n  return (\n    <section\n      className=\"empty-state\"\n      aria-labelledby={titleId}\n      aria-describedby={messageId}\n    >\n      <h2 id={titleId} className=\"empty-state__title\">\n        {title}\n      </h2>\n      <p id={messageId} className=\"empty-state__message\">\n        {message}\n      </p>\n      <button\n        type=\"button\"\n        className=\"empty-state__action\"\n        onClick={onAction}\n      >\n        {actionLabel}\n      </button>\n    </section>\n  );\n}\n```\n\n```css\n.empty-state {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 0.75rem;\n  max-width: 36rem;\n  margin: 0 auto;\n  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);\n  text-align: center;\n  color: var(--ink);\n  border: 1px solid var(--hair);\n  border-radius: 12px;\n}\n\n.empty-state__title {\n  margin: 0;\n  font: inherit;\n  font-size: clamp(1.125rem, 2.5vw, 1.5rem);\n  font-weight: 600;\n  color: var(--ink);\n}\n\n.empty-state__message {\n  margin: 0;\n  max-width: 40ch;\n  font: inherit;\n  font-size: clamp(0.9375rem, 1.8vw, 1.0625rem);\n  line-height: 1.5;\n  color: var(--muted);\n}\n\n.empty-state__action {\n  margin-top: 0.5rem;\n  padding: 0.6em 1.25em;\n  font: inherit;\n  font-size: clamp(0.9375rem, 1.8vw, 1rem);\n  font-weight: 600;\n  color: var(--slide);\n  background: var(--myelin);\n  border: none;\n  border-radius: 999px;\n  cursor: pointer;\n  transition: box-shadow 150ms ease;\n}\n\n.empty-state__action:hover {\n  box-shadow: 0 0 0 3px var(--myelin-wash);\n}\n\n:root[data-motion=\"reduce\"] .empty-state__action {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .empty-state__action {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an empty state for a list that has nothing in it yet: a heading, one sentence of explanation, and a primary action button. Props: title, message, actionLabel, onAction.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file EmptyState.tsx. It imports \"./EmptyState.css\" and has a named export `EmptyState`.\n2. A `css` block: the file EmptyState.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport { useId } from \"react\";\nimport \"./EmptyState.css\";\n\nexport interface EmptyStateProps {\n  title: string;\n  message: string;\n  actionLabel: string;\n  onAction: () => void;\n}\n\nexport function EmptyState({ title, message, actionLabel, onAction }: EmptyStateProps) {\n  const titleId = useId();\n  const messageId = useId();\n\n  return (\n    <section\n      className=\"empty-state\"\n      aria-labelledby={titleId}\n      aria-describedby={messageId}\n    >\n      <h2 id={titleId} className=\"empty-state__title\">\n        {title}\n      </h2>\n      <p id={messageId} className=\"empty-state__message\">\n        {message}\n      </p>\n      <button\n        type=\"button\"\n        className=\"empty-state__action\"\n        onClick={onAction}\n      >\n        {actionLabel}\n      </button>\n    </section>\n  );\n}\n```\n\n```css\n.empty-state {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 0.75rem;\n  max-width: 36rem;\n  margin: 0 auto;\n  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);\n  text-align: center;\n  color: var(--ink);\n  border: 1px solid var(--hair);\n  border-radius: 12px;\n}\n\n.empty-state__title {\n  margin: 0;\n  font: inherit;\n  font-size: clamp(1.125rem, 2.5vw, 1.5rem);\n  font-weight: 600;\n  color: var(--ink);\n}\n\n.empty-state__message {\n  margin: 0;\n  max-width: 40ch;\n  font: inherit;\n  font-size: clamp(0.9375rem, 1.8vw, 1.0625rem);\n  line-height: 1.5;\n  color: var(--muted);\n}\n\n.empty-state__action {\n  margin-top: 0.5rem;\n  padding: 0.6em 1.25em;\n  font: inherit;\n  font-size: clamp(0.9375rem, 1.8vw, 1rem);\n  font-weight: 600;\n  color: var(--slide);\n  background: var(--myelin);\n  border: none;\n  border-radius: 999px;\n  cursor: pointer;\n  transition: box-shadow 150ms ease;\n}\n\n.empty-state__action:hover {\n  box-shadow: 0 0 0 3px var(--myelin-wash);\n}\n\n:root[data-motion=\"reduce\"] .empty-state__action {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .empty-state__action {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 4150,
+  "output_tokens": 2044,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 7.767,
+ "cost_usd": 0.001437
+}

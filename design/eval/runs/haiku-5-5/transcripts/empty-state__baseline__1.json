@@ -1,0 +1,60 @@
+{
+ "task": "empty-state",
+ "name": "EmptyState",
+ "condition": "baseline",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 6.892,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 309,
+    "output_tokens": 1870,
+    "output_tokens_details": {
+     "thinking_tokens": 359
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./EmptyState.css\";\n\nexport interface EmptyStateProps {\n  title: string;\n  message: string;\n  actionLabel: string;\n  onAction: () => void;\n}\n\nexport function EmptyState({\n  title,\n  message,\n  actionLabel,\n  onAction,\n}: EmptyStateProps): ReactElement {\n  const headingId = useId();\n  const messageId = useId();\n\n  return (\n    <section\n      className=\"empty-state\"\n      aria-labelledby={headingId}\n      aria-describedby={messageId}\n    >\n      <h2 id={headingId} className=\"empty-state__title\">\n        {title}\n      </h2>\n      <p id={messageId} className=\"empty-state__message\">\n        {message}\n      </p>\n      <button\n        type=\"button\"\n        className=\"empty-state__action\"\n        onClick={onAction}\n      >\n        {actionLabel}\n      </button>\n    </section>\n  );\n}\n```\n\n```css\n:root {\n  --empty-state-bg: #f7f5f0;\n  --empty-state-surface: #ffffff;\n  --empty-state-border: #d9d4c7;\n  --empty-state-title: #2b2a26;\n  --empty-state-text: #5c5950;\n  --empty-state-accent: #3f6b5a;\n  --empty-state-accent-text: #ffffff;\n  --empty-state-accent-hover: #345a4c;\n  --empty-state-focus: #1f5fbf;\n}\n\n[data-theme=\"night\"] {\n  --empty-state-bg: #14171c;\n  --empty-state-surface: #1b1f26;\n  --empty-state-border: #2f3642;\n  --empty-state-title: #e6e8ec;\n  --empty-state-text: #a3aab6;\n  --empty-state-accent: #7fb59f;\n  --empty-state-accent-text: #0f1512;\n  --empty-state-accent-hover: #9cc9b5;\n  --empty-state-focus: #8ab4ff;\n}\n\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme=\"day\"]) {\n    --empty-state-bg: #14171c;\n    --empty-state-surface: #1b1f26;\n    --empty-state-border: #2f3642;\n    --empty-state-title: #e6e8ec;\n    --empty-state-text: #a3aab6;\n    --empty-state-accent: #7fb59f;\n    --empty-state-accent-text: #0f1512;\n    --empty-state-accent-hover: #9cc9b5;\n    --empty-state-focus: #8ab4ff;\n  }\n}\n\n.empty-state {\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 1rem;\n  width: 100%;\n  max-width: 28rem;\n  margin: 0 auto;\n  padding: 2.5rem 2rem;\n  text-align: center;\n  background-color: var(--empty-state-surface);\n  border: 1px solid var(--empty-state-border);\n  border-radius: 1rem;\n  font-family: inherit;\n}\n\n.empty-state__title {\n  margin: 0;\n  font-size: 1.25rem;\n  font-weight: 600;\n  line-height: 1.3;\n  color: var(--empty-state-title);\n}\n\n.empty-state__message {\n  margin: 0;\n  font-size: 0.95rem;\n  line-height: 1.55;\n  color: var(--empty-state-text);\n}\n\n.empty-state__action {\n  margin-top: 0.5rem;\n  min-height: 2.75rem;\n  padding: 0.6rem 1.4rem;\n  font: inherit;\n  font-weight: 600;\n  color: var(--empty-state-accent-text);\n  background-color: var(--empty-state-accent);\n  border: 1px solid transparent;\n  border-radius: 999px;\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.empty-state__action:hover {\n  background-color: var(--empty-state-accent-hover);\n}\n\n.empty-state__action:active {\n  filter: brightness(0.95);\n}\n\n.empty-state__action:focus {\n  outline: none;\n}\n\n.empty-state__action:focus-visible {\n  outline: 3px solid var(--empty-state-focus);\n  outline-offset: 3px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .empty-state__action {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an empty state for a list that has nothing in it yet: a heading, one sentence of explanation, and a primary action button. Props: title, message, actionLabel, onAction.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file EmptyState.tsx. It imports \"./EmptyState.css\" and has a named export `EmptyState`.\n2. A `css` block: the file EmptyState.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport { useId } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./EmptyState.css\";\n\nexport interface EmptyStateProps {\n  title: string;\n  message: string;\n  actionLabel: string;\n  onAction: () => void;\n}\n\nexport function EmptyState({\n  title,\n  message,\n  actionLabel,\n  onAction,\n}: EmptyStateProps): ReactElement {\n  const headingId = useId();\n  const messageId = useId();\n\n  return (\n    <section\n      className=\"empty-state\"\n      aria-labelledby={headingId}\n      aria-describedby={messageId}\n    >\n      <h2 id={headingId} className=\"empty-state__title\">\n        {title}\n      </h2>\n      <p id={messageId} className=\"empty-state__message\">\n        {message}\n      </p>\n      <button\n        type=\"button\"\n        className=\"empty-state__action\"\n        onClick={onAction}\n      >\n        {actionLabel}\n      </button>\n    </section>\n  );\n}\n```\n\n```css\n:root {\n  --empty-state-bg: #f7f5f0;\n  --empty-state-surface: #ffffff;\n  --empty-state-border: #d9d4c7;\n  --empty-state-title: #2b2a26;\n  --empty-state-text: #5c5950;\n  --empty-state-accent: #3f6b5a;\n  --empty-state-accent-text: #ffffff;\n  --empty-state-accent-hover: #345a4c;\n  --empty-state-focus: #1f5fbf;\n}\n\n[data-theme=\"night\"] {\n  --empty-state-bg: #14171c;\n  --empty-state-surface: #1b1f26;\n  --empty-state-border: #2f3642;\n  --empty-state-title: #e6e8ec;\n  --empty-state-text: #a3aab6;\n  --empty-state-accent: #7fb59f;\n  --empty-state-accent-text: #0f1512;\n  --empty-state-accent-hover: #9cc9b5;\n  --empty-state-focus: #8ab4ff;\n}\n\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme=\"day\"]) {\n    --empty-state-bg: #14171c;\n    --empty-state-surface: #1b1f26;\n    --empty-state-border: #2f3642;\n    --empty-state-title: #e6e8ec;\n    --empty-state-text: #a3aab6;\n    --empty-state-accent: #7fb59f;\n    --empty-state-accent-text: #0f1512;\n    --empty-state-accent-hover: #9cc9b5;\n    --empty-state-focus: #8ab4ff;\n  }\n}\n\n.empty-state {\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 1rem;\n  width: 100%;\n  max-width: 28rem;\n  margin: 0 auto;\n  padding: 2.5rem 2rem;\n  text-align: center;\n  background-color: var(--empty-state-surface);\n  border: 1px solid var(--empty-state-border);\n  border-radius: 1rem;\n  font-family: inherit;\n}\n\n.empty-state__title {\n  margin: 0;\n  font-size: 1.25rem;\n  font-weight: 600;\n  line-height: 1.3;\n  color: var(--empty-state-title);\n}\n\n.empty-state__message {\n  margin: 0;\n  font-size: 0.95rem;\n  line-height: 1.55;\n  color: var(--empty-state-text);\n}\n\n.empty-state__action {\n  margin-top: 0.5rem;\n  min-height: 2.75rem;\n  padding: 0.6rem 1.4rem;\n  font: inherit;\n  font-weight: 600;\n  color: var(--empty-state-accent-text);\n  background-color: var(--empty-state-accent);\n  border: 1px solid transparent;\n  border-radius: 999px;\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.empty-state__action:hover {\n  background-color: var(--empty-state-accent-hover);\n}\n\n.empty-state__action:active {\n  filter: brightness(0.95);\n}\n\n.empty-state__action:focus {\n  outline: none;\n}\n\n.empty-state__action:focus-visible {\n  outline: 3px solid var(--empty-state-focus);\n  outline-offset: 3px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .empty-state__action {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 309,
+  "output_tokens": 1870,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 6.892,
+ "cost_usd": 0.000966
+}

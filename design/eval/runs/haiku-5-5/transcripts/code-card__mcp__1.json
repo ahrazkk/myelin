@@ -1,0 +1,265 @@
+{
+ "task": "code-card",
+ "name": "CodeCard",
+ "condition": "mcp",
+ "repetition": 1,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.817,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1770,
+    "output_tokens": 107,
+    "output_tokens_details": {
+     "thinking_tokens": 50
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 15.944,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10872,
+    "output_tokens": 3870,
+    "output_tokens_details": {
+     "thinking_tokens": 2396
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 2.749,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 14965,
+    "output_tokens": 536,
+    "output_tokens_details": {
+     "thinking_tokens": 369
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 4.151,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 15584,
+    "output_tokens": 1377,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport { useId, useState } from \"react\";\nimport \"./CodeCard.css\";\n\nexport interface CodeCardProps {\n  title: string;\n  code: string;\n  /** Called after the code has been copied to the clipboard. */\n  onCopy?: (code: string) => void;\n}\n\ntype CopyState = \"idle\" | \"copied\" | \"failed\";\n\nexport function CodeCard({ title, code, onCopy }: CodeCardProps) {\n  const titleId = useId();\n  const [copyState, setCopyState] = useState<CopyState>(\"idle\");\n\n  async function handleCopy(): Promise<void> {\n    try {\n      await navigator.clipboard.writeText(code);\n      setCopyState(\"copied\");\n      onCopy?.(code);\n    } catch {\n      setCopyState(\"failed\");\n    }\n  }\n\n  return (\n    <section className=\"code-card\" aria-labelledby={titleId}>\n      <header className=\"code-card-header\">\n        <h2 id={titleId} className=\"code-card-title\">\n          {title}\n        </h2>\n        <button type=\"button\" className=\"code-card-button\" onClick={handleCopy}>\n          Copy\n        </button>\n      </header>\n\n      <pre className=\"code-card-code\" tabIndex={0} aria-label={`${title} SQL`}>\n        <code>{code}</code>\n      </pre>\n\n      <p className=\"code-card-status\" role=\"status\">\n        {copyState === \"copied\" ? \"Copied to clipboard.\" : \"\"}\n      </p>\n      {copyState === \"failed\" ? (\n        <p className=\"code-card-alert\" role=\"alert\">\n          Copy failed. Select the code and copy it by hand.\n        </p>\n      ) : null}\n    </section>\n  );\n}\n```\n\n```css\n.code-card {\n  display: grid;\n  gap: clamp(0.5rem, 1vw, 0.75rem);\n  max-width: 40rem;\n  padding: clamp(0.9rem, 1.6vw, 1.25rem);\n  border: 1px solid var(--hair);\n  border-radius: 12px;\n  background: var(--slide);\n  color: var(--ink);\n}\n\n.code-card-header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem;\n}\n\n.code-card-title {\n  margin: 0;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.95rem, 1.2vw, 1.1rem);\n  font-weight: 600;\n}\n\n.code-card-button {\n  flex: none;\n  padding: 0.4em 1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.code-card-button:hover {\n  background: var(--myelin-wash);\n}\n\n.code-card-code {\n  margin: 0;\n  padding: clamp(0.6rem, 1.2vw, 0.9rem);\n  overflow-x: auto;\n  border-radius: 8px;\n  background: var(--code-bg);\n  color: var(--ink);\n  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: clamp(0.8rem, 1.1vw, 0.95rem);\n  line-height: 1.5;\n  white-space: pre;\n}\n\n.code-card-code code {\n  font: inherit;\n  color: inherit;\n}\n\n.code-card-status {\n  margin: 0;\n  min-height: 1.25em;\n  color: var(--muted);\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n}\n\n.code-card-alert {\n  margin: 0;\n  color: var(--cresyl);\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n}\n\n:root[data-motion=\"reduce\"] .code-card-button {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .code-card-button {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a card that shows a short SQL snippet in a monospace block, with a title above it and a Copy button. Props: title, code, onCopy.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file CodeCard.tsx. It imports \"./CodeCard.css\" and has a named export `CodeCard`.\n2. A `css` block: the file CodeCard.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS7QUKEAgTGAI4AUIIdGhpbmtpbmcSDNEM6RwPbUxi/im1YRoMPBDzaX0BkaO+UKHHIjBt50WUcWioDkS+h2ggo6x13CWn3qYkfT28t6KxT79oZLyAKBTKaw/oYCKFnFnApJQqigXE0Xw0uoNIJIthHnr4E+65/7ez15sjHrbnbdn+sQwAXe62S53Q1a3DaFiP+H84r5GSeNFFyf/lQoBydCNYjfCZdf3FUgIGrj6vxUvumpAeLg1IZlFkvAG0+C+taG2K8wc75uur6PbE01mlEMnXDBZVzdzNsi+YWfkqRNM+0PtMwDfaszhepEl64JGjzIp+uFKMIcEK/qCv9y8epmZ76cJQZE3qq3MjMnWsrpSAkOcv+NhNnIeeJisd8bNuEcwhpy+f+kZEvjwk1HjUUquegoxQsMPCUogv+sxuql1H6+w1fhHgyf/QwxCNRTQjrl2JxUkqHeySXjN09MZUy4FLeYNPP+tknpTiePUFb0a4ElhcpfVtI2xokORI2+JHz3kJn/7kqm1j4Aj81XH7+fAJtdyZq7YXyd0a2yURVhdIXemmHPZ+jgMw9vdrRiGRizjo96D3JH0Dc6iD9ZJOKsax1314HTg4J+vn+H+pooFEVleGEZU143cxmWBYGOTHTdqBb98v4i1LNnRxuTE1M6gF2dQ2vtngBIpLHVgQi1IY5zK7xeQgwi8PvcZETjf5i9S315tTZngw3ZQfvkQGC9N/Tzl9wcJtAbSkxVEG4YvFKP1OPinOeN/BvposeQYjzzec3saa7ZsVcJLcB57nY6cod1xLELNplxbH/T73G548qbb65QQY47/jIj+psxWikyzadAP92K2GEykBdBp/9idVno1aFbJGgkb6m+wiVKZHy+85kPPQ9vJQNvvpele1IT4XejOO09grWb6xi9594/BHQ+mw4HcBqcSYT0lx4FOIXhDDELibpRzdvh12oLrP1q+iUImum8LWJaA1dnyNWpgG/BnlBbLOuRN63FxrhRgB",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01F6KTYmir8rDLQfAFWfaSoq",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_012K9XLMGRRD2xfCingwkLB2",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01F6KTYmir8rDLQfAFWfaSoq",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_012K9XLMGRRD2xfCingwkLB2",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01KHegwMMEKXVMXtwoFxkTnw",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import { useId, useState } from \"react\";\nimport \"./CodeCard.css\";\n\nexport interface CodeCardProps {\n  title: string;\n  code: string;\n  onCopy?: (code: string) => void;\n}\n\ntype CopyState = \"idle\" | \"copied\" | \"failed\";\n\nexport function CodeCard({ title, code, onCopy }: CodeCardProps) {\n  const titleId = useId();\n  const [copyState, setCopyState] = useState<CopyState>(\"idle\");\n\n  async function handleCopy(): Promise<void> {\n    try {\n      await navigator.clipboard.writeText(code);\n      setCopyState(\"copied\");\n      onCopy?.(code);\n    } catch {\n      setCopyState(\"failed\");\n    }\n  }\n\n  return (\n    <section className=\"code-card\" aria-labelledby={titleId}>\n      <header className=\"code-card-header\">\n        <h2 id={titleId} className=\"code-card-title\">\n          {title}\n        </h2>\n        <button type=\"button\" className=\"code-card-button\" onClick={handleCopy}>\n          Copy\n        </button>\n      </header>\n\n      <pre className=\"code-card-code\" tabIndex={0} aria-label={`${title} SQL`}>\n        <code>{code}</code>\n      </pre>\n\n      <p className=\"code-card-status\" role=\"status\">\n        {copyState === \"copied\" ? \"Copied to clipboard.\" : \"\"}\n      </p>\n      {copyState === \"failed\" ? (\n        <p className=\"code-card-alert\" role=\"alert\">\n          Copy failed. Select the code and copy it by hand.\n        </p>\n      ) : null}\n    </section>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01FNJknaiYQbYvzi75wt61yr",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".code-card {\n  display: grid;\n  gap: clamp(0.5rem, 1vw, 0.75rem);\n  max-width: 40rem;\n  padding: clamp(0.9rem, 1.6vw, 1.25rem);\n  border: 1px solid var(--hair);\n  border-radius: 12px;\n  background: var(--slide);\n  color: var(--ink);\n}\n\n.code-card-header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem;\n}\n\n.code-card-title {\n  margin: 0;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.95rem, 1.2vw, 1.1rem);\n  font-weight: 600;\n}\n\n.code-card-button {\n  flex: none;\n  padding: 0.4em 1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.code-card-button:hover {\n  background: var(--myelin-wash);\n}\n\n.code-card-code {\n  margin: 0;\n  padding: clamp(0.6rem, 1.2vw, 0.9rem);\n  overflow-x: auto;\n  border-radius: 8px;\n  background: var(--code-bg);\n  color: var(--ink);\n  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: clamp(0.8rem, 1.1vw, 0.95rem);\n  line-height: 1.5;\n  white-space: pre;\n}\n\n.code-card-code code {\n  font: inherit;\n  color: inherit;\n}\n\n.code-card-status {\n  margin: 0;\n  min-height: 1.25em;\n  color: var(--muted);\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n}\n\n.code-card-alert {\n  margin: 0;\n  color: var(--cresyl);\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n}\n\n:root[data-motion=\"reduce\"] .code-card-button,\n@media (prefers-reduced-motion: reduce) {\n  .code-card-button {\n    transition: none;\n  }\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01KHegwMMEKXVMXtwoFxkTnw",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01FNJknaiYQbYvzi75wt61yr",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 11, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 3, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01JBt67UEoa4jovBu8QGBscQ",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".code-card-button {\n  transition: background-color 150ms ease;\n}\n\n:root[data-motion=\"reduce\"] .code-card-button {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .code-card-button {\n    transition: none;\n  }\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01JBt67UEoa4jovBu8QGBscQ",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "text": "```tsx\nimport { useId, useState } from \"react\";\nimport \"./CodeCard.css\";\n\nexport interface CodeCardProps {\n  title: string;\n  code: string;\n  /** Called after the code has been copied to the clipboard. */\n  onCopy?: (code: string) => void;\n}\n\ntype CopyState = \"idle\" | \"copied\" | \"failed\";\n\nexport function CodeCard({ title, code, onCopy }: CodeCardProps) {\n  const titleId = useId();\n  const [copyState, setCopyState] = useState<CopyState>(\"idle\");\n\n  async function handleCopy(): Promise<void> {\n    try {\n      await navigator.clipboard.writeText(code);\n      setCopyState(\"copied\");\n      onCopy?.(code);\n    } catch {\n      setCopyState(\"failed\");\n    }\n  }\n\n  return (\n    <section className=\"code-card\" aria-labelledby={titleId}>\n      <header className=\"code-card-header\">\n        <h2 id={titleId} className=\"code-card-title\">\n          {title}\n        </h2>\n        <button type=\"button\" className=\"code-card-button\" onClick={handleCopy}>\n          Copy\n        </button>\n      </header>\n\n      <pre className=\"code-card-code\" tabIndex={0} aria-label={`${title} SQL`}>\n        <code>{code}</code>\n      </pre>\n\n      <p className=\"code-card-status\" role=\"status\">\n        {copyState === \"copied\" ? \"Copied to clipboard.\" : \"\"}\n      </p>\n      {copyState === \"failed\" ? (\n        <p className=\"code-card-alert\" role=\"alert\">\n          Copy failed. Select the code and copy it by hand.\n        </p>\n      ) : null}\n    </section>\n  );\n}\n```\n\n```css\n.code-card {\n  display: grid;\n  gap: clamp(0.5rem, 1vw, 0.75rem);\n  max-width: 40rem;\n  padding: clamp(0.9rem, 1.6vw, 1.25rem);\n  border: 1px solid var(--hair);\n  border-radius: 12px;\n  background: var(--slide);\n  color: var(--ink);\n}\n\n.code-card-header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem;\n}\n\n.code-card-title {\n  margin: 0;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.95rem, 1.2vw, 1.1rem);\n  font-weight: 600;\n}\n\n.code-card-button {\n  flex: none;\n  padding: 0.4em 1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n  cursor: pointer;\n  transition: background-color 150ms ease;\n}\n\n.code-card-button:hover {\n  background: var(--myelin-wash);\n}\n\n.code-card-code {\n  margin: 0;\n  padding: clamp(0.6rem, 1.2vw, 0.9rem);\n  overflow-x: auto;\n  border-radius: 8px;\n  background: var(--code-bg);\n  color: var(--ink);\n  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: clamp(0.8rem, 1.1vw, 0.95rem);\n  line-height: 1.5;\n  white-space: pre;\n}\n\n.code-card-code code {\n  font: inherit;\n  color: inherit;\n}\n\n.code-card-status {\n  margin: 0;\n  min-height: 1.25em;\n  color: var(--muted);\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n}\n\n.code-card-alert {\n  margin: 0;\n  color: var(--cresyl);\n  font-size: clamp(0.8rem, 1vw, 0.9rem);\n}\n\n:root[data-motion=\"reduce\"] .code-card-button {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .code-card-button {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 43191,
+  "output_tokens": 5890,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 23.661,
+ "cost_usd": 0.007264
+}

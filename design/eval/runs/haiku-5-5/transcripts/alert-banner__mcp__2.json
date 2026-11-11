@@ -1,0 +1,282 @@
+{
+ "task": "alert-banner",
+ "name": "AlertBanner",
+ "condition": "mcp",
+ "repetition": 2,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 0.814,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 1766,
+    "output_tokens": 104,
+    "output_tokens_details": {
+     "thinking_tokens": 47
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 7.367,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 10865,
+    "output_tokens": 1782,
+    "output_tokens_details": {
+     "thinking_tokens": 1613
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 2.626,
+   "stop_reason": "tool_use",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 13308,
+    "output_tokens": 817,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  },
+  {
+   "seconds": 2.143,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 14348,
+    "output_tokens": 691,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [
+  {
+   "name": "get_guidelines",
+   "is_error": false
+  },
+  {
+   "name": "get_design_tokens",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "check_contrast",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  },
+  {
+   "name": "lint_snippet",
+   "is_error": false
+  }
+ ],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport type { ReactElement } from \"react\";\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps): ReactElement {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: clamp(0.5rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);\n  padding: clamp(0.6rem, 1.5vw, 0.9rem) clamp(0.9rem, 2vw, 1.25rem);\n  border: 1px solid var(--cresyl);\n  border-radius: 12px;\n  background: var(--cresyl-wash);\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.875rem, 1.2vw, 1rem);\n}\n\n.alert-banner__message {\n  flex: 1 1 16rem;\n  min-width: 0;\n  margin: 0;\n  overflow-wrap: anywhere;\n}\n\n.alert-banner__retry {\n  flex: 0 0 auto;\n  margin-left: auto;\n  padding: 0.4em 1.1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-weight: 600;\n  cursor: pointer;\n}\n\n.alert-banner__retry:hover {\n  background: var(--slide);\n}\n\n.alert-banner__retry:focus-visible {\n  outline: 3px solid var(--cresyl);\n  outline-offset: 3px;\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an inline warning banner that says the local server cannot be reached, with a Retry button. Props: message, onRetry.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file AlertBanner.tsx. It imports \"./AlertBanner.css\" and has a named export `AlertBanner`.\n2. A `css` block: the file AlertBanner.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "CAQS4AUKEAgTGAI4AUIIdGhpbmtpbmcSDNUErvRTu3qhjVAOCBoMkf/SlZ8gBBzVY4HoIjAiinQRhEH3rTqIPhD74ef/MU0/zctCh0DH0jx4sHuntTK+SpLghluUPOzHo6KqbFAq/QRDZIPIOA6PbWghXkfDOej5nnVtFsj56wsDHUEcucI7VxTsb69W0vOke6OwHoMGR9hjQNf3BXbTrbvUZVbFamFkbFaFSfA3TxAIGagZyKzMgF9w6I53APwWHVYuV5GrSn3bdZjOhHKpY4pkkhADUo1CMTrZU90vO/aNUpN2/z5e14oI7YZ03T+AIDMwzAn1ksvYo1zSUHEDh7juHrdtdemlnkHJ9MRZvwgzG3Bzr+GTCCw6nRT2aPTkJqvI4jvMHwnpcoBZlrFl9oyzxs1NWuitEmFNpBEioxprn4WZpwpAqWL5DsyryFycfNLVfWAQMLVjBRKVVyWL9bGIFWdqDtOIRwibcl9Fc9wKHyV6AyAR/894TF4npLXk68cZi3TdAFfuLGIlvTOcMSwVvpUN0PxRZUvHO7q/B/E4wfNoXyLuiqu/ztDayUgRHR3eQooHppFnqOaekBUvZLkpl5Fpl60/WIysf6ZseA+9iz6z/Zuq2gEoVcJ4VCVhZ3T6h5hwL8AUUR6Wmg2Q2LGqwhppmLVa05UTHuqB2ucdcZy75ZawGG+7y9eRK3NTpDY6MZYSQRMlmMv6q6Z4iNJxZUYLWK4TEkShpy8J1Mp5jXLarRMZjAxbZfG+yPYreGeFfyiImFFNIdYc4FErlBXGj0pHnQkclEAtJvgQmuJChaeX+N9CNUCTYY5xrJiNwJv10uPqv+DOY+D+9mls7wjazu3fR1q4VtQzVETjbtYPG2GWpXywKtlYLIIgX4itIDyAwhxbzDG2WdKxxF3oJzFE+27rYKOzUdNWTJV815Z+NtZmEeODYukT0XjbdMSa6vL711Pk4Q1SMBP8ktiHyprqLi8fGAE=",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_015XQMSc3phPUxtnpRz7k9sT",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_guidelines",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_01GwkDxrNL9GvewPNaj9otrz",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {},
+     "name": "get_design_tokens",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_015XQMSc3phPUxtnpRz7k9sT",
+     "content": "{\"format\": \"markdown\", \"text\": \"# Myelin UI guidelines\\n\\nMyelin is a calm, full-screen habit dashboard that also runs as a desktop wallpaper. Its palette comes\\nfrom histology: myelin is stained blue, neurons violet. These rules describe how its interface is built.\\n\\n## Colour\\n\\n- Take every colour from a design token: `color: var(--ink)`. Do not write hex, `rgb()`, `hsl()` or\\n  named colours in components. Token values change with the theme and the accent; a copied value does not.\\n- `--slide` is the page background. `--ink` is main text. `--muted` is secondary text.\\n- `--myelin` is the main accent: done states, the selected item, the primary button. It follows the\\n  user's accent setting (myelin blue, emerald, amber or rose).\\n- `--cresyl` is the second accent: whatever is next, and the keyboard focus outline.\\n- `--hair` is for hairline separators. `--axon-ahead` is a decorative track colour.\\n- `--cresyl-wash`, `--myelin-wash` and `--code-bg` are translucent fills. Text on a fill has less\\n  contrast than on the page, so check the pair with `check_contrast` before using it.\\n- Text on a solid `--myelin` fill uses `--slide`.\\n- Do not lower text contrast with `opacity`. Pick a token instead.\\n\\n## Themes and accents\\n\\n- There are two themes (day and night) and four accents. Anything you build has to work in all eight.\\n- Components never test for the theme or the accent. They use tokens, and the tokens change.\\n\\n## Focus and keyboard\\n\\n- Never remove the focus outline (`outline: none`, `outline: 0`). One global rule,\\n  `:focus-visible { outline: 3px solid var(--cresyl); outline-offset: 3px; }`, covers every control.\\n- A control may add to its focus style (a border colour, for example). It may not replace the outline.\\n- Every action is a real `<button type=\\\"button\\\">`, and every field has a label. Do not put click\\n  handlers on `<div>` or `<span>`.\\n\\n## Motion\\n\\n- Motion is optional. CSS transitions and animations are switched off under\\n  `:root[data-motion=\\\"reduce\\\"]` and `@media (prefers-reduced-motion: reduce)`.\\n- Animation driven by JavaScript must check both of those before it moves anything.\\n\\n## Semantics (the ARIA patterns in use)\\n\\n- Tabs: `role=\\\"tablist\\\"` holding `<button role=\\\"tab\\\" aria-selected aria-controls>`, and one\\n  `role=\\\"tabpanel\\\"` with `aria-labelledby`.\\n- One choice from a few: `role=\\\"radiogroup\\\"` with an `aria-label`, holding `<button role=\\\"radio\\\" aria-checked>`.\\n- On and off: `<button aria-pressed>`.\\n- A message that appears after an action: `role=\\\"status\\\"`. An error: `role=\\\"alert\\\"`.\\n- A button with only an icon needs an `aria-label`. A decorative `<svg>` gets `aria-hidden=\\\"true\\\"`.\\n- A label that should not be seen uses the `.sr-only` class, not `display: none`.\\n- A chart or drawing is a `<figure>` with an `aria-label` that says what it shows in words.\\n\\n## Type and shape\\n\\n- Controls inherit the font: `font: inherit`.\\n- Font sizes scale with the screen: `clamp(minimum, viewport-based, maximum)`.\\n- Numbers that change, such as times and counts, use `font-variant-numeric: tabular-nums`.\\n- Pills and segmented controls use `border-radius: 999px`.\\n\", \"contrast_pairs\": [{\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.81, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.02, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"code\", \"layers\": [\"slide\", \"code-bg\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 12.65, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-myelin-wash\", \"layers\": [\"@sky\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 7.1, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes').\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 4.5, \"result\": \"fail\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Accent text: .verdict.is-correct, .busy-label, the first plan action.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 4.5, \"result\": \"pass\", \"where\": \"Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true].\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"inactive\", \"opacity\": 0.55, \"lowest_ratio\": 3.49, \"needs\": null, \"result\": \"exempt\", \"where\": \".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3.\"}, {\"foreground\": \"cresyl\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.3, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.18, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"cresyl\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.08, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle.\"}, {\"foreground\": \"muted\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 5.03, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 2.89, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"muted\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.45, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log.\"}, {\"foreground\": \"ink\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 13.6, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 11.75, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"ink\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 6.99, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up.\"}, {\"foreground\": \"myelin\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"track\", \"layers\": [\"hair\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 3.44, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"myelin\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.06, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar.\"}, {\"foreground\": \"slide\", \"surface\": \"accent\", \"layers\": [\"myelin\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 4.57, \"needs\": 3.0, \"result\": \"pass\", \"where\": \"The tick inside a done .check.\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"non-text\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": 3.0, \"result\": \"fail\", \"where\": \"Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed).\"}, {\"foreground\": \"hair\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.32, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"hair\", \"surface\": \"myelin-wash\", \"layers\": [\"slide\", \"myelin-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.17, \"needs\": null, \"result\": \"exempt\", \"where\": \"Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip).\"}, {\"foreground\": \"myelin\", \"surface\": \"sky\", \"layers\": [\"@sky\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.63, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"cresyl-wash\", \"layers\": [\"slide\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 3.95, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"myelin\", \"surface\": \"sky-cresyl-wash\", \"layers\": [\"@sky\", \"cresyl-wash\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 2.35, \"needs\": null, \"result\": \"exempt\", \"where\": \"Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash.\"}, {\"foreground\": \"axon-ahead\", \"surface\": \"page\", \"layers\": [\"slide\"], \"kind\": \"decorative\", \"opacity\": 1.0, \"lowest_ratio\": 1.45, \"needs\": null, \"result\": \"exempt\", \"where\": \"The part of the axon not yet walked (.axon-line.ahead, .week-segment::before).\"}]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01GwkDxrNL9GvewPNaj9otrz",
+     "content": "{\"source\": \"frontend/src/styles.css\", \"themes\": [\"day\", \"night\"], \"accents\": [\"myelin\", \"emerald\", \"amber\", \"rose\"], \"defaultAccent\": \"myelin\", \"filter\": {\"theme\": null, \"accent\": null}, \"usage\": \"In CSS write var(--name), for example color: var(--ink). Never copy a hex value into code: the value changes with the theme and the accent.\", \"tokens\": [{\"name\": \"slide\", \"cssVariable\": \"--slide\", \"role\": \"background\", \"description\": \"Page background. Day is a lit microscope slide; night is a fluorescence view.\", \"values\": {\"day\": {\"css\": \"#edeff5\", \"hex\": \"#edeff5\", \"alpha\": 1.0}, \"night\": {\"css\": \"#0e1530\", \"hex\": \"#0e1530\", \"alpha\": 1.0}}}, {\"name\": \"ink\", \"cssVariable\": \"--ink\", \"role\": \"text\", \"description\": \"Main text, and the border of the default button.\", \"values\": {\"day\": {\"css\": \"#1b2142\", \"hex\": \"#1b2142\", \"alpha\": 1.0}, \"night\": {\"css\": \"#e4e8f6\", \"hex\": \"#e4e8f6\", \"alpha\": 1.0}}}, {\"name\": \"muted\", \"cssVariable\": \"--muted\", \"role\": \"text\", \"description\": \"Secondary text, and quiet lines that carry meaning, such as input borders.\", \"values\": {\"day\": {\"css\": \"#5d6485\", \"hex\": \"#5d6485\", \"alpha\": 1.0}, \"night\": {\"css\": \"#949bbb\", \"hex\": \"#949bbb\", \"alpha\": 1.0}}}, {\"name\": \"hair\", \"cssVariable\": \"--hair\", \"role\": \"border\", \"description\": \"Hairline separators between rows and sections.\", \"values\": {\"day\": {\"css\": \"#ccd1e0\", \"hex\": \"#ccd1e0\", \"alpha\": 1.0}, \"night\": {\"css\": \"#27305a\", \"hex\": \"#27305a\", \"alpha\": 1.0}}}, {\"name\": \"axon-ahead\", \"cssVariable\": \"--axon-ahead\", \"role\": \"border\", \"description\": \"Decorative track: the part of the axon that has not been walked yet.\", \"values\": {\"day\": {\"css\": \"#c2c8da\", \"hex\": \"#c2c8da\", \"alpha\": 1.0}, \"night\": {\"css\": \"#2b3462\", \"hex\": \"#2b3462\", \"alpha\": 1.0}}}, {\"name\": \"myelin\", \"cssVariable\": \"--myelin\", \"role\": \"accent\", \"description\": \"Main accent: done states, the selected tab, the primary button. Follows the accent setting.\", \"values\": {\"day\": {\"css\": \"#2d6bad\", \"hex\": \"#2d6bad\", \"alpha\": 1.0}, \"night\": {\"css\": \"#57c4e5\", \"hex\": \"#57c4e5\", \"alpha\": 1.0}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"#1f7a5a\", \"hex\": \"#1f7a5a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#4fd1a1\", \"hex\": \"#4fd1a1\", \"alpha\": 1.0}}, \"amber\": {\"day\": {\"css\": \"#9a5b12\", \"hex\": \"#9a5b12\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f2b25c\", \"hex\": \"#f2b25c\", \"alpha\": 1.0}}, \"rose\": {\"day\": {\"css\": \"#b03a6a\", \"hex\": \"#b03a6a\", \"alpha\": 1.0}, \"night\": {\"css\": \"#f28bb0\", \"hex\": \"#f28bb0\", \"alpha\": 1.0}}}}, {\"name\": \"cresyl\", \"cssVariable\": \"--cresyl\", \"role\": \"accent\", \"description\": \"Second accent: whatever is next, and the keyboard focus outline.\", \"values\": {\"day\": {\"css\": \"#7b3f9e\", \"hex\": \"#7b3f9e\", \"alpha\": 1.0}, \"night\": {\"css\": \"#d07be8\", \"hex\": \"#d07be8\", \"alpha\": 1.0}}}, {\"name\": \"cresyl-wash\", \"cssVariable\": \"--cresyl-wash\", \"role\": \"wash\", \"description\": \"Translucent cresyl fill behind 'today' and 'next' markers.\", \"values\": {\"day\": {\"css\": \"rgb(123 63 158 / 0.1)\", \"hex\": \"#7b3f9e\", \"alpha\": 0.1}, \"night\": {\"css\": \"rgb(208 123 232 / 0.14)\", \"hex\": \"#d07be8\", \"alpha\": 0.14}}}, {\"name\": \"myelin-wash\", \"cssVariable\": \"--myelin-wash\", \"role\": \"wash\", \"description\": \"Translucent fill in the accent colour.\", \"values\": {\"day\": {\"css\": \"rgb(45 107 173 / 0.09)\", \"hex\": \"#2d6bad\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(87 196 229 / 0.1)\", \"hex\": \"#57c4e5\", \"alpha\": 0.1}}, \"accents\": {\"emerald\": {\"day\": {\"css\": \"rgb(31 122 90 / 0.09)\", \"hex\": \"#1f7a5a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(79 209 161 / 0.1)\", \"hex\": \"#4fd1a1\", \"alpha\": 0.1}}, \"amber\": {\"day\": {\"css\": \"rgb(154 91 18 / 0.09)\", \"hex\": \"#9a5b12\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 178 92 / 0.1)\", \"hex\": \"#f2b25c\", \"alpha\": 0.1}}, \"rose\": {\"day\": {\"css\": \"rgb(176 58 106 / 0.09)\", \"hex\": \"#b03a6a\", \"alpha\": 0.09}, \"night\": {\"css\": \"rgb(242 139 176 / 0.1)\", \"hex\": \"#f28bb0\", \"alpha\": 0.1}}}}, {\"name\": \"code-bg\", \"cssVariable\": \"--code-bg\", \"role\": \"wash\", \"description\": \"Translucent fill behind code and other inset surfaces.\", \"values\": {\"day\": {\"css\": \"rgb(27 33 66 / 0.04)\", \"hex\": \"#1b2142\", \"alpha\": 0.04}, \"night\": {\"css\": \"rgb(228 232 246 / 0.05)\", \"hex\": \"#e4e8f6\", \"alpha\": 0.05}}}]}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "id": "toolu_01SffTFBZVsBGmcPUaNZByes",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--ink)",
+      "background": "var(--cresyl-wash)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_013XxkuuZeYzSDvVmWKaq8cs",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "foreground": "var(--cresyl)",
+      "background": "var(--slide)"
+     },
+     "name": "check_contrast",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01SffTFBZVsBGmcPUaNZByes",
+     "content": "{\"foreground\": \"var(--ink)\", \"background\": \"var(--cresyl-wash)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 11.75, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#1b2142\", \"background\": \"#e2ddec\", \"ratio\": 11.75, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#e4e8f6\", \"background\": \"#29234a\", \"ratio\": 11.97, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": [\"The background is translucent, so it was composited over --slide first.\"]}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_013XxkuuZeYzSDvVmWKaq8cs",
+     "content": "{\"foreground\": \"var(--cresyl)\", \"background\": \"var(--slide)\", \"thresholds\": {\"aa_text\": 4.5, \"aa_large_text\": 3.0, \"aa_non_text\": 3.0}, \"lowest_ratio\": 5.99, \"passes_everywhere\": {\"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, \"measurements\": [{\"theme\": \"day\", \"accent\": null, \"foreground\": \"#7b3f9e\", \"background\": \"#edeff5\", \"ratio\": 5.99, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}, {\"theme\": \"night\", \"accent\": null, \"foreground\": \"#d07be8\", \"background\": \"#0e1530\", \"ratio\": 6.57, \"aa_text\": true, \"aa_large_text\": true, \"aa_non_text\": true}], \"notes\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "id": "toolu_01AYdAx2jkUkH9q77qkDdW63",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": ".alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: clamp(0.5rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);\n  padding: clamp(0.6rem, 1.5vw, 0.9rem) clamp(0.9rem, 2vw, 1.25rem);\n  border: 1px solid var(--cresyl);\n  border-radius: 12px;\n  background: var(--cresyl-wash);\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.875rem, 1.2vw, 1rem);\n}\n\n.alert-banner__message {\n  flex: 1 1 16rem;\n  min-width: 0;\n  margin: 0;\n  overflow-wrap: anywhere;\n}\n\n.alert-banner__retry {\n  flex: 0 0 auto;\n  margin-left: auto;\n  padding: 0.4em 1.1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-weight: 600;\n  cursor: pointer;\n}\n\n.alert-banner__retry:hover {\n  background: var(--slide);\n}\n\n.alert-banner__retry:focus-visible {\n  outline: 3px solid var(--cresyl);\n  outline-offset: 3px;\n}\n",
+      "language": "css"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    },
+    {
+     "id": "toolu_016hByKodzvNX4HxBpmvMyCm",
+     "caller": {
+      "type": "direct"
+     },
+     "input": {
+      "code": "import type { ReactElement } from \"react\";\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps): ReactElement {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n",
+      "language": "tsx"
+     },
+     "name": "lint_snippet",
+     "type": "tool_use"
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_01AYdAx2jkUkH9q77qkDdW63",
+     "content": "{\"language\": \"css\", \"ok\": true, \"token_compliance\": {\"token_uses\": 7, \"hard_coded\": 0, \"percent\": 100.0}, \"contrast_pairs\": {\"measured\": 2, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    },
+    {
+     "type": "tool_result",
+     "tool_use_id": "toolu_016hByKodzvNX4HxBpmvMyCm",
+     "content": "{\"language\": \"tsx\", \"ok\": true, \"token_compliance\": {\"token_uses\": 0, \"hard_coded\": 0, \"percent\": null}, \"contrast_pairs\": {\"measured\": 0, \"failing\": 0}, \"findings\": []}",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "text": "```tsx\nimport type { ReactElement } from \"react\";\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps): ReactElement {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: clamp(0.5rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);\n  padding: clamp(0.6rem, 1.5vw, 0.9rem) clamp(0.9rem, 2vw, 1.25rem);\n  border: 1px solid var(--cresyl);\n  border-radius: 12px;\n  background: var(--cresyl-wash);\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.875rem, 1.2vw, 1rem);\n}\n\n.alert-banner__message {\n  flex: 1 1 16rem;\n  min-width: 0;\n  margin: 0;\n  overflow-wrap: anywhere;\n}\n\n.alert-banner__retry {\n  flex: 0 0 auto;\n  margin-left: auto;\n  padding: 0.4em 1.1em;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-weight: 600;\n  cursor: pointer;\n}\n\n.alert-banner__retry:hover {\n  background: var(--slide);\n}\n\n.alert-banner__retry:focus-visible {\n  outline: 3px solid var(--cresyl);\n  outline-offset: 3px;\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 40287,
+  "output_tokens": 3394,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 12.95,
+ "cost_usd": 0.005726
+}

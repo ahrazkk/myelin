@@ -1,0 +1,60 @@
+{
+ "task": "alert-banner",
+ "name": "AlertBanner",
+ "condition": "context",
+ "repetition": 2,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 7.22,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 4136,
+    "output_tokens": 1668,
+    "output_tokens_details": {
+     "thinking_tokens": 914
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps) {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem 1rem;\n  padding: clamp(0.6rem, 1.2vw, 0.9rem) clamp(0.8rem, 1.6vw, 1.1rem);\n  border-left: 3px solid var(--ink);\n  border-radius: 6px;\n  background: var(--code-bg);\n  color: var(--ink);\n  font: inherit;\n}\n\n.alert-banner__message {\n  margin: 0;\n  flex: 1 1 16rem;\n  font-size: clamp(0.9rem, 1.4vw, 1rem);\n  line-height: 1.4;\n  color: var(--ink);\n}\n\n.alert-banner__retry {\n  flex: 0 0 auto;\n  padding: 0.4rem 0.9rem;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  cursor: pointer;\n}\n\n.alert-banner__retry:hover {\n  background: var(--myelin-wash);\n  border-color: var(--myelin);\n}\n\n/* Focus outline comes from the global :focus-visible rule; this only adds to it. */\n.alert-banner__retry:focus-visible {\n  border-color: var(--myelin);\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__retry {\n    transition: none;\n  }\n}\n\n:root[data-motion=\"reduce\"] .alert-banner__retry {\n  transition: none;\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: an inline warning banner that says the local server cannot be reached, with a Retry button. Props: message, onRetry.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file AlertBanner.tsx. It imports \"./AlertBanner.css\" and has a named export `AlertBanner`.\n2. A `css` block: the file AlertBanner.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport \"./AlertBanner.css\";\n\nexport interface AlertBannerProps {\n  message: string;\n  onRetry: () => void;\n}\n\nexport function AlertBanner({ message, onRetry }: AlertBannerProps) {\n  return (\n    <div className=\"alert-banner\" role=\"alert\">\n      <p className=\"alert-banner__message\">{message}</p>\n      <button type=\"button\" className=\"alert-banner__retry\" onClick={onRetry}>\n        Retry\n      </button>\n    </div>\n  );\n}\n```\n\n```css\n.alert-banner {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem 1rem;\n  padding: clamp(0.6rem, 1.2vw, 0.9rem) clamp(0.8rem, 1.6vw, 1.1rem);\n  border-left: 3px solid var(--ink);\n  border-radius: 6px;\n  background: var(--code-bg);\n  color: var(--ink);\n  font: inherit;\n}\n\n.alert-banner__message {\n  margin: 0;\n  flex: 1 1 16rem;\n  font-size: clamp(0.9rem, 1.4vw, 1rem);\n  line-height: 1.4;\n  color: var(--ink);\n}\n\n.alert-banner__retry {\n  flex: 0 0 auto;\n  padding: 0.4rem 0.9rem;\n  border: 1px solid var(--ink);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--ink);\n  font: inherit;\n  font-size: clamp(0.85rem, 1.3vw, 0.95rem);\n  cursor: pointer;\n}\n\n.alert-banner__retry:hover {\n  background: var(--myelin-wash);\n  border-color: var(--myelin);\n}\n\n/* Focus outline comes from the global :focus-visible rule; this only adds to it. */\n.alert-banner__retry:focus-visible {\n  border-color: var(--myelin);\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .alert-banner__retry {\n    transition: none;\n  }\n}\n\n:root[data-motion=\"reduce\"] .alert-banner__retry {\n  transition: none;\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 4136,
+  "output_tokens": 1668,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 7.22,
+ "cost_usd": 0.001248
+}

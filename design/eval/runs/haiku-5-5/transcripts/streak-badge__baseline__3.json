@@ -1,0 +1,60 @@
+{
+ "task": "streak-badge",
+ "name": "StreakBadge",
+ "condition": "baseline",
+ "repetition": 3,
+ "model": "claude-haiku-5-5",
+ "calls": [
+  {
+   "seconds": 8.812,
+   "stop_reason": "end_turn",
+   "usage": {
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 302,
+    "output_tokens": 2292,
+    "output_tokens_details": {
+     "thinking_tokens": 1070
+    },
+    "service_tier": "standard",
+    "speed": "standard"
+   }
+  }
+ ],
+ "tool_calls": [],
+ "stop_reason": "end_turn",
+ "final_text": "```tsx\nimport \"./StreakBadge.css\";\n\nexport interface StreakBadgeProps {\n  day: number;\n  total: number;\n}\n\nexport function StreakBadge({ day, total }: StreakBadgeProps) {\n  const safeTotal = Number.isFinite(total) && total > 0 ? Math.floor(total) : 1;\n  const safeDay = Number.isFinite(day)\n    ? Math.min(Math.max(Math.floor(day), 0), safeTotal)\n    : 0;\n  const percent = (safeDay / safeTotal) * 100;\n  const label = `Day ${safeDay} of ${safeTotal}`;\n\n  return (\n    <div\n      className=\"streak-badge\"\n      role=\"group\"\n      tabIndex={0}\n      aria-label={label}\n    >\n      <span className=\"streak-badge__label\" aria-hidden=\"true\">\n        {label}\n      </span>\n      <div\n        className=\"streak-badge__track\"\n        role=\"progressbar\"\n        aria-label=\"Streak progress\"\n        aria-valuemin={0}\n        aria-valuemax={safeTotal}\n        aria-valuenow={safeDay}\n        aria-valuetext={label}\n      >\n        <div\n          className=\"streak-badge__fill\"\n          style={{ width: `${percent}%` }}\n        />\n      </div>\n    </div>\n  );\n}\n```\n\n```css\n/* Day theme (default). Night theme overrides the tokens below. */\n:root {\n  --streak-badge-bg: #f4efe6;\n  --streak-badge-fg: #2b2a27;\n  --streak-badge-track: #d9d1c3;\n  --streak-badge-fill: #3f7d6b;\n  --streak-badge-border: #c9bfae;\n  --streak-badge-focus: #1f5c4c;\n}\n\n[data-theme=\"night\"] {\n  --streak-badge-bg: #1d2129;\n  --streak-badge-fg: #e6e9ef;\n  --streak-badge-track: #353b47;\n  --streak-badge-fill: #7fd1b5;\n  --streak-badge-border: #2e3440;\n  --streak-badge-focus: #a6e8d0;\n}\n\n.streak-badge {\n  display: inline-flex;\n  flex-direction: column;\n  gap: 0.4rem;\n  min-width: 9rem;\n  padding: 0.6rem 0.8rem;\n  border-radius: 0.6rem;\n  border: 1px solid var(--streak-badge-border);\n  background: var(--streak-badge-bg);\n  color: var(--streak-badge-fg);\n  font: 500 0.875rem/1.2 system-ui, sans-serif;\n  letter-spacing: 0.01em;\n  box-sizing: border-box;\n}\n\n.streak-badge:focus {\n  outline: none;\n}\n\n.streak-badge:focus-visible {\n  outline: 2px solid var(--streak-badge-focus);\n  outline-offset: 2px;\n}\n\n.streak-badge__label {\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n.streak-badge__track {\n  position: relative;\n  height: 0.35rem;\n  width: 100%;\n  border-radius: 999px;\n  background: var(--streak-badge-track);\n  overflow: hidden;\n}\n\n.streak-badge__fill {\n  height: 100%;\n  min-width: 0;\n  max-width: 100%;\n  border-radius: inherit;\n  background: var(--streak-badge-fill);\n  transition: width 300ms ease-out;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .streak-badge__fill {\n    transition: none;\n  }\n}\n```",
+ "messages": [
+  {
+   "role": "user",
+   "content": "Build a React component for Myelin: a badge that shows the current streak, such as \"Day 12 of 66\", with a small bar showing how far along it is. Props: day, total.\n\nRequirements:\n- React 19 function component in strict TypeScript, with no libraries other than React.\n- Styles in a separate plain CSS file that the component imports.\n- It must look right in Myelin's day theme and its night theme.\n- It must be usable with the keyboard alone.\n\nReply with exactly two code blocks and nothing else that is code:\n1. A `tsx` block: the file StreakBadge.tsx. It imports \"./StreakBadge.css\" and has a named export `StreakBadge`.\n2. A `css` block: the file StreakBadge.css."
+  },
+  {
+   "role": "assistant",
+   "content": [
+    {
+     "signature": "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",
+     "thinking": "",
+     "type": "thinking"
+    },
+    {
+     "text": "```tsx\nimport \"./StreakBadge.css\";\n\nexport interface StreakBadgeProps {\n  day: number;\n  total: number;\n}\n\nexport function StreakBadge({ day, total }: StreakBadgeProps) {\n  const safeTotal = Number.isFinite(total) && total > 0 ? Math.floor(total) : 1;\n  const safeDay = Number.isFinite(day)\n    ? Math.min(Math.max(Math.floor(day), 0), safeTotal)\n    : 0;\n  const percent = (safeDay / safeTotal) * 100;\n  const label = `Day ${safeDay} of ${safeTotal}`;\n\n  return (\n    <div\n      className=\"streak-badge\"\n      role=\"group\"\n      tabIndex={0}\n      aria-label={label}\n    >\n      <span className=\"streak-badge__label\" aria-hidden=\"true\">\n        {label}\n      </span>\n      <div\n        className=\"streak-badge__track\"\n        role=\"progressbar\"\n        aria-label=\"Streak progress\"\n        aria-valuemin={0}\n        aria-valuemax={safeTotal}\n        aria-valuenow={safeDay}\n        aria-valuetext={label}\n      >\n        <div\n          className=\"streak-badge__fill\"\n          style={{ width: `${percent}%` }}\n        />\n      </div>\n    </div>\n  );\n}\n```\n\n```css\n/* Day theme (default). Night theme overrides the tokens below. */\n:root {\n  --streak-badge-bg: #f4efe6;\n  --streak-badge-fg: #2b2a27;\n  --streak-badge-track: #d9d1c3;\n  --streak-badge-fill: #3f7d6b;\n  --streak-badge-border: #c9bfae;\n  --streak-badge-focus: #1f5c4c;\n}\n\n[data-theme=\"night\"] {\n  --streak-badge-bg: #1d2129;\n  --streak-badge-fg: #e6e9ef;\n  --streak-badge-track: #353b47;\n  --streak-badge-fill: #7fd1b5;\n  --streak-badge-border: #2e3440;\n  --streak-badge-focus: #a6e8d0;\n}\n\n.streak-badge {\n  display: inline-flex;\n  flex-direction: column;\n  gap: 0.4rem;\n  min-width: 9rem;\n  padding: 0.6rem 0.8rem;\n  border-radius: 0.6rem;\n  border: 1px solid var(--streak-badge-border);\n  background: var(--streak-badge-bg);\n  color: var(--streak-badge-fg);\n  font: 500 0.875rem/1.2 system-ui, sans-serif;\n  letter-spacing: 0.01em;\n  box-sizing: border-box;\n}\n\n.streak-badge:focus {\n  outline: none;\n}\n\n.streak-badge:focus-visible {\n  outline: 2px solid var(--streak-badge-focus);\n  outline-offset: 2px;\n}\n\n.streak-badge__label {\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n.streak-badge__track {\n  position: relative;\n  height: 0.35rem;\n  width: 100%;\n  border-radius: 999px;\n  background: var(--streak-badge-track);\n  overflow: hidden;\n}\n\n.streak-badge__fill {\n  height: 100%;\n  min-width: 0;\n  max-width: 100%;\n  border-radius: inherit;\n  background: var(--streak-badge-fill);\n  transition: width 300ms ease-out;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .streak-badge__fill {\n    transition: none;\n  }\n}\n```",
+     "type": "text"
+    }
+   ]
+  }
+ ],
+ "usage": {
+  "input_tokens": 302,
+  "output_tokens": 2292,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0
+ },
+ "seconds": 8.812,
+ "cost_usd": 0.001176
+}
