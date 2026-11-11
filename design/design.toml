@@ -95,15 +95,29 @@ where = "Body text. On the sky: the clock and date. On washes: .focus-badge (in 
 
 [[contrast.pair]]
 foreground = "muted"
-on = ["page", "sky"]
+on = ["page"]
 kind = "text"
-where = "Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes')."
+where = "Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes')."
+
+[[contrast.pair]]
+foreground = "muted"
+on = ["sky"]
+kind = "text"
+where = "Header text on the sky: .clock-period, .hijri, .tab, .next-at, .weather-line."
+known_failure = "Open. Header text over the day sky is below AA. Fixing it means changing the default look (a backing behind the header, or lighter day skies), which is a design decision not yet made. Fails on 7 of 8 day skies, lowest 2.89."
 
 [[contrast.pair]]
 foreground = "cresyl"
-on = ["page", "sky", "myelin-wash"]
+on = ["page", "myelin-wash"]
 kind = "text"
-where = "What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log."
+where = "What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On myelin-wash: .form-error inside .quick-log."
+
+[[contrast.pair]]
+foreground = "cresyl"
+on = ["sky"]
+kind = "text"
+where = "Header text on the sky: .next-line, .interview-next, .setup-link."
+known_failure = "Open. Header text over the day sky is below AA. Fixing it means changing the default look (a backing behind the header, or lighter day skies), which is a design decision not yet made. Fails on the storm and rain skies, lowest 3.44."
 
 [[contrast.pair]]
 foreground = "myelin"
@@ -134,9 +148,16 @@ where = "The global :focus-visible outline, and the 'next' and 'today' markers (
 
 [[contrast.pair]]
 foreground = "muted"
-on = ["page", "sky", "myelin-wash"]
+on = ["page", "myelin-wash"]
 kind = "non-text"
-where = "Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log."
+where = "Control boundaries: .check, .input, .sql-q-mark. On myelin-wash: inputs inside .quick-log."
+
+[[contrast.pair]]
+foreground = "muted"
+on = ["sky"]
+kind = "non-text"
+where = "The theme toggle icon, in the header on the sky."
+known_failure = "Open. Header text over the day sky is below AA. Fixing it means changing the default look (a backing behind the header, or lighter day skies), which is a design decision not yet made. Fails on the storm sky only, at 2.89."
 
 [[contrast.pair]]
 foreground = "ink"
@@ -161,6 +182,7 @@ foreground = "hair"
 on = ["page"]
 kind = "non-text"
 where = "Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed)."
+known_failure = "Open. 1.32:1 by day and 1.41:1 at night, where 3:1 is needed. The two fields can take the --muted border that .input already has; the heatmap cells need a design decision. Not changed yet because it alters how the app looks."
 
 # ---- Decorative: measured for the record, exempt from the thresholds ----
 
