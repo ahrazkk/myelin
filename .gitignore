@@ -22,3 +22,6 @@ Thumbs.db
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Scratch folder for type-checking AI-generated components (design/myelin_design/evaluation.py)
+frontend/.design-eval/
