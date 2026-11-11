@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "myelin-design"
+version = "0.1.0"
+description = "Design-token contract, accessibility linters and an MCP server for Myelin's design system."
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Ahraz Kibria" }]
+dependencies = [
+  # Validates tokens.json against tokens.schema.json, so the contract is checked, not assumed.
+  "jsonschema>=4.20",
+  # Its TypedDict is the one pydantic can turn into an MCP output schema on Python 3.11.
+  "typing-extensions>=4.13",
+]
+
+[project.optional-dependencies]
+# The official MCP SDK. Optional, so the linters install and run in CI without it.
+mcp = ["mcp>=2.3,<3"]
+dev = ["pytest>=8.0", "mcp>=2.3,<3"]
+# The Anthropic SDK, only for running the evaluation against a real model. Scoring saved runs does not need it.
+eval = ["anthropic>=1.0", "mcp>=2.3,<3"]
+
+[tool.setuptools.packages.find]
+include = ["myelin_design*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

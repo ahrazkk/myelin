@@ -1,0 +1,197 @@
+# What the CSS cannot say for itself: what each token is for, and which exceptions are allowed.
+# Everything else in design/tokens.json is read from the stylesheet.
+
+# The stylesheet that defines the tokens, relative to the repo root.
+source = "frontend/src/styles.css"
+
+# A TypeScript module generated from the tokens, for the two places in the app that need values
+# rather than var(--name): the accent picker's swatches and the canvas fallbacks.
+generated_ts = "frontend/src/tokens.generated.ts"
+
+# The accent that applies when no data-accent rule overrides --myelin (see Settings.tsx, ACCENTS).
+default_accent = "myelin"
+
+# One entry per token. The export fails if a token in the CSS has no entry here, or the other way
+# round, so a new token cannot be added without someone deciding what it is for.
+# Roles: background, text, accent, border, wash (a translucent fill).
+
+[tokens.slide]
+role = "background"
+description = "Page background. Day is a lit microscope slide; night is a fluorescence view."
+
+[tokens.ink]
+role = "text"
+description = "Main text, and the border of the default button."
+
+[tokens.muted]
+role = "text"
+description = "Secondary text, and quiet lines that carry meaning, such as input borders."
+
+[tokens.hair]
+role = "border"
+description = "Hairline separators between rows and sections."
+
+[tokens.axon-ahead]
+role = "border"
+description = "Decorative track: the part of the axon that has not been walked yet."
+
+[tokens.myelin]
+role = "accent"
+description = "Main accent: done states, the selected tab, the primary button. Follows the accent setting."
+
+[tokens.cresyl]
+role = "accent"
+description = "Second accent: whatever is next, and the keyboard focus outline."
+
+[tokens.cresyl-wash]
+role = "wash"
+description = "Translucent cresyl fill behind 'today' and 'next' markers."
+
+[tokens.myelin-wash]
+role = "wash"
+description = "Translucent fill in the accent colour."
+
+[tokens.code-bg]
+role = "wash"
+description = "Translucent fill behind code and other inset surfaces."
+
+# ---------------------------------------------------------------------------------------------
+# Contrast (WCAG 2.1 AA). See myelin_design/contrast.py for how these are measured.
+# ---------------------------------------------------------------------------------------------
+
+[contrast]
+# Unless Background is set to Plain, the app paints a sky gradient behind the whole page
+# (Ambient.tsx): the sky colour at the top, 85% of the way to --slide two thirds down, --slide at the
+# bottom. The sky colours are read from the source, so they cannot drift from the app.
+# "sky" surfaces use the colour at the very top. "page" is exact only with the Plain background.
+# Over the gradient, a pair's real value lies between its "page" and "sky" results. Pairs that occur
+# in the header are declared on the sky. Clouds, mist, sun, moon, rain and the cursor glow are drawn
+# over the gradient and are not modelled; they can lower contrast further.
+sky_file = "frontend/src/Ambient.tsx"
+sky_day = "SKY_DAY"
+sky_night = "SKY_NIGHT"
+
+# A surface is a stack of layers, bottom first. "@sky" stands for each sky colour in turn.
+[contrast.surfaces]
+page = ["slide"]
+sky = ["@sky"]
+accent = ["myelin"]
+myelin-wash = ["slide", "myelin-wash"]
+cresyl-wash = ["slide", "cresyl-wash"]
+code = ["slide", "code-bg"]
+track = ["hair"]
+sky-myelin-wash = ["@sky", "myelin-wash"]
+sky-cresyl-wash = ["@sky", "cresyl-wash"]
+
+# Kinds: text (4.5:1), large-text (3:1), non-text (3:1), and decorative or inactive (measured, exempt).
+
+# ---- Text ----
+
+[[contrast.pair]]
+foreground = "ink"
+on = ["page", "sky", "myelin-wash", "cresyl-wash", "code", "sky-myelin-wash", "sky-cresyl-wash"]
+kind = "text"
+where = "Body text. On the sky: the clock and date. On washes: .focus-badge (in the header), .quick-log, .sql-q:hover, .chip.is-on. On code: .sql-editor, .solution pre, .phone-link code."
+
+[[contrast.pair]]
+foreground = "muted"
+on = ["page", "sky"]
+kind = "text"
+where = "Secondary text (.hint, .tool-sub, .plan-detail), placeholders, and days before the start date in the Week view. On the sky: .clock-period, .hijri, .tab, .next-at, .weather-line. Not used on washes: secondary text there is --ink (tools.css, 'Text on washes')."
+
+[[contrast.pair]]
+foreground = "cresyl"
+on = ["page", "sky", "myelin-wash"]
+kind = "text"
+where = "What is next: .prayer.is-next, .axon-today, .form-error, td.is-due. On the sky: .next-line, .interview-next, .setup-link. On myelin-wash: .form-error inside .quick-log."
+
+[[contrast.pair]]
+foreground = "myelin"
+on = ["page"]
+kind = "text"
+where = "Accent text: .verdict.is-correct, .busy-label, the first plan action."
+
+[[contrast.pair]]
+foreground = "slide"
+on = ["accent"]
+kind = "text"
+where = "Text on a solid accent fill: .btn.primary, .segmented button[aria-checked=true]."
+
+[[contrast.pair]]
+foreground = "ink"
+on = ["page"]
+kind = "inactive"
+opacity = 0.55
+where = ".btn:disabled (opacity 0.55). Disabled controls are exempt from SC 1.4.3."
+
+# ---- Non-text: focus, control boundaries, states ----
+
+[[contrast.pair]]
+foreground = "cresyl"
+on = ["page", "sky", "myelin-wash", "cresyl-wash", "sky-cresyl-wash"]
+kind = "non-text"
+where = "The global :focus-visible outline, and the 'next' and 'today' markers (.is-next .check, .chip.is-on, .sheath-today). On the sky: focus on the tabs and theme toggle."
+
+[[contrast.pair]]
+foreground = "muted"
+on = ["page", "sky", "myelin-wash"]
+kind = "non-text"
+where = "Control boundaries: .check, .input, .sql-q-mark. On the sky: the theme toggle icon. On myelin-wash: inputs inside .quick-log."
+
+[[contrast.pair]]
+foreground = "ink"
+on = ["page", "cresyl-wash", "sky-cresyl-wash"]
+kind = "non-text"
+where = "The .btn border, and the selected .swatch border. On cresyl-wash: buttons inside .focus-badge.is-up."
+
+[[contrast.pair]]
+foreground = "myelin"
+on = ["page", "track", "myelin-wash"]
+kind = "non-text"
+where = "Done states: the fill of .is-done .check, .sheath, .sql-q.is-solved .sql-q-mark (on myelin-wash when the row is hovered or selected). On track: the progress fill in .focus-sheath and .pattern-bar."
+
+[[contrast.pair]]
+foreground = "slide"
+on = ["accent"]
+kind = "non-text"
+where = "The tick inside a done .check."
+
+[[contrast.pair]]
+foreground = "hair"
+on = ["page"]
+kind = "non-text"
+where = "Borders that are the only edge of a text field: .command-input, .sql-editor. Also the 'missed day' fill in the heatmap (.heat.is-missed)."
+
+# ---- Decorative: measured for the record, exempt from the thresholds ----
+
+[[contrast.pair]]
+foreground = "hair"
+on = ["page", "myelin-wash"]
+kind = "decorative"
+where = "Row separators, and borders around controls that already have a text label (.segmented, .swatch, .chip)."
+
+[[contrast.pair]]
+foreground = "myelin"
+on = ["sky", "cresyl-wash", "sky-cresyl-wash"]
+kind = "decorative"
+where = "Accent shapes that repeat what text already says: the bar under the selected tab (the tab is also bold), and the fill of .btn.primary (which has a text label) inside a wash."
+
+[[contrast.pair]]
+foreground = "axon-ahead"
+on = ["page"]
+kind = "decorative"
+where = "The part of the axon not yet walked (.axon-line.ahead, .week-segment::before)."
+
+# ---------------------------------------------------------------------------------------------
+# Token compliance: allowed exceptions. Each needs a reason. They still count as hard-coded.
+# ---------------------------------------------------------------------------------------------
+
+[[compliance.allow]]
+file = "frontend/src/Ambient.tsx"
+kinds = ["literal"]
+reason = "Canvas scene art (sun, moon, stars, rain, snow, lightning). These paint a picture of the weather; they are not interface colours and have no token."
+
+[[compliance.allow]]
+file = "frontend/src/tools.css"
+match = "rgb(0 0 0 / 0.12)"
+reason = "A drop shadow under the command reply. Shadows are black at low alpha in both themes; there is no shadow token."

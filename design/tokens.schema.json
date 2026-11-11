@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahrazkk/myelin/blob/main/design/tokens.schema.json",
+  "title": "Myelin design tokens",
+  "description": "The contract for design/tokens.json: every colour token in Myelin's stylesheet, with its value in each theme and under each accent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "version", "source", "themes", "defaultAccent", "accents", "tokens"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "source": {
+      "description": "The stylesheet the tokens were read from, relative to the repo root.",
+      "type": "string"
+    },
+    "themes": { "const": ["day", "night"] },
+    "defaultAccent": { "$ref": "#/$defs/name" },
+    "accents": {
+      "description": "Every accent, with the default one first.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/name" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "tokens": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/token" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "color": {
+      "description": "One colour. 'css' is the text from the stylesheet; 'hex' and 'alpha' are the same colour, parsed.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["css", "hex", "alpha"],
+      "properties": {
+        "css": { "type": "string", "minLength": 1 },
+        "hex": { "type": "string", "pattern": "^#[0-9a-f]{6}$" },
+        "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "themed": {
+      "description": "A colour for each theme.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["day", "night"],
+      "properties": {
+        "day": { "$ref": "#/$defs/color" },
+        "night": { "$ref": "#/$defs/color" }
+      }
+    },
+    "token": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "cssVariable", "role", "description", "values"],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "cssVariable": { "type": "string", "pattern": "^--[a-z][a-z0-9-]*$" },
+        "role": { "enum": ["background", "text", "accent", "border", "wash"] },
+        "description": { "type": "string", "minLength": 1 },
+        "values": {
+          "description": "The token's values under the default accent.",
+          "$ref": "#/$defs/themed"
+        },
+        "accents": {
+          "description": "Values under each non-default accent that overrides this token. Absent when no accent does.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/name" },
+          "additionalProperties": { "$ref": "#/$defs/themed" },
+          "minProperties": 1
+        }
+      }
+    }
+  }
+}
